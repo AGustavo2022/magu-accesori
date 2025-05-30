@@ -3,14 +3,15 @@ import Menudesktop from './menu-desktop'
 import { ShoppingCart, User } from 'lucide-react'
 import AcmeLogo from './acme-logo'
 import MenuMobile from './menu-mobile'
+import { Separator } from "@/components/ui/separator"
 
 function Navbar() {
   return (
     <>
-      <div className='p-4 bg-amber-700'>
+      <div className='p-2'>
         <AcmeLogo />
       </div>
-      <div className='flex items-center justify-between p-4  cursor-pointer  bg-amber-200'>
+      <div className='flex items-center justify-between p-4  cursor-pointer '>
 
         <div className='hidden sm:flex'>
           <Menudesktop />
@@ -23,8 +24,8 @@ function Navbar() {
           <User strokeWidth={1} className='cursor-pointer' />
           <ShoppingCart strokeWidth={1} className='cursor-pointer' />
         </div>
-
       </div>
+      <Separator />
     </>
   )
 }
