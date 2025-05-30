@@ -6,7 +6,7 @@ import MenuMobile from './menu-mobile'
 
 function Navbar() {
   return (
-    <div className='w-full max-w-screen-xl mx-auto'>
+    <>
       <div className='p-4 bg-amber-700'>
         <AcmeLogo />
       </div>
@@ -25,7 +25,7 @@ function Navbar() {
         </div>
 
       </div>
-    </div>
+    </>
   )
 }
 
