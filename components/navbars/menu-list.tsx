@@ -48,7 +48,7 @@ const  MenuList = ()=>{
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <Link href="/sobrenosotros" legacyBehavior passHref>
+          <Link href="/about" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Quienes Somos
             </NavigationMenuLink>
