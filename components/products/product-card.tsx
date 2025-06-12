@@ -11,6 +11,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ title, price, description, imageUrl }: ProductCardProps) {
+  console.log({ title, price, description, imageUrl })
   return (
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[450px]">
       <div className="relative">

@@ -6,7 +6,7 @@ const products = [
     title: "Zapatillas Deportivas Premium",
     price: 79.99,
     description: "Zapatillas deportivas de alta calidad con tecnología de amortiguación avanzada para máximo confort.",
-    imageUrl: "/images/sneakers.png",
+    imageUrl: "/images/sneakers.jpg",
   },
   {
     id: 2,
@@ -14,24 +14,23 @@ const products = [
     price: 129.99,
     description:
       "Monitorea tu actividad física, recibe notificaciones y controla tu música con este reloj inteligente.",
-    imageUrl: "/images/smartwatch.png",
+    imageUrl: "/images/smartwatch.jpg",
   },
   {
     id: 3,
     title: "Auriculares Inalámbricos Pro",
     price: 89.99,
     description: "Disfruta de un sonido de alta calidad con cancelación de ruido y hasta 20 horas de batería.",
-    imageUrl: "/images/headphones.png",
+    imageUrl: "/images/headphones.jpg",
   },
   {
     id: 4,
     title: "Mochila Impermeable Viajera",
     price: 49.99,
     description: "Espaciosa, resistente al agua y con compartimentos para laptop y accesorios.",
-    imageUrl: "/images/backpack.png",
+    imageUrl: "/images/backpack.jpg",
   },
 ]
-console.log(products)
 export default function ProductGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
