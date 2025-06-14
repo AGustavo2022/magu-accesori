@@ -1,48 +1,23 @@
+import { getProductos } from "@/lib/actions"
 import ProductCard from "./product-card"
 
-const products = [
-  {
-    id: 1,
-    title: "Zapatillas Deportivas Premium",
-    price: 79.99,
-    description: "Zapatillas deportivas de alta calidad con tecnología de amortiguación avanzada para máximo confort.",
-    imageUrl: "/images/sneakers.jpg",
-  },
-  {
-    id: 2,
-    title: "Reloj Inteligente Serie X",
-    price: 129.99,
-    description:
-      "Monitorea tu actividad física, recibe notificaciones y controla tu música con este reloj inteligente.",
-    imageUrl: "/images/smartwatch.jpg",
-  },
-  {
-    id: 3,
-    title: "Auriculares Inalámbricos Pro",
-    price: 89.99,
-    description: "Disfruta de un sonido de alta calidad con cancelación de ruido y hasta 20 horas de batería.",
-    imageUrl: "/images/headphones.jpg",
-  },
-  {
-    id: 4,
-    title: "Mochila Impermeable Viajera",
-    price: 49.99,
-    description: "Espaciosa, resistente al agua y con compartimentos para laptop y accesorios.",
-    imageUrl: "/images/backpack.jpg",
-  },
-]
-export default function ProductGrid() {
+
+export default async function ProductGrid() {
+  const products = await getProductos()
+  console.log(products)
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          title={product.title}
-          price={product.price}
-          description={product.description}
-          imageUrl={product.imageUrl}
-        />
-      ))}
-    </div>
+    <h1>productos </h1>
+
+    // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    //   {products.map((product) => (
+    //     <ProductCard
+    //       key={product.id}
+    //       title={product.title}
+    //       price={product.price}
+    //       description={product.description}
+    //       imageUrl={product.imageUrl}
+    //     />
+    //   ))}
+    // </div>
   )
 }
