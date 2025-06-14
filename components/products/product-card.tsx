@@ -32,7 +32,7 @@ export default function ProductCard({ title, price, description, imageUrl }: Pro
 
           <div className="mt-auto pt-3 border-t border-gray-100">
             <div className="flex items-center mb-2">
-              <span className="text-xl font-bold text-green-600">${price.toFixed(2)}</span>
+              <span className="text-xl font-bold text-green-600">${price}</span>
             </div>
 
             <Button className="w-full text-xs">

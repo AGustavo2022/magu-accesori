@@ -108,6 +108,14 @@ const MenuList = () => {
           </Link>
         </NavigationMenuItem>
 
+                <NavigationMenuItem>
+          <Link href="/productos" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Producto Card
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+
       </NavigationMenuList>
     </NavigationMenu>
   )
