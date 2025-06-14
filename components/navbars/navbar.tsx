@@ -8,6 +8,7 @@ import AcmeLogo from "./acme-logo"
 import Link from "next/link"
 import MenuList from "./menu-list"
 
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [cartCount] = useState(4) // Simulando items en el carrito
