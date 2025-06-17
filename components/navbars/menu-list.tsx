@@ -2,8 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-
-import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react"
 
 import {
   NavigationMenu,
@@ -15,31 +14,21 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
-// Datos organizados por categorías para el navigation menu
-const productCategories = [
-  {
-    title: "Electrónicos",
-    description: "Dispositivos y gadgets de última tecnología",
-    items: ["Smartphones", "Laptops", "Tablets", "Auriculares", "Cámaras"],
-  },
-  {
-    title: "Ropa & Moda",
-    description: "Las últimas tendencias en moda y accesorios",
-    items: ["Camisetas", "Pantalones", "Chaquetas", "Calzado", "Accesorios"],
-  },
-  {
-    title: "Deportes",
-    description: "Todo lo que necesitas para mantenerte activo",
-    items: ["Zapatillas", "Ropa Deportiva", "Equipamiento", "Suplementos", "Outdoor"],
-  },
-  {
-    title: "Hogar",
-    description: "Productos para hacer de tu casa un hogar",
-    items: ["Muebles", "Decoración", "Cocina", "Iluminación", "Jardín"],
-  },
-]
+import { getData } from "@/lib/actions"
 
-const MenuList = () => {
+export function MenuList() {
+  const [productCategories, setProductCategories] = useState([]);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const data = await getData();
+  //     console.log(data)
+  //     setProductCategories(data);
+  //   }
+
+  //   fetchData();
+  // }, []);
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -51,36 +40,42 @@ const MenuList = () => {
           </Link>
         </NavigationMenuItem>
 
-        {/* Productos with Navigation Menu */}
         <NavigationMenuItem>
           <NavigationMenuTrigger>Productos</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <div className="grid grid-cols-2 gap-3 p-6 md:w-[600px] lg:w-[700px]">
-              {productCategories.map((category, index) => (
-                <div key={index} className="group rounded-md p-3 hover:bg-gray-50">
+            {/* <div className="grid grid-cols-2 gap-1 p-2 md:w-[600px] lg:w-[700px]">
+              {productCategories.map((category: any) => (
+                <div key={category.id} className="group rounded-md p-3 hover:bg-gray-50">
                   <NavigationMenuLink asChild>
                     <Link
                       href="#"
                       className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors"
                     >
-                      <div className="text-sm font-medium leading-none text-gray-900">{category.title}</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-gray-500">{category.description}</p>
-                      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1">
-                        {category.items.map((item, itemIndex) => (
-                          <Link
-                            key={itemIndex}
-                            href="#"
-                            className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200"
-                          >
-                            {item}
-                          </Link>
-                        ))}
+                      <div className="text-sm font-medium leading-none text-gray-900">
+                        {category.nombre}
                       </div>
+                      <p className="line-clamp-2 text-sm leading-snug text-gray-500">
+                        {category.descripcion}
+                      </p>
+                      {category.items && (
+                        <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1">
+                          {category.items.map((item: string, i: number) => (
+                            <Link
+                              key={i}
+                              href="#"
+                              className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200"
+                            >
+                              {item}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </Link>
                   </NavigationMenuLink>
                 </div>
               ))}
             </div>
+
             <div className="bg-gray-50 p-4 text-center border-t">
               <Link
                 href="#"
@@ -88,10 +83,10 @@ const MenuList = () => {
               >
                 Ver todos los productos
               </Link>
-            </div>
+            </div> */}
           </NavigationMenuContent>
         </NavigationMenuItem>
-       
+
         <NavigationMenuItem>
           <Link href="/about" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -108,17 +103,14 @@ const MenuList = () => {
           </Link>
         </NavigationMenuItem>
 
-                <NavigationMenuItem>
+        <NavigationMenuItem>
           <Link href="/productos" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Producto Card
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 }
-
-export default MenuList

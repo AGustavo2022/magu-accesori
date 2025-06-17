@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import AcmeLogo from "./acme-logo"
 import Link from "next/link"
-import MenuList from "./menu-list"
+import { MenuList } from "./menu-list"
+
 
 
 export default function Navbar() {

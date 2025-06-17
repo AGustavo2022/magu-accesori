@@ -4,6 +4,7 @@ import ProductCard from "./product-card"
 
 export default async function ProductGrid() {
   const products = await getProductos()
+  console.log(products)
   
   return (
 
