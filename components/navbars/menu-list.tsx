@@ -13,21 +13,21 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-
-import { getData } from "@/lib/actions"
+import { getProductos } from "@/lib/actions"
+import { Product } from "@/lib/definitions"
 
 export function MenuList() {
-  const [productCategories, setProductCategories] = useState([]);
+  const [productCategories, setProductCategories] = useState<Array<Product>>([]);
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const data = await getData();
-  //     console.log(data)
-  //     setProductCategories(data);
-  //   }
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getProductos();
+      console.log(data)
+      setProductCategories(data as Product[]);
+    }
 
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, []);
 
   return (
     <NavigationMenu>
@@ -43,21 +43,22 @@ export function MenuList() {
         <NavigationMenuItem>
           <NavigationMenuTrigger>Productos</NavigationMenuTrigger>
           <NavigationMenuContent>
-            {/* <div className="grid grid-cols-2 gap-1 p-2 md:w-[600px] lg:w-[700px]">
+            <div className="grid grid-cols-3 gap-1 p-2 md:w-[600px] lg:w-[900px]">
+
               {productCategories.map((category: any) => (
-                <div key={category.id} className="group rounded-md p-3 hover:bg-gray-50">
+                <div key={category.id} className="group rounded-md p-1 hover:bg-gray-50">
                   <NavigationMenuLink asChild>
                     <Link
                       href="#"
                       className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors"
                     >
                       <div className="text-sm font-medium leading-none text-gray-900">
-                        {category.nombre}
+                        {category.name}
                       </div>
                       <p className="line-clamp-2 text-sm leading-snug text-gray-500">
-                        {category.descripcion}
+                        {category.description}
                       </p>
-                      {category.items && (
+                      {/* {category.items && (
                         <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1">
                           {category.items.map((item: string, i: number) => (
                             <Link
@@ -69,7 +70,7 @@ export function MenuList() {
                             </Link>
                           ))}
                         </div>
-                      )}
+                      )} */}
                     </Link>
                   </NavigationMenuLink>
                 </div>
@@ -83,7 +84,8 @@ export function MenuList() {
               >
                 Ver todos los productos
               </Link>
-            </div> */}
+            </div>
+
           </NavigationMenuContent>
         </NavigationMenuItem>
 
