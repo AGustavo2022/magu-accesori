@@ -1,13 +1,13 @@
 // app/actions.ts
 "use server";
 import { neon } from '@neondatabase/serverless';
+import { Product } from './definitions';
 
 const sqlDb = `${process.env.DATABASE_URL}`
 
+const sql = neon(sqlDb);
 
 export async function getCategorias() {
-  
-  const sql = neon(sqlDb);
 
   const response = await sql`
    SELECT 
@@ -21,7 +21,7 @@ export async function getCategorias() {
 }
 
 export async function getProductos() {
-  const sql = neon(sqlDb);
+
   const response = await sql`
     SELECT 
       id,
@@ -36,6 +36,25 @@ export async function getProductos() {
     FROM products
     ORDER BY id ASC
   `;
-  return response;
+  return response as Product[];
 }
 
+export async function getProductsByCategory(category: string): Promise<Product[]> {
+  
+  const result = await sql`
+    SELECT 
+      p.id,
+      p.name,
+      p.price,
+      p.description,
+      p.image_url,
+      p.stock,
+      p.status,
+      pc.name AS category
+    FROM products p
+    JOIN product_categories pc ON p.category_id = pc.id
+    WHERE LOWER(pc.name) = LOWER(${category})
+    ORDER BY p.id ASC
+  `;
+  return result as Product[];
+}

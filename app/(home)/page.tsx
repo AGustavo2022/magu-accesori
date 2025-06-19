@@ -1,5 +1,5 @@
 // app/page.tsx
-import {getCategorias, getData, getProductos} from '@/lib/actions';
+import {getCategorias, getProductos, getProductsByCategory} from '@/lib/actions';
 
 export default async function Home() {
   

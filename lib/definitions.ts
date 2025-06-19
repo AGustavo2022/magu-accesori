@@ -9,3 +9,7 @@ export type Product = {
   status: boolean;
   category: string;
 };
+
+export type ProductGridProps = {
+  products: Product[];
+};

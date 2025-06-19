@@ -1,10 +1,11 @@
 import { getProductos } from "@/lib/actions"
 import ProductCard from "./product-card"
+import { ProductGridProps } from "@/lib/definitions"
 
 
-export default async function ProductGrid() {
+export default async function ProductGrid({ products }: ProductGridProps) {
   
-  const products = await getProductos()
+  //const productsDb = await getProductos()
 
   return (
 

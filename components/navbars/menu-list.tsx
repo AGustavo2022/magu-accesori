@@ -22,7 +22,6 @@ export function MenuList() {
   useEffect(() => {
     async function fetchData() {
       const data = await getProductos();
-      console.log(data)
       setProductCategories(data as Product[]);
     }
 
