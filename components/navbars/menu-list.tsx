@@ -24,10 +24,10 @@ export function MenuList() {
       const data = await getProductos();
       setProductCategories(data as Product[]);
     }
-
     fetchData();
   }, []);
-
+  
+  console.log(productCategories)
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -39,6 +39,7 @@ export function MenuList() {
           </Link>
         </NavigationMenuItem>
 
+        {/* navegacion de categorias de productos */}
         <NavigationMenuItem>
           <NavigationMenuTrigger>Productos</NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -48,7 +49,7 @@ export function MenuList() {
                 <div key={category.id} className="group rounded-md p-1 hover:bg-gray-50">
                   <NavigationMenuLink asChild>
                     <Link
-                      href="#"
+                      href={`/productos/${category.category_id}`}
                       className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors"
                     >
                       <div className="text-sm font-medium leading-none text-gray-900">
