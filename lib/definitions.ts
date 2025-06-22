@@ -10,6 +10,12 @@ export type Product = {
   category: string;
 };
 
+export type Category = {
+  id: number;              
+  name: string;            
+  description: string;              
+};
+
 export type ProductGridProps = {
   products: Product[];
 };

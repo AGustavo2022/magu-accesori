@@ -1,20 +1,19 @@
 import { notFound } from "next/navigation"
 import ProductGrid from "@/components/products/product-grid"
-import { getProductsByCategory } from "@/lib/actions"
+import { getProductsByid } from "@/lib/actions"
 
 
-export default async function CategoryPage({ params }: { params: { category: string } }) {
-
-  const { category } = params
-  const products = await getProductsByCategory(category)
-  console.log(products, String(category))
+export default async function CategoryPage({ params }: { params: { product_id: number } }) {
+  const { product_id } = params
+  const products = await getProductsByid(product_id)
 
   // Si no hay productos, mostrar página 404
-if (!Array.isArray(products) || products.length === 0) {
-  console.log("Categoría no encontrada:", category);
-  notFound();
+  if (products.length === 0) {
+    notFound()
   }
 
+  console.log(products)
+  //const categoryTitle = getCategoryTitle(categoria)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -22,7 +21,7 @@ if (!Array.isArray(products) || products.length === 0) {
       <p className="text-gray-600 mb-8 text-center">Explora nuestra selección de {categoryTitle.toLowerCase()}</p> */}
 
       {/* Mostrar los productos usando el componente ProductGrid */}
-      <ProductGrid products={products} />
+      {/* <ProductGrid products={products} /> */}
     </div>
   )
 }

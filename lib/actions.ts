@@ -39,22 +39,40 @@ export async function getProductos() {
   return response as Product[];
 }
 
-export async function getProductsByCategory(category: string): Promise<Product[]> {
-  
+export async function getProductsByCategory(categoryId: number): Promise<Product[]> {
   const result = await sql`
     SELECT 
-      p.id,
-      p.name,
-      p.price,
-      p.description,
-      p.image_url,
-      p.stock,
-      p.status,
-      pc.name AS category
-    FROM products p
-    JOIN product_categories pc ON p.category_id = pc.id
-    WHERE LOWER(pc.name) = LOWER(${category})
-    ORDER BY p.id ASC
+      id,
+      name,
+      price,
+      description,
+      image_url,
+      stock,
+      status,
+      category_id
+    FROM products
+    WHERE category_id = ${categoryId}
+    ORDER BY id ASC
   `;
   return result as Product[];
+}
+
+export async function getProductsByid(product_id: number): Promise<Product[]> {
+
+  const response = await sql`
+    SELECT 
+      id,
+      sku,
+      name,
+      price,
+      description,
+      image_url,
+      stock,
+      category_id,
+      status
+    FROM products
+    WHERE id = ${product_id}
+    ORDER BY id ASC
+  `;
+  return response as Product[];
 }
