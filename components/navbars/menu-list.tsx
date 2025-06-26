@@ -39,7 +39,7 @@ export function MenuList() {
         </NavigationMenuItem>
 
         {/* navegacion de categorias de productos */}
-        <NavigationMenuItem>
+        {/* <NavigationMenuItem>
           <NavigationMenuTrigger>Productos</NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="grid grid-cols-3 gap-1 p-2 md:w-[600px] lg:w-[900px]">
@@ -48,7 +48,7 @@ export function MenuList() {
                 <div key={category.id} className="group rounded-md p-1 hover:bg-gray-50">
                   <NavigationMenuLink asChild>
                     <Link
-                      href={`/productos/${category.id}`}
+                      href={`/products/category/${category.id}`}
                       className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors"
                     >
                       <div className="text-sm font-medium leading-none text-gray-900">
@@ -65,7 +65,7 @@ export function MenuList() {
 
             <div className="bg-gray-50 p-4 text-center border-t">
               <Link
-                href="/productos"
+                href="/products"
                 className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
               >
                 Ver todos los productos
@@ -73,7 +73,7 @@ export function MenuList() {
             </div>
 
           </NavigationMenuContent>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
 
         <NavigationMenuItem>
           <Link href="/about" legacyBehavior passHref>
@@ -92,9 +92,9 @@ export function MenuList() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <Link href="/productos" legacyBehavior passHref>
+          <Link href="/products" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Producto Card
+              Productos
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

@@ -19,3 +19,7 @@ export type Category = {
 export type ProductGridProps = {
   products: Product[];
 };
+
+export type ProductItemProps = {
+  product: Product;
+};
