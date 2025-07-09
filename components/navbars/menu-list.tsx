@@ -38,6 +38,14 @@ export function MenuList() {
           </Link>
         </NavigationMenuItem>
 
+        <NavigationMenuItem>
+          <Link href="/products" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Productos
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+
         {/* navegacion de categorias de productos */}
         {/* <NavigationMenuItem>
           <NavigationMenuTrigger>Productos</NavigationMenuTrigger>
@@ -84,20 +92,13 @@ export function MenuList() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <Link href="/contacto" legacyBehavior passHref>
+          <Link href="/contact" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Contacto
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
 
-        <NavigationMenuItem>
-          <Link href="/products" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Productos
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   );

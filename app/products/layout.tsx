@@ -1,19 +1,35 @@
-import CategorySidebar from "@/components/category-sidebar";
-import Category from "@/components/products/category";
 
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
 
-export const experimental_ppr = true;
- 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-      <div className="w-full flex-none md:w-64">
-        {/* Sidebar izquierda con categorías */}
-        <aside className="hidden lg:block">
-          <CategorySidebar />
-        </aside>
-      </div>
-      <div className="flex-grow p-6  md:p-12">{children}</div>
-    </div>
+
+    <ResizablePanelGroup
+      direction="horizontal"
+    >
+      <ResizableHandle />
+
+      <ResizablePanel defaultSize={20}>
+        <div className="flex h-screen   p-6">
+          <span className="font-semibold">One</span>
+        </div>
+      </ResizablePanel>
+
+      <ResizableHandle />
+
+      <ResizablePanel defaultSize={80}>
+
+        <ResizablePanel>
+          <div >
+            <span className="font-semibold">{children}</span>
+          </div>
+        </ResizablePanel>
+
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 }
