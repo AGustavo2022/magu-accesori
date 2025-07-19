@@ -1,4 +1,5 @@
 
+import CategorySidebar from "@/components/category-sidebar";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -15,7 +16,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <ResizablePanel defaultSize={20}>
         <div className="flex h-screen   p-6">
-          <span className="font-semibold">One</span>
+          <span className="font-semibold">
+            <CategorySidebar/>
+
+          </span>
         </div>
       </ResizablePanel>
 
