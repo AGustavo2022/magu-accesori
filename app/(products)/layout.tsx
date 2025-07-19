@@ -12,8 +12,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <ResizablePanelGroup
       direction="horizontal"
     >
-      <ResizableHandle />
-
       <ResizablePanel defaultSize={20}>
         <div className="flex h-screen   p-6">
           <span className="font-semibold">
@@ -22,8 +20,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </span>
         </div>
       </ResizablePanel>
-
-      <ResizableHandle />
 
       <ResizablePanel defaultSize={80}>
 
