@@ -17,15 +17,15 @@ import { getCategorias } from "@/lib/actions"
 import { Category } from "@/lib/definitions"
 
 export function MenuList() {
-  const [productCategories, setProductCategories] = useState<Array<Category>>([]);
+  // const [productCategories, setProductCategories] = useState<Array<Category>>([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const data = await getCategorias();
-      setProductCategories(data as Category[]);
-    }
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const data = await getCategorias();
+  //     setProductCategories(data as Category[]);
+  //   }
+  //   fetchData();
+  // }, []);
 
   return (
     <NavigationMenu>

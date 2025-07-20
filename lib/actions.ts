@@ -14,7 +14,7 @@ export async function getCategorias() {
       id,
       name,
       description
-    FROM product_categories
+    FROM categories
     ORDER BY id ASC
   `;
   return response;
@@ -31,7 +31,7 @@ export async function getProductos() {
       description,
       image_url,
       stock,
-      category_id,
+      subcategory_id,
       status
     FROM products
     ORDER BY id ASC
@@ -43,15 +43,18 @@ export async function getProductsByCategory(categoryId: number): Promise<Product
   const result = await sql`
     SELECT 
       id,
+      sku,
       name,
       price,
       description,
       image_url,
       stock,
-      status,
-      category_id
+      subcategory_id,
+      status
+      created_at
+      updated_at
     FROM products
-    WHERE category_id = ${categoryId}
+    WHERE subcategory_id = ${categoryId}
     ORDER BY id ASC
   `;
   return result as Product[];
@@ -68,8 +71,10 @@ export async function getProductsByid(product_id: number): Promise<Product[]> {
       description,
       image_url,
       stock,
-      category_id,
+      subcategory_id,
       status
+      created_at
+      updated_at
     FROM products
     WHERE id = ${product_id}
     ORDER BY id ASC

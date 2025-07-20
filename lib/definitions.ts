@@ -10,10 +10,17 @@ export type Product = {
   category: string;
 };
 
+export type Subcategory = {
+  id: number;
+  name: string;
+  category_id: number;
+};
+
 export type Category = {
   id: number;              
   name: string;            
-  description: string;              
+  description: string; 
+  subcategory?:Subcategory[];             
 };
 
 export type ProductGridProps = {

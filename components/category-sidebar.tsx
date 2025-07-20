@@ -24,8 +24,7 @@ export default function CategorySidebar() {
       }
       fetchData();
     }, []);
-    
- console.log(productCategories)
+
 return (
     <Accordion
       type="single"

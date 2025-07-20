@@ -3,7 +3,7 @@ import ProductCard from "./product-card"
 import { ProductGridProps } from "@/lib/definitions"
 
 
-export default async function ProductGrid({ products }: ProductGridProps) {
+export default function ProductGrid({ products }: ProductGridProps) {
   
   //const productsDb = await getProductos()
 
@@ -16,7 +16,8 @@ export default async function ProductGrid({ products }: ProductGridProps) {
           title={product.name}
           price={product.price}
           description={product.description}
-          imageUrl={product.image_url}
+          // imageUrl={product.image_url}
+          imageUrl='/images/backpack.jpg'
         />
       ))}
     </div>
