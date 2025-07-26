@@ -18,7 +18,7 @@ export default function page() {
         fetchData();
       }, []);
       
-    console.log(products)
+    // console.log(products)
 
   //const products = await getProductos()
 

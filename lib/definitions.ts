@@ -11,16 +11,15 @@ export type Product = {
 };
 
 export type Subcategory = {
-  id: number;
-  name: string;
-  category_id: number;
+  subcategory_id: number;
+  subcategory_name: string;
 };
 
 export type Category = {
-  id: number;              
-  name: string;            
-  description: string; 
-  subcategory?:Subcategory[];             
+  category_id: number;
+  category_name: string;
+  description: string;
+  subcategories: Subcategory[];
 };
 
 export type ProductGridProps = {

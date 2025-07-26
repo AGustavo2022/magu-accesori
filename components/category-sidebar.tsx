@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getCategorias } from "@/lib/actions"
+import { getCategorias, getCategorias2 } from "@/lib/actions"
 import { Category } from "@/lib/definitions"
 import Link from "next/link"
 
@@ -19,45 +19,35 @@ export default function CategorySidebar() {
 
     useEffect(() => {
       async function fetchData() {
-        const data = await getCategorias();
+        //const data = await getCategorias();
+        const data = await getCategorias2();
         setProductCategories(data as Category[]);
       }
       fetchData();
     }, []);
 
 return (
-    <Accordion
-      type="single"
-      collapsible
-      className="w-full"
-      // defaultValue="item-2"
-    >
-
-    {productCategories.map((cat: any) => (
-
-      <AccordionItem value={cat.id}>
-        <AccordionTrigger className="w-full">{cat.name}</AccordionTrigger>
-        <AccordionContent className="flex flex-col gap-4 text-balance">
-          <p>
-              <Link
-                key={cat.id}
-                href={`/category/${cat.id}`}
-                className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium transition-colors duration-200"
-              >
-                {cat.description}
-              </Link>
-          </p>
-
-        </AccordionContent>
-      </AccordionItem>
-    ))}
+    <Accordion type="single" collapsible className="w-full">
+      
+      {productCategories.map((cat) => (
+        <AccordionItem key={cat.category_id} value={`cat-${cat.category_id}`}>
+          <AccordionTrigger className="w-full">
+            {cat.category_name}
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-2 pl-4">
+            {cat.subcategories.map((sub) => (
+                <Link
+                  key={sub.subcategory_id}
+                  href={`/category/${cat.category_id}`}
+                  className="text-gray-700 hover:text-blue-600 text-sm"
+                >
+                  {sub.subcategory_name}
+                </Link>
+              ))
+            }
+          </AccordionContent>
+        </AccordionItem>
+      ))}
     </Accordion>
-  )
-
-  }
-
-      //         <ul className="list-disc pl-6">
-      //   {productCategories.map((cat: any) => (
-      //     <li key={cat.id}>{cat.name}.........{cat.description}</li>
-      //   ))}
-      // </ul>
+  );
+}

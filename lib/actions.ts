@@ -20,18 +20,44 @@ export async function getCategorias() {
   return response;
 }
 
+
+export async function getCategorias2() {
+
+  const response = await sql`
+  SELECT 
+      c.id AS category_id,
+      c.name AS category_name,
+      c.description,
+      COALESCE(
+        json_agg(
+          json_build_object(
+            'subcategory_id', s.id,
+            'subcategory_name', s.name
+          )
+        ) FILTER (WHERE s.id IS NOT NULL),
+        '[]'
+      ) AS subcategories
+    FROM categories c
+    LEFT JOIN subcategories s ON s.category_id = c.id
+    GROUP BY c.id
+    ORDER BY c.id;
+  `;
+  return response;
+}
+
+
+
 export async function getProductos() {
 
   const response = await sql`
     SELECT 
       id,
-      sku,
       name,
       price,
       description,
       image_url,
       stock,
-      subcategory_id,
+      category_id,
       status
     FROM products
     ORDER BY id ASC
@@ -51,8 +77,6 @@ export async function getProductsByCategory(categoryId: number): Promise<Product
       stock,
       subcategory_id,
       status
-      created_at
-      updated_at
     FROM products
     WHERE subcategory_id = ${categoryId}
     ORDER BY id ASC
