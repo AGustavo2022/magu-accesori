@@ -38,7 +38,7 @@ return (
             {cat.subcategories.map((sub) => (
                 <Link
                   key={sub.subcategory_id}
-                  href={`/category/${cat.category_id}`}
+                  href={`/category/${sub.subcategory_id}`}
                   className="text-gray-700 hover:text-blue-600 text-sm"
                 >
                   {sub.subcategory_name}

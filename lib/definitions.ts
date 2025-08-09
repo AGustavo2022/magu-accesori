@@ -8,6 +8,7 @@ export type Product = {
   stock: number;
   status: boolean;
   category: string;
+  subcategory: string
 };
 
 export type Subcategory = {

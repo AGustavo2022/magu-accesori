@@ -2,6 +2,7 @@ import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
+import Link from "next/link"
 
 interface ProductCardProps {
   title: string
@@ -15,12 +16,14 @@ export default function ProductCard({ title, price, description, imageUrl }: Pro
   return (
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[450px]">
       <div className="relative">
-        <Image className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-          src={imageUrl || "/backpack.png"}
-          alt={title}
-          width={500}
-          height={300}
-        />
+        <Link href="/">
+          <Image className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+            src={imageUrl || "/backpack.png"}
+            alt={title}
+            width={500}
+            height={300}
+          />
+        </Link>
       </div>
 
       <CardContent className="p-3 flex flex-col flex-1">
