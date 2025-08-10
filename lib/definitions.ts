@@ -30,3 +30,7 @@ export type ProductGridProps = {
 export type ProductItemProps = {
   product: Product;
 };
+
+export type ProductCardProps = {
+  product: Product;
+}
