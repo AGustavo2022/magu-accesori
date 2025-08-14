@@ -108,18 +108,16 @@ export async function getProductsByid(product_id: number): Promise<Product[]> {
   const response = await sql`
     SELECT 
       id,
-      sku,
       name,
-      price,
       description,
+      price,
       image_url,
       stock,
-      subcategory_id,
-      status
-      created_at
-      updated_at
+      status,
+      category_id,
+      subcategory_id
     FROM products
-    WHERE id = ${product_id}
+    WHERE id = 1
     ORDER BY id ASC
   `;
   return response as Product[];

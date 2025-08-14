@@ -8,6 +8,9 @@ import { ProductCardProps } from "@/lib/definitions"
 
 export default function ProductCard({ product }: ProductCardProps) {
 
+  if (!product) {
+    return <p>Producto no encontrado</p>
+  }
   return (
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[450px]">
       <div className="relative">
