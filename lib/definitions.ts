@@ -28,7 +28,7 @@ export type ProductGridProps = {
 };
 
 export type ProductItemProps = {
-  product: Product;
+  product: Product[];
 };
 
 export type ProductCardProps = {

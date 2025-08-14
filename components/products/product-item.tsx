@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button"
 
 export default function ProductItem({ product }: ProductItemProps) {
 
- console.log(product)
+  const {id, name, description, price, image_url, stock, status, category, subcategory} = product[0]
+
+   console.log(product)
  
   return (
 
@@ -17,8 +19,8 @@ export default function ProductItem({ product }: ProductItemProps) {
         {/* Volver */}
         <div className="mb-4">
           <Link
-            href="/"
-            className="text-blue-600 hover:underline flex items-center gap-2"
+            href="/products"
+            className="flex items-center gap-2"
           >
             ← Volver
           </Link>
@@ -29,8 +31,8 @@ export default function ProductItem({ product }: ProductItemProps) {
           {/* Imagen */}
           <div className="w-full h-auto">
             <Image
-              src={product.image_url}
-              alt={product.name}
+              src={image_url}
+              alt={name}
               width={500}
               height={500}
               className="object-cover rounded-lg"
@@ -40,12 +42,12 @@ export default function ProductItem({ product }: ProductItemProps) {
           {/* Información */}
           <div className="flex flex-col justify-between space-y-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-              <p className="text-gray-700 mt-2">{product.description}</p>
+              <h1 className="text-3xl font-bold text-gray-900">{name}</h1>
+              <p className="text-gray-700 mt-2">{description}</p>
 
               <div className="mt-4 flex gap-2">
-                <Badge variant="secondary">{product.category}</Badge>
-                {product.status ? (
+                <Badge variant="secondary">{category}</Badge>
+                {status ? (
                   <Badge variant="default" className="bg-green-500">Activo</Badge>
                 ) : (
                   <Badge variant="destructive">Inactivo</Badge>
@@ -53,12 +55,12 @@ export default function ProductItem({ product }: ProductItemProps) {
               </div>
 
               <div className="mt-4 text-2xl font-semibold text-green-600">
-                ${product.price}
+                ${price}
               </div>
 
               <div className="mt-2 text-sm text-gray-600">
-                {product.stock > 0 ? (
-                  <span>En stock: {product.stock} unidades</span>
+                {stock > 0 ? (
+                  <span>En stock: {stock} unidades</span>
                 ) : (
                   <span className="text-red-600">Sin stock</span>
                 )}
@@ -66,7 +68,7 @@ export default function ProductItem({ product }: ProductItemProps) {
             </div>
 
             <div className="pt-4">
-              <Button disabled={product.stock === 0} className="w-full">
+              <Button disabled={stock === 0} className="w-full">
                 Agregar al carrito
               </Button>
             </div>

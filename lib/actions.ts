@@ -117,7 +117,7 @@ export async function getProductsByid(product_id: number): Promise<Product[]> {
       category_id,
       subcategory_id
     FROM products
-    WHERE id = 1
+    WHERE id = ${product_id}
     ORDER BY id ASC
   `;
   return response as Product[];
