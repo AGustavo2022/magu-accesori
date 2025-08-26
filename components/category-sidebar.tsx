@@ -1,8 +1,5 @@
-"use client"
 
-import { useEffect, useState } from "react"
-import { getCategorias, getCategorias2 } from "@/lib/actions"
-import { Category } from "@/lib/definitions"
+import { getCategorias2 } from "@/lib/actions"
 import Link from "next/link"
 
 import {
@@ -11,20 +8,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Subcategory } from "@/lib/definitions"
 
+export default  async function CategorySidebar() {
 
+  const productCategories = await getCategorias2()
 
-export default function CategorySidebar() {
-  const [productCategories, setProductCategories] = useState<Array<Category>>([]);
-
-    useEffect(() => {
-      async function fetchData() {
-        //const data = await getCategorias();
-        const data = await getCategorias2();
-        setProductCategories(data as Category[]);
-      }
-      fetchData();
-    }, []);
+  console.log(productCategories)
 
 return (
     <Accordion type="single" collapsible className="w-full">
@@ -35,7 +25,7 @@ return (
             {cat.category_name}
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-2 pl-4">
-            {cat.subcategories.map((sub) => (
+            {cat.subcategories.map((sub: Subcategory) => (
                 <Link
                   key={sub.subcategory_id}
                   href={`/category/${sub.subcategory_id}`}
@@ -43,6 +33,7 @@ return (
                 >
                   {sub.subcategory_name}
                 </Link>
+
               ))
             }
           </AccordionContent>
