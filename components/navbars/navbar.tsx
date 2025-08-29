@@ -12,7 +12,7 @@ import { MenuList } from "./menu-list"
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [cartCount] = useState(4) // Simulando items en el carrito
+  const [cartCount] = useState(2) // Simulando items en el carrito
 
   const categories = ["Inicio", "Ropa", "Electrónicos", "Deportes", "Hogar", "Ofertas"]
 
