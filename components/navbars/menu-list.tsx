@@ -1,5 +1,5 @@
-import Link from "next/link"
 
+import Link from "next/link"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -32,13 +32,14 @@ const listMenu = [
 ]
 
 export function MenuList() {
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
         {listMenu.map((item) => (
           <NavigationMenuItem>
             <Link
-              key={item.id }
+              key={item.id}
               href={item.href}>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 {item.name}
