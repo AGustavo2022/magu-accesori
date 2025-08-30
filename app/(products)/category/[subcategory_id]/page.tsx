@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 import { Product } from "@/lib/definitions";
 import React from "react"
 
-export default   function CategoryPage({ params }: { params: Promise<{ subcategory_id: string }> }) {
+export default   function CategoryPage({ params }: { params: { subcategory_id: string } }) {
 
-  const { subcategory_id } =  React.use(params) 
-  const numericSubcategoryId = Number(subcategory_id);
+
+  const numericSubcategoryId = Number(params.subcategory_id);
 
   // const products = await getProductsBySubcategory(numericSubcategoryId)
 
