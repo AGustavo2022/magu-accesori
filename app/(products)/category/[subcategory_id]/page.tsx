@@ -2,8 +2,9 @@ import ProductGrid from "@/components/products/product-grid"
 import { getProductsBySubcategory } from "@/lib/actions"
 import React from "react"
 
-export default async function CategoryPage({ params }: { params: { subcategory_id: string } }) {
+export default async function CategoryPage(props: { params: Promise<{ subcategory_id: string }> }) {
 
+  const params = await props.params
 
   const numericSubcategoryId = Number(params.subcategory_id);
 
