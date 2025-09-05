@@ -30,11 +30,6 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <AcmeLogo/>
-          {/* <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Shop<span className="text-blue-600">Zone</span>
-            </h1>
-          </div> */}
 
           {/* Search Bar - Desktop */}
           <div className="hidden md:flex flex-1 max-w-md mx-8">
@@ -51,12 +46,6 @@ export default function Navbar() {
               <User className="h-5 w-5" />
               <span className="ml-1 text-sm">Cuenta</span>
             </Button>
-
-            {/* Favorites */}
-            {/* <Button variant="ghost" size="sm" className="relative">
-              <Heart className="h-5 w-5" />
-              <span className="sr-only">Favoritos</span>
-            </Button> */}
 
             {/* Cart */}
             <Button variant="ghost" size="sm" className="relative">
@@ -92,15 +81,6 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="flex items-center justify-center space-x-8 py-4">
               <MenuList/>
-              {/* {categories.map((category) => (
-                <Link
-                  key={category}
-                  href="#"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
-                >
-                  {category}
-                </Link>
-              ))} */}
             </div>
           </div>
         </div>
