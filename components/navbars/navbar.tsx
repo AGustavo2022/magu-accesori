@@ -120,7 +120,8 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="border-t pt-2 mt-2">
-              <Link href="#" className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">
+              <Link 
+                href="#" className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">
                 <User className="inline h-4 w-4 mr-2" />
                 Mi Cuenta
               </Link>
