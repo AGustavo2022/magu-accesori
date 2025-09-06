@@ -49,6 +49,13 @@ export async function getCategorias2() {
 
 export async function getProductos() {
 
+  try {
+    // We artificially delay a response for demo purposes.
+    // Don't do this in production :)
+    console.log('Fetching revenue data...');
+    
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
   const response = await sql`
     SELECT 
       id,
@@ -62,7 +69,13 @@ export async function getProductos() {
     FROM products
     ORDER BY id ASC
   `;
-  return response as Product[];
+   console.log('Data fetch completed after 3 seconds.');
+ 
+    return response as Product[];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch revenue data.');
+  }
 }
 
 export async function getProductsBySubcategory(subcategoryId: number): Promise<Product[]> {
