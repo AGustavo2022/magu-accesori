@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import AcmeLogo from "./acme-logo"
 import Link from "next/link"
 import { MenuList } from "./menu-list"
+import SearchNew from "../search"
 
 
 
@@ -34,8 +35,9 @@ export default function Navbar() {
           {/* Search Bar - Desktop */}
           <div className="hidden md:flex flex-1 max-w-md mx-8">
             <div className="relative w-full">
-              <Input type="text" placeholder="Buscar productos..." className="pl-10 pr-4 py-2 w-full" />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <SearchNew placeholder="Buscar Productos"/>
+              {/* <Input type="text" placeholder="Buscar productos..." className="pl-10 pr-4 py-2 w-full" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" /> */}
             </div>
           </div>
 
@@ -70,6 +72,7 @@ export default function Navbar() {
           <div className="relative">
             <Input type="text" placeholder="Buscar productos..." className="pl-10 pr-4 py-2 w-full" />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            
           </div>
         </div>
       </div>

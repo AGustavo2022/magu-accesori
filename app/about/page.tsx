@@ -1,8 +1,12 @@
-import React from 'react'
+import SearchNew from '@/components/search'
+import { Suspense } from 'react'
+
 
 function About() {
   return (
-    <div>About</div>
+    <Suspense>
+      <SearchNew placeholder="Buscar Productos" />
+    </Suspense>
   )
 }
 

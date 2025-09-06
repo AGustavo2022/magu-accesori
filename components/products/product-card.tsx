@@ -4,6 +4,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
 import { ProductCardProps } from "@/lib/definitions"
+import { Suspense } from "react"
+import { InvoiceSkeleton } from "../skeletons"
 
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -15,6 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[450px]">
       <div className="relative">
         <Link href={`/products/${product.id}`}>
+        <Suspense fallback={<InvoiceSkeleton />}>
           <Image 
             src={product.image_url || "/backpack.png"}
             width={500}
@@ -22,6 +25,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
             alt={product.name}
           />
+          </Suspense>
         </Link>
       </div>
 
