@@ -1,7 +1,7 @@
-import React from "react"
 import { notFound } from "next/navigation"
 import { getProductsByid } from "@/lib/actions"
-import ProductItem from "@/components/products/product-item"
+import { ProductDetail } from "@/components/products/product-detail"
+import { Product } from "@/lib/definitions"
 
 
 export default async function ProductItemPage(props: { params: Promise<{ product_id: string }> }) {
@@ -12,6 +12,8 @@ export default async function ProductItemPage(props: { params: Promise<{ product
   if (!product || product.length === 0) {
     notFound()
   }
-  return <ProductItem product={product} />
+
+
+  return <ProductDetail product={product[0]}/>
 }
 
