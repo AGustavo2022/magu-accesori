@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ShoppingCart, Plus, Minus, Trash2, Package } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
+import Image from "next/image"
 
 export function CartDrawer() {
   const { items, total, itemCount, updateQuantity, removeItem, clearCart } = useCart()
@@ -13,7 +14,7 @@ export function CartDrawer() {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-ES", {
       style: "currency",
-      currency: "EUR",
+      currency: "ARS",
     }).format(price)
   }
 
@@ -57,8 +58,10 @@ export function CartDrawer() {
                     <div key={item.product.id} className="flex gap-3 p-3 border rounded-lg">
                       <div className="w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0">
                         {item.product.image_url ? (
-                          <img
+                          <Image
                             src={item.product.image_url || "/placeholder.svg"}
+                            width={400}
+                            height={200}
                             alt={item.product.name}
                             className="w-full h-full object-cover"
                           />
