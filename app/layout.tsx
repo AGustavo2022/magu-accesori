@@ -3,6 +3,7 @@ import { geistSans, geistMono } from '../ui/fonts';
 
 import "./globals.css";
 import Navbar from "@/components/navbars/navbar";
+import { CartProvider } from "@/contexts/cart-context";
 
 export const experimental_ppr = true;
 
@@ -19,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Navbar />
-        <main className="w-full max-w-screen-xl mx-auto">
-          {children}
-        </main>
+        <CartProvider>
+          <Navbar />
+          <main className="w-full max-w-screen-xl mx-auto">
+            {children}
+          </main>
+        </CartProvider>
       </body>
     </html>
   );

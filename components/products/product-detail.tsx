@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator"
 import { ShoppingCart, Heart, Share2, Package, Calendar, Tag } from "lucide-react"
 import { Product } from "@/lib/definitions"
 import Image from "next/image"
+import { useCart } from "@/contexts/cart-context"
 
 interface ProductDetailProps {
   product: Product
@@ -16,6 +17,8 @@ interface ProductDetailProps {
 
 
 export function ProductDetail({ product}: ProductDetailProps) {
+
+    const { addItem } = useCart()
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-ES", {
@@ -33,6 +36,7 @@ export function ProductDetail({ product}: ProductDetailProps) {
   }
 
     const handleAddToCart = (product: Product) => {
+      addItem(product)
     console.log("Añadiendo al carrito:", product.name)
     // Aquí implementarías la lógica del carrito
   }

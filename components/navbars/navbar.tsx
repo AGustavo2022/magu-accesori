@@ -8,6 +8,7 @@ import AcmeLogo from "./acme-logo"
 import Link from "next/link"
 import { MenuList } from "./menu-list"
 import SearchNew from "../search"
+import { CartDrawer } from "../cart-drawer"
 
 
 
@@ -50,7 +51,8 @@ export default function Navbar() {
             </Button>
 
             {/* Cart */}
-              <Button variant="ghost" size="sm" className="relative">
+            <CartDrawer/>
+              {/* <Button variant="ghost" size="sm" className="relative">
                 <ShoppingCart className="h-5 w-5" />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -58,7 +60,7 @@ export default function Navbar() {
                   </span>
                 )}
                 <span className="sr-only">Carrito</span>
-              </Button>
+              </Button> */}
 
             {/* Mobile menu button */}
             <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
