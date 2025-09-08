@@ -14,7 +14,6 @@ import { CartDrawer } from "../cart-drawer"
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [cartCount] = useState(2) // Simulando items en el carrito
 
   const categories = ["Inicio", "Ropa", "Electrónicos", "Deportes", "Hogar", "Ofertas"]
 
@@ -52,15 +51,6 @@ export default function Navbar() {
 
             {/* Cart */}
             <CartDrawer/>
-              {/* <Button variant="ghost" size="sm" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-                <span className="sr-only">Carrito</span>
-              </Button> */}
 
             {/* Mobile menu button */}
             <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
