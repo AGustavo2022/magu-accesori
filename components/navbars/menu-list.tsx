@@ -37,9 +37,8 @@ export function MenuList() {
     <NavigationMenu>
       <NavigationMenuList>
         {listMenu.map((item) => (
-          <NavigationMenuItem>
+          <NavigationMenuItem key={item.id}>
             <Link
-              key={item.id}
               href={item.href}>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 {item.name}
