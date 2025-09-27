@@ -95,7 +95,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, {
     items: [],
     total: 0,
-    itemCount: 0,
+    itemCount: 1,
   })
 
   useEffect(() => {

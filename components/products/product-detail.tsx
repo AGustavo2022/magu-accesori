@@ -18,7 +18,7 @@ interface ProductDetailProps {
 
 export function ProductDetail({ product}: ProductDetailProps) {
 
-    const { addItem } = useCart()
+    const { addItem } = useCart()  
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-ES", {
