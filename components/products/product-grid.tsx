@@ -10,15 +10,9 @@ export default function ProductGrid({ products }: ProductGridProps) {
 
   return (
 
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5">
       {products.map((item) => (
         <ProductCard key={item.id} product={item}
-          // key={product.id}
-          // title={product.name}
-          // price={product.price}
-          // description={product.description}
-          // // imageUrl={product.image_url}
-          // imageUrl='/images/backpack.jpg'
         />
       ))}
     </div>

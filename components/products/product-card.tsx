@@ -14,7 +14,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     return <p>Producto no encontrado</p>
   }
   return (
-    <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[400px] p-0">
+    <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[380px] p-0">
       <div className="relative">
         <Link href={`/products/${product.id}`}>
         <Suspense fallback={<InvoiceSkeleton />}>
@@ -36,7 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <p className="text-xs text-gray-600 line-clamp-3">{product.description}</p>
           </div>
 
-          <div className="mt-auto pt-3 border-t border-gray-100">
+          <div className="mt-auto pt-3">
             <div className="flex items-center mb-2">
               <span className="text-xl font-bold text-green-600">${product.price}</span>
             </div>

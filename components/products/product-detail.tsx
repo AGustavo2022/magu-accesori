@@ -55,8 +55,8 @@ export function ProductDetail({ product}: ProductDetailProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Image */}
         <div className="space-y-4">
-          <Card className="overflow-hidden">
-            <div className="aspect-square bg-muted relative">
+          <Card className="p-0 overflow-hidden">
+            <div className="aspect-square relative p-0">
               {product.image_url ? (
                 <Image
                   src={product.image_url || "/placeholder.svg"}
