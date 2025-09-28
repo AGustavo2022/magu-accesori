@@ -37,12 +37,12 @@ export function ProductDetail({ product}: ProductDetailProps) {
 
     const handleAddToCart = (product: Product) => {
       addItem(product)
-    console.log("Añadiendo al carrito:", product.name)
+    console.log("Añadiendo al carrito:", product.title)
     // Aquí implementarías la lógica del carrito
   }
 
   const handleAddToWishlist = (product: Product) => {
-    console.log("Añadiendo a favoritos:", product.name)
+    console.log("Añadiendo a favoritos:", product.title)
     // Aquí implementarías la lógica de favoritos
   }
 
@@ -62,7 +62,7 @@ export function ProductDetail({ product}: ProductDetailProps) {
                   src={product.image_url || "/placeholder.svg"}
                   width={500}
                   height={300}
-                  alt={product.name}
+                  alt={product.title}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -88,14 +88,14 @@ export function ProductDetail({ product}: ProductDetailProps) {
         {/* Product Information */}
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-balance mb-2">{product.name}</h1>
+            <h1 className="text-3xl font-bold text-balance mb-2">{product.title}</h1>
             <div className="text-4xl font-bold text-primary mb-4">{formatPrice(product.price)}</div>
           </div>
 
-          {product.description && (
+          {product.shortDescription && (
             <div>
               <h3 className="text-lg font-semibold mb-2">Descripción</h3>
-              <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+              <p className="text-muted-foreground leading-relaxed">{product.shortDescription}</p>
             </div>
           )}
 
