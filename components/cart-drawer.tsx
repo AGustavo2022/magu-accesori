@@ -11,6 +11,13 @@ import Image from "next/image"
 export function CartDrawer() {
   const { items, total, itemCount, updateQuantity, removeItem, clearCart } = useCart()
 
+    const handleCheckout = async () => {
+      console.log(items, total, itemCount)
+    // if (state.items.length === 0) {
+    //   alert("El carrito está vacío.");
+    //   return;
+    }
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-ES", {
       style: "currency",
@@ -125,7 +132,9 @@ export function CartDrawer() {
                 </div>
 
                 <div className="space-y-2">
-                  <Button className="w-full" size="lg">
+                  <Button 
+                    onClick={() => handleCheckout()}
+                    className="w-full" size="lg">
                     Proceder al Checkout
                   </Button>
 
