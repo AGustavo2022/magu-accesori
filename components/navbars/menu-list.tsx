@@ -28,6 +28,11 @@ const listMenu = [
     id: 4,
     name: 'Contacto',
     href:'/contact'
+  },
+  {
+    id: 5,
+    name: 'Dashboard',
+    href:'/dashboard'
   }
 ]
 
