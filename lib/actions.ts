@@ -1,137 +1,108 @@
-// app/actions.ts
-"use server";
+'use server';
+
+import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { neon } from '@neondatabase/serverless';
-import { Product } from './definitions';
 
 const sqlDb = `${process.env.DATABASE_URL}`
 
 const sql = neon(sqlDb);
 
-export async function getCategorias() {
+const FormSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    shortDescription: z.string(),
+    longDescription: z.string(),
+    price: z.coerce.number(),
+    stock: z.coerce.number(),
+    image_url: z.string(),
+    category: z.string(),
+    subcategory: z.string(),
+    status: z.enum(['pending', 'paid']),
+    discount: z.coerce.number(),
+    date: z.string(),
+});
 
-  const response = await sql`
-   SELECT 
-      id,
-      name,
-      description
-    FROM categories
-    ORDER BY id ASC
-  `;
-  return response;
+
+const CreateProduct = FormSchema.omit({ id: true, date: true });
+
+export async function createProduct(formData: FormData) {
+    const rawFormData = {
+        title: formData.get('title'),
+        shortDescription: formData.get('shortDescription'),
+        longDescription: formData.get('longDescription'),
+        price: formData.get('price'),
+        stock: formData.get('stock'),
+        image_url: formData.get('image_url'),
+        category: formData.get('category'),
+        subcategory: formData.get('subcategory'),
+        status: formData.get('status'), // Nota: Esto será un string, necesitará conversión a booleano
+        discount: formData.get('discount'),
+    };
+// 1. **Conversión de Tipos y Validación (¡Recomendado!)**
+    // Es crucial convertir los valores a los tipos correctos antes de insertarlos.
+    // Por ejemplo, `price`, `stock`, `discount` deben ser números, y `status` un booleano (si aplica).
+
+    const price = Number(rawFormData.price) || 0; // Convertir a número, usar 0 si falla
+    const stock = Number(rawFormData.stock) || 0;
+    const discount = Number(rawFormData.discount) || 0;
+    // Si 'status' es un booleano en la BD:
+    const status = rawFormData.status === 'on' || rawFormData.status === 'true'; // Asumiendo que viene de un checkbox
+
+    // 2. **Fecha de Creación**
+    // Obtenemos la fecha actual para la columna de fecha de creación.
+    const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
+
+    // Para probarlo:
+    console.log(rawFormData);
+
+    // 3. **Consulta SQL Modificada**
+    // Utilizamos los valores ya formateados y la plantilla de cadena (`sql` tag)
+    // para insertar los datos de manera segura, evitando inyección SQL.
+
+    try {
+        await sql`
+            INSERT INTO products2 (
+                title, 
+                short_description, 
+                long_description, 
+                price, 
+                stock, 
+                image_url, 
+                category, 
+                subcategory, 
+                status, 
+                discount, 
+                created_at
+            )
+            VALUES (
+                ${rawFormData.title}, 
+                ${rawFormData.shortDescription}, 
+                ${rawFormData.longDescription}, 
+                ${price}, 
+                ${stock}, 
+                ${rawFormData.image_url}, 
+                ${rawFormData.category}, 
+                ${rawFormData.subcategory}, 
+                ${status}, 
+                ${discount}, 
+                ${created_at}
+            )
+        `;
+// "Olvida los datos que tienes guardados" (la caché) para una página en particular.
+// "Cuando un usuario visite esa ruta la próxima vez, vuelve a buscar los datos" (o en el próximo acceso a datos en el servidor).
+        revalidatePath('/dashboard/add');
+        console.log('Producto creado exitosamente.');
+        
+    } catch (error) {
+        console.error('Error al crear el producto:', error);
+        // Aquí podrías manejar el error, quizás lanzando una nueva excepción.
+        throw new Error('Fallo al crear el producto en la base de datos.');
+    }
+    redirect('/dashboard');
 }
 
 
-export async function getCategorias2() {
-
-  const response = await sql`
-  SELECT 
-      c.id AS category_id,
-      c.name AS category_name,
-      c.description,
-      COALESCE(
-        json_agg(
-          json_build_object(
-            'subcategory_id', s.id,
-            'subcategory_name', s.name
-          )
-        ) FILTER (WHERE s.id IS NOT NULL),
-        '[]'
-      ) AS subcategories
-    FROM categories c
-    LEFT JOIN subcategories s ON s.category_id = c.id
-    GROUP BY c.id
-    ORDER BY c.id;
-  `;
-  return response;
-}
-
-
-
-export async function getProductos() {
-
-  try {
-    // We artificially delay a response for demo purposes.
-    // Don't do this in production :)
-    console.log('Fetching revenue data...');
-    
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  const response = await sql`
-    SELECT 
-      id,
-      name,
-      price,
-      description,
-      image_url,
-      stock,
-      category_id,
-      status
-    FROM products
-    ORDER BY id ASC
-  `;
-   console.log('Data fetch completed after 3 seconds.');
- 
-    return response as Product[];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch revenue data.');
-  }
-}
-
-export async function getProductsBySubcategory(subcategoryId: number): Promise<Product[]> {
-  const result = await sql`
-    SELECT 
-      id,
-      name,
-      description,
-      price,
-      image_url,
-      stock,
-      status,
-      category_id,
-      subcategory_id
-    FROM products
-    WHERE subcategory_id = ${subcategoryId}
-    ORDER BY id ASC
-  `;
-  return result as Product[];
-}
-
-export async function getProductsByCategory(categoryId: number, subcategory_id: number): Promise<Product[]> {
-  const result = await sql`
-    SELECT 
-      id,
-      sku,
-      name,
-      price,
-      description,
-      image_url,
-      stock,
-      subcategory_id,
-      status
-    FROM products
-    WHERE subcategory_id = ${categoryId}
-    ORDER BY id ASC
-  `;
-  return result as Product[];
-}
-
-export async function getProductsByid(product_id: number): Promise<Product[]> {
-
-  const response = await sql`
-    SELECT 
-      id,
-      name,
-      description,
-      price,
-      image_url,
-      stock,
-      status,
-      category_id,
-      subcategory_id
-    FROM products
-    WHERE id = ${product_id}
-    ORDER BY id ASC
-  `;
-  return response as Product[];
-}
+//por 6hs
+// https://ibb.co/0pg4sB2H

@@ -1,6 +1,6 @@
 
 import ProductGrid from '@/components/products/product-grid'
-import { getProductos } from '@/lib/actions'
+import { getProductos } from '@/lib/data'
 import { notFound } from 'next/navigation';
 
 export default async function ProductItemPage() {

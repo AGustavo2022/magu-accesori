@@ -1,5 +1,5 @@
 
-import { getProductos } from "@/lib/actions"
+import { getProductos } from "@/lib/data"
 import ProductCard from "./product-card"
 import { ProductGridProps } from "@/lib/definitions"
 

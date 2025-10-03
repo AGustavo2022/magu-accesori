@@ -36,3 +36,25 @@ export type ProductItemProps = {
 export type ProductCardProps = {
   product: Product;
 }
+
+export type ProductsField = {
+  id: string;
+  title: string;
+};
+
+
+export type ProductFormState = {
+    errors?: {
+        title?: string[];
+        shortDescription?: string[];
+        longDescription?: string[];
+        price?: string[];
+        stock?: string[];
+        image_url?: string[];
+        category?: string[];
+        subcategory?: string[];
+        status?: string[];
+        discount?: string[];
+    };
+    message?: string | null;
+};
