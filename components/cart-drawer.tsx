@@ -69,7 +69,7 @@ export function CartDrawer() {
                             src={item.product.image_url || "/placeholder.svg"}
                             width={400}
                             height={200}
-                            alt={item.product.name}
+                            alt={item.product.title}
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -80,7 +80,7 @@ export function CartDrawer() {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm line-clamp-2 mb-1">{item.product.name}</h4>
+                        <h4 className="font-medium text-sm line-clamp-2 mb-1">{item.product.title}</h4>
                         <p className="text-sm font-semibold text-primary mb-2">{formatPrice(item.product.price)}</p>
 
                         <div className="flex items-center justify-between">
