@@ -23,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             width={500}
             height={300}
             className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
-            alt={product.name}
+            alt={product.title}
           />
           </Suspense>
         </Link>
@@ -32,8 +32,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       <CardContent className="p-3 flex flex-col flex-1">
         <div className="flex flex-col flex-1">
           <div className="flex-1">
-            <h3 className="font-semibold text-base line-clamp-2 mb-1">{product.name}</h3>
-            <p className="text-xs text-gray-600 line-clamp-3">{product.description}</p>
+            <h3 className="font-semibold text-base line-clamp-2 mb-1">{product.title}</h3>
+            <p className="text-xs text-gray-600 line-clamp-3">{product.shortDescription}</p>
           </div>
 
           <div className="mt-auto pt-3">
