@@ -31,7 +31,7 @@ const initialProducts: Product[] = [
     description:
       "Mochila resistente al agua con compartimento acolchado para laptop de hasta 15.6 pulgadas. Incluye múltiples bolsillos organizadores y correas ajustables.",
     price: 89.99,
-    image_url: "/modern-laptop-backpack.jpg",
+    image_url: "",
     stock: 25,
     category: "Accesorios",
     createdAt: new Date("2024-01-15"),
