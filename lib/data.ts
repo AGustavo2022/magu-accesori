@@ -45,8 +45,6 @@ export async function getCategorias2() {
   return response;
 }
 
-
-
 export async function getProductos() {
 
   try {
@@ -77,6 +75,36 @@ export async function getProductos() {
     throw new Error('Failed to fetch revenue data.');
   }
 }
+
+export async function getProductos2() {
+
+  try {
+
+  const response = await sql`
+  SELECT 
+  id,
+  title,
+  short_Description,
+  long_Description,
+  price,
+  stock,
+  image_url,
+  category,
+  subcategory,
+  status,
+  discount,
+  created_at
+    FROM products2
+    ORDER BY id ASC
+  `;
+    console.log(response)
+    return response as Product[];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch revenue data.');
+  }
+}
+
 
 export async function getProductsBySubcategory(subcategoryId: number): Promise<Product[]> {
   const result = await sql`
@@ -136,20 +164,3 @@ export async function getProductsByid(product_id: number): Promise<Product[]> {
   return response as Product[];
 }
 
-// export async function fetchProducts() {
-//   try {
-//     const data = await sql<ProductsField>`
-//       SELECT
-//         id,
-//         title
-//       FROM customers
-//       ORDER BY name ASC
-//     `;
-
-//     //const customers = data.rows;
-//     return data;
-//   } catch (err) {
-//     console.error('Database Error:', err);
-//     throw new Error('Failed to fetch all customers.');
-//   }
-// }

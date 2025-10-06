@@ -10,7 +10,8 @@ export type Product = {
   category: string;
   subcategory: string;
   status: boolean;
-  discount: number
+  discount: number;
+  created_at: Date
 };
 
 export type Subcategory = {
@@ -28,6 +29,16 @@ export type Category = {
 export type ProductGridProps = {
   products: Product[];
 };
+export type ProductArrayProps = {
+  products: number;
+  cardTitle: string;
+  unitSigla?: string
+};
+
+export type ProductTableProps = {
+  products: Product[];
+  onDelete?: (productId: string | number) => void;
+}
 
 export type ProductItemProps = {
   product: Product[];

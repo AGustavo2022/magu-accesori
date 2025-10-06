@@ -4,7 +4,7 @@ import { createContext, useContext, useState, type ReactNode } from "react"
 
 export interface Product {
   id: string
-  name: string
+  title: string
   description: string
   price: number
   image_url: string
@@ -27,7 +27,7 @@ const ProductsContext = createContext<ProductsContextType | undefined>(undefined
 const initialProducts: Product[] = [
   {
     id: "1",
-    name: "Mochila Premium para Laptop",
+    title: "Mochila Premium para Laptop",
     description:
       "Mochila resistente al agua con compartimento acolchado para laptop de hasta 15.6 pulgadas. Incluye múltiples bolsillos organizadores y correas ajustables.",
     price: 89.99,
@@ -38,7 +38,7 @@ const initialProducts: Product[] = [
   },
   {
     id: "2",
-    name: "Auriculares Inalámbricos Pro",
+    title: "Auriculares Inalámbricos Pro",
     description: "Auriculares con cancelación de ruido activa, batería de 30 horas y sonido de alta fidelidad.",
     price: 149.99,
     image_url: "/wireless-headphones.png",
@@ -48,7 +48,7 @@ const initialProducts: Product[] = [
   },
   {
     id: "3",
-    name: "Funda Protectora Ultra",
+    title: "Funda Protectora Ultra",
     description: "Funda resistente a caídas con protección militar y soporte magnético integrado.",
     price: 24.99,
     image_url: "/stylish-smartphone-case.png",

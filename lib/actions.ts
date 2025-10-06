@@ -44,9 +44,9 @@ export async function createProduct(formData: FormData) {
     // Es crucial convertir los valores a los tipos correctos antes de insertarlos.
     // Por ejemplo, `price`, `stock`, `discount` deben ser números, y `status` un booleano (si aplica).
 
-    const price = Number(rawFormData.price) || 0; // Convertir a número, usar 0 si falla
-    const stock = Number(rawFormData.stock) || 0;
-    const discount = Number(rawFormData.discount) || 0;
+    const priceNew = Number(rawFormData.price) || 0; // Convertir a número, usar 0 si falla
+    const stockNew = Number(rawFormData.stock) || 0;
+    const discountNew = Number(rawFormData.discount) || 0;
     // Si 'status' es un booleano en la BD:
     const status = rawFormData.status === 'on' || rawFormData.status === 'true'; // Asumiendo que viene de un checkbox
 
@@ -80,13 +80,13 @@ export async function createProduct(formData: FormData) {
                 ${rawFormData.title}, 
                 ${rawFormData.shortDescription}, 
                 ${rawFormData.longDescription}, 
-                ${price}, 
-                ${stock}, 
+                ${priceNew}, 
+                ${stockNew}, 
                 ${rawFormData.image_url}, 
                 ${rawFormData.category}, 
                 ${rawFormData.subcategory}, 
                 ${status}, 
-                ${discount}, 
+                ${discountNew}, 
                 ${created_at}
             )
         `;
