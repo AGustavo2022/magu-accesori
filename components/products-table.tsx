@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input" // Importación necesaria para el 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BookImage, Pencil, Trash, Search } from "lucide-react" // Importé Search
 import { ProductTableProps } from "@/lib/definitions" // Asumimos que ProductsTableProps ahora tiene 'onDelete'
+import { deleteProduct } from "@/lib/actions"
 
 
-export function ProductsTable({ products, onDelete }: ProductTableProps) {
+export function ProductsTable({ products }: ProductTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
 
@@ -136,7 +137,8 @@ export function ProductsTable({ products, onDelete }: ProductTableProps) {
                         variant="outline"
                         size="sm"
                         // 👈 CAMBIO 3: Llamar a la función onDelete con el ID del producto
-                        onClick={() => console.log(product.id)}
+                        onClick={() => deleteProduct({id:product.id})}
+                        // onClick={()=>console.log(typeof product.id, product.id )}
                         className="text-destructive hover:bg-destructive/10" // Estilo para destacar eliminación
                       >
                         <Trash className="h-4 w-4" /> 

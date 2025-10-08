@@ -37,7 +37,6 @@ export type ProductArrayProps = {
 
 export type ProductTableProps = {
   products: Product[];
-  onDelete?: (productId: string | number) => void;
 }
 
 export type ProductItemProps = {
@@ -69,3 +68,7 @@ export type ProductFormState = {
     };
     message?: string | null;
 };
+
+export type DeleteProductArgs = {
+  id: number;
+}
