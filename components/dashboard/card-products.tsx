@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ProductArrayProps, ProductTableProps } from "@/lib/definitions"
-import { ProductsTable } from "@/components/products-table"
+import { ProductsTable } from "@/components/dashboard/products-table"
 
 function CardProducts({ products, cardTitle, unitSigla }: ProductArrayProps) {
 
@@ -19,7 +19,7 @@ function CardProducts({ products, cardTitle, unitSigla }: ProductArrayProps) {
 }
 
 
-function CardProductsTable({ products, onDelete }: ProductTableProps) {
+function CardProductsTable({ products }: ProductTableProps) {
 
     return (
         <Card>
@@ -27,7 +27,7 @@ function CardProductsTable({ products, onDelete }: ProductTableProps) {
                 <CardTitle>Lista de Productos</CardTitle>
             </CardHeader>
             <CardContent>
-                <ProductsTable products={products} onDelete={onDelete} />
+                <ProductsTable products={products} />
             </CardContent>
         </Card>
     )

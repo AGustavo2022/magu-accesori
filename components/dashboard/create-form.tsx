@@ -1,7 +1,7 @@
 'use client';
 //import { CustomerField } from '@/app/lib/definitions';
 import Link from 'next/link';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { ProductsField } from '@/lib/definitions';
 import { createProduct } from '@/lib/actions';
 

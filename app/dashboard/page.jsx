@@ -1,6 +1,6 @@
 //"use client"
 //import { useProducts } from "@/contexts/products-context"
-import {CardProducts, CardProductsTable} from "@/components/card-products" 
+import {CardProducts, CardProductsTable} from "@/components/dashboard/card-products" 
 import { getProductos2 } from '@/lib/data'
 
 export default async function DashboardPage() {

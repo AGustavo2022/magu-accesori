@@ -1,5 +1,5 @@
 
-import CategorySidebar from "@/components/category-sidebar";
+import CategorySidebar from "@/components/products/category-sidebar";
 import { RevenueChartSkeleton } from "@/components/skeletons";
 import {
   ResizableHandle,

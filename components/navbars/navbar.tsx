@@ -8,7 +8,7 @@ import AcmeLogo from "./acme-logo"
 import Link from "next/link"
 import { MenuList } from "./menu-list"
 import SearchNew from "../search"
-import { CartDrawer } from "../cart-drawer"
+import { CartDrawer } from "./cart-drawer"
 
 
 
