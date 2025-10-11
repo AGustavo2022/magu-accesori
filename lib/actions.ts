@@ -104,6 +104,74 @@ export async function createProduct(formData: FormData) {
     redirect('/dashboard');
 }
 
+export async function updateProduct(id: string, formData: FormData) {
+    // 1. **Obtener y Formatear Datos del Formulario**
+    // (Igual que en la función de creación)
+    const rawFormData = {
+        title: formData.get('title'),
+        shortDescription: formData.get('shortDescription'),
+        longDescription: formData.get('longDescription'),
+        price: formData.get('price'),
+        stock: formData.get('stock'),
+        image_url: formData.get('image_url'),
+        category: formData.get('category'),
+        subcategory: formData.get('subcategory'),
+        status: formData.get('status'), // Nota: Esto será un string
+        discount: formData.get('discount'),
+    };
+
+    // 2. **Conversión y Validación de Tipos**
+    const priceNew = Number(rawFormData.price) || 0;
+    const stockNew = Number(rawFormData.stock) || 0;
+    const discountNew = Number(rawFormData.discount) || 0;
+    // Si 'status' es un booleano en la BD:
+    const status = rawFormData.status === 'on' || rawFormData.status === 'true';
+
+    // 3. **Fecha de Actualización (Opcional, pero recomendado)**
+    // Agregamos una columna para rastrear cuándo fue la última modificación.
+    const updated_at = new Date().toISOString();
+
+    // Para probarlo:
+    console.log(`Actualizando producto ID: ${id}`);
+
+    // 4. **Consulta SQL UPDATE**
+    // Usamos la sentencia UPDATE y la cláusula WHERE para asegurarnos de que
+    // solo se modifique el producto con el ID especificado.
+
+    try {
+        await sql`
+            UPDATE products2
+            SET
+                title = ${rawFormData.title},
+                short_description = ${rawFormData.shortDescription},
+                long_description = ${rawFormData.longDescription},
+                price = ${priceNew},
+                stock = ${stockNew},
+                image_url = ${rawFormData.image_url},
+                category = ${rawFormData.category},
+                subcategory = ${rawFormData.subcategory},
+                status = ${status},
+                discount = ${discountNew},
+                updated_at = ${updated_at} -- Columna para la última actualización
+            WHERE id = ${id}
+        `;
+
+        // 5. **Invalidación de Caché y Redirección**
+        // Invalida la caché de la página de edición y de la lista principal.
+        revalidatePath('/dashboard');
+        revalidatePath(`/dashboard/${id}/edit`);
+
+        console.log(`Producto ID ${id} actualizado exitosamente.`);
+        
+    } catch (error) {
+        console.error(`Error al actualizar el producto ID ${id}:`, error);
+        throw new Error('Fallo al actualizar el producto en la base de datos.');
+    }
+
+    // Redirige a la página principal de productos o al detalle.
+    redirect('/dashboard');
+}
+
 export async function deleteProduct({ id }: DeleteProductArgs) {
 
   if (!id || typeof id !== 'number' || id <= 0) {

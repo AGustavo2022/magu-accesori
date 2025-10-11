@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BookImage, Pencil, Trash, Search } from "lucide-react" // Importé Search
 import { ProductTableProps } from "@/lib/definitions" // Asumimos que ProductsTableProps ahora tiene 'onDelete'
 import { deleteProduct } from "@/lib/actions"
+import Link from "next/link"
 
 
 export function ProductsTable({ products }: ProductTableProps) {
@@ -123,7 +124,7 @@ export function ProductsTable({ products }: ProductTableProps) {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Button
+                      {/* <Button
                         variant="outline"
                         size="sm"
                         onClick={() => {
@@ -131,7 +132,14 @@ export function ProductsTable({ products }: ProductTableProps) {
                         }}
                       >
                         <Pencil className="h-4 w-4" />
-                      </Button>
+                      </Button> */}
+
+                      <Link
+                        href={`/dashboard/${product.id}/edit`}
+                        className="rounded-md border p-2 hover:bg-gray-100"
+                      >
+                        <Pencil className="w-5" />
+                      </Link>
 
                       <Button
                         variant="outline"
