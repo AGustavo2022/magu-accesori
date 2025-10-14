@@ -105,7 +105,15 @@ export function ProductsTable({ products }: ProductTableProps) {
               filteredProducts.map((product) => (
                 <TableRow key={product.id}>
                   {/* ... Celdas de datos ... */}
-                  <TableCell>...</TableCell>
+                  <TableCell>
+                    <Image
+                      src={product.image_url || "/backpack.png"}
+                      width={40}
+                      height={40}
+                      className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
+                      alt={product.title}
+                    />
+                  </TableCell>
                   <TableCell>
                     <div>
                       <div className="font-medium">{product.title}</div>
