@@ -84,8 +84,8 @@ export async function getProductos2() {
   SELECT 
   id,
   title,
-  short_Description,
-  long_Description,
+  short_description,
+  long_description,
   price,
   stock,
   image_url,

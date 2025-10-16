@@ -2,8 +2,8 @@
 export type Product = {
   id: number;
   title: string;
-  shortDescription: string;
-  longDescription: string;
+  short_description: string;
+  long_description: string;
   price: number;
   stock: number;
   image_url: string;

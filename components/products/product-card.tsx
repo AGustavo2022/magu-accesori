@@ -32,8 +32,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       <CardContent className="p-3 flex flex-col flex-1">
         <div className="flex flex-col flex-1">
           <div className="flex-1">
-            <h3 className="font-semibold text-base line-clamp-2 mb-1">{product.title}</h3>
-            <p className="text-xs text-gray-600 line-clamp-3">{product.shortDescription}</p>
+            <h3 className="text-base line-clamp-2 mb-1">{product.title}</h3>
+            <p className="text-xs text-gray-600 line-clamp-3">{product.short_description}</p>
           </div>
 
           <div className="mt-auto pt-3">
