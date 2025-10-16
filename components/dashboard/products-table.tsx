@@ -25,7 +25,7 @@ export function ProductsTable({ products }: ProductTableProps) {
     // 🚨 ATENCIÓN: Se asume que 'title' y 'shortDescription' existen en tu tipo Product.
     const matchesSearch =
       product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.shortDescription.toLowerCase().includes(searchTerm.toLowerCase())
+      product.short_description.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = selectedCategory === "all" || product.category === selectedCategory
 
     return matchesSearch && matchesCategory
@@ -110,14 +110,14 @@ export function ProductsTable({ products }: ProductTableProps) {
                       src={product.image_url || "/backpack.png"}
                       width={40}
                       height={40}
-                      className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
+                      className="w-30 h-15 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
                       alt={product.title}
                     />
                   </TableCell>
                   <TableCell>
                     <div>
                       <div className="font-medium">{product.title}</div>
-                      <div className="text-sm text-muted-foreground line-clamp-1">{product.shortDescription}</div>
+                      <div className="text-sm text-muted-foreground line-clamp-1">{product.short_description}</div>
                     </div>
                   </TableCell>
                   <TableCell>
