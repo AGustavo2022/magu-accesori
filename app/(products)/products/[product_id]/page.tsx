@@ -6,8 +6,9 @@ import { Product } from "@/lib/definitions"
 
 export default async function ProductItemPage(props: { params: Promise<{ product_id: string }> }) {
   
-  const params = await props.params
-  const product = await getProductById(params.product_id)
+  const { product_id } = await props.params;
+
+  const product = await getProductById(product_id)
   if (!product || product.length === 0) {
     notFound()
   }
