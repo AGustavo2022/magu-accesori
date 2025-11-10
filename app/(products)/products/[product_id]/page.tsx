@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { getProductsByid } from "@/lib/data"
+import { getProductById } from "@/lib/data"
 import { ProductDetail } from "@/components/products/product-detail"
 import { Product } from "@/lib/definitions"
 
@@ -7,8 +7,7 @@ import { Product } from "@/lib/definitions"
 export default async function ProductItemPage(props: { params: Promise<{ product_id: string }> }) {
   
   const params = await props.params
-  const numericProductId = Number(params.product_id)
-  const product = await getProductsByid(numericProductId)
+  const product = await getProductById(params.product_id)
   if (!product || product.length === 0) {
     notFound()
   }

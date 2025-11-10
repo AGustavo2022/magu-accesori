@@ -10,6 +10,7 @@ export default async function EditProductPage(props: { params: Promise<{ id: str
 
 
   const productData = await getProductById2(id)
+  console.log(productData)
   if (!productData) {
     // Manejar el caso de que el producto no exista (ej: mostrar 404)
     return <div>Producto no encontrado.</div>;

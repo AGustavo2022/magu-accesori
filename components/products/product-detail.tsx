@@ -92,10 +92,10 @@ export function ProductDetail({ product}: ProductDetailProps) {
             <div className="text-4xl font-bold text-primary mb-4">{formatPrice(product.price)}</div>
           </div>
 
-          {product.shortDescription && (
+          {product.short_description && (
             <div>
               <h3 className="text-lg font-semibold mb-2">Descripción</h3>
-              <p className="text-muted-foreground leading-relaxed">{product.shortDescription}</p>
+              <p className="text-muted-foreground leading-relaxed">{product.short_description}</p>
             </div>
           )}
 

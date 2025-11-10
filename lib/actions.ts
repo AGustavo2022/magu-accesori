@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { neon } from '@neondatabase/serverless';
 import { DeleteProductArgs } from './definitions';
 
+
 const sqlDb = `${process.env.DATABASE_URL}`
 
 const sql = neon(sqlDb);
@@ -29,6 +30,8 @@ const FormSchema = z.object({
 const CreateProduct = FormSchema.omit({ id: true, date: true });
 
 export async function createProduct(formData: FormData) {
+    
+    
     const rawFormData = {
         title: formData.get('title'),
         shortDescription: formData.get('shortDescription'),
@@ -44,7 +47,6 @@ export async function createProduct(formData: FormData) {
 // 1. **Conversión de Tipos y Validación (¡Recomendado!)**
     // Es crucial convertir los valores a los tipos correctos antes de insertarlos.
     // Por ejemplo, `price`, `stock`, `discount` deben ser números, y `status` un booleano (si aplica).
-
     const priceNew = Number(rawFormData.price) || 0; // Convertir a número, usar 0 si falla
     const stockNew = Number(rawFormData.stock) || 0;
     const discountNew = Number(rawFormData.discount) || 0;
