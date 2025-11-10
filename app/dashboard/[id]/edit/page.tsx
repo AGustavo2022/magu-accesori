@@ -1,15 +1,14 @@
 //import { fetchProducts } from "@/lib/data"
 import Breadcrumbs from "@/components/dashboard/breadcrumbs";
 import Form from "@/components/dashboard/edit-form"
-import { getProductById2 } from "@/lib/data";
+import { getProductById } from "@/lib/data";
 
 export default async function EditProductPage(props: { params: Promise<{ id: string }> }) {
-  //const produts = await fetchProducts()
-  const params = await props.params;
-  const id = Number(params.id);
 
+  const { id } = await props.params;
 
-  const productData = await getProductById2(id)
+  const productData = await getProductById(id)
+
   console.log(productData)
   if (!productData) {
     // Manejar el caso de que el producto no exista (ej: mostrar 404)
