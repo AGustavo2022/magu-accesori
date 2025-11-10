@@ -1,10 +1,9 @@
-//"use client"
-//import { useProducts } from "@/contexts/products-context"
+
 import {CardProducts, CardProductsTable} from "@/components/dashboard/card-products" 
 import { getProductos2 } from '@/lib/data'
 
 export default async function DashboardPage() {
-  //const { products, deleteProduct } = useProducts()
+
   const products = await getProductos2()
 
   console.log(products)

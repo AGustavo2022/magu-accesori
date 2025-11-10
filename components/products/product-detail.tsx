@@ -89,7 +89,7 @@ export function ProductDetail({ product}: ProductDetailProps) {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-balance mb-2">{product.title}</h1>
-            <div className="text-4xl font-bold text-primary mb-4">{formatPrice(product.price)}</div>
+            <div className="text-3xl font-bold text-primary mb-4">{formatPrice(product.price)}</div>
           </div>
 
           {product.short_description && (
