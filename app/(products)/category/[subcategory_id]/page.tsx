@@ -1,13 +1,13 @@
 import ProductGrid from "@/components/products/product-grid"
 import { getProductsBySubcategory } from "@/lib/data"
+import { unslugify } from "@/lib/utils"
+
 
 export default async function CategoryPage(props: { params: Promise<{ subcategory_id: string }> }) {
 
-  const params = await props.params
+  const {subcategory_id} = await props.params
 
-  const numericSubcategoryId = Number(params.subcategory_id);
-
-  const products = await getProductsBySubcategory(numericSubcategoryId)
+  const products = await getProductsBySubcategory(unslugify(subcategory_id))
 
   return (
     <div className="container mx-auto px-4 py-8">

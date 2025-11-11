@@ -105,7 +105,7 @@ export async function getProductos2() {
     FROM products2
     ORDER BY id ASC
   `;
-    console.log(response)
+    // console.log(response)
     return response as Product[];
   } catch (error) {
     console.error('Database Error:', error);
@@ -114,25 +114,34 @@ export async function getProductos2() {
 }
 
 
-export async function getProductsBySubcategory(subcategoryId: number): Promise<Product[]> {
+export async function getProductsBySubcategory(subcategoryName: string): Promise<Product[]> {
   const result = await sql`
     SELECT 
-      id,
-      title,
-      short_description,
-      long_description,
-      price,
-      stock,
-      image_url,
-      category,
-      subcategory,
-      status,
-      discount,
-      created_at
-    FROM products2
-    WHERE subcategory = ${subcategoryId}
-    ORDER BY id ASC
+      p.id,
+      p.title,
+      p.short_description,
+      p.long_description,
+      p.price,
+      p.stock,
+      p.image_url,
+      c.name AS category,        
+      sc.name AS subcategory,     
+      p.status,
+      p.discount,
+      p.created_at
+    FROM products2 p
+    
+    -- Unir con la tabla de categorías para obtener el nombre
+    INNER JOIN categories c ON p.category = c.id
+    
+    -- Unir con la tabla de subcategorías (sc)
+    INNER JOIN subcategories sc ON p.subcategory = sc.id
+    
+    -- FILTRO: Usamos el nombre de la subcategoría de la tabla 'sc' (subcategories)
+    WHERE sc.name = ${subcategoryName} 
+    ORDER BY p.id ASC
   `;
+
   return result as Product[];
 }
 

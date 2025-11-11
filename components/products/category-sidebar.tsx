@@ -8,10 +8,18 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Subcategory } from "@/lib/definitions"
+import { createSlug } from "@/lib/utils"
+
+
+
 
 export default async function CategorySidebar() {
 
   const productCategories = await getCategorias2()
+
+
+  // console.log(JSON.stringify(productCategories, null, 2))
+
 
   return (
     <Accordion type="single" collapsible className="w-full">
@@ -25,7 +33,7 @@ export default async function CategorySidebar() {
             {cat.subcategories.map((sub: Subcategory) => (
               <Link
                 key={sub.subcategory_id}
-                href={`/category/${sub.subcategory_id}`}
+                href={`/category/${createSlug(sub.subcategory_name)}`}
                 className="text-gray-700 hover:text-blue-600 text-sm"
               >
                 {sub.subcategory_name}

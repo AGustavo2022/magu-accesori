@@ -16,7 +16,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[380px] p-0">
       <div className="relative">
-        <Link href={`/products/${product.id}`}>
+        <Link href={`/product/${product.id}`}>
         <Suspense fallback={<InvoiceSkeleton />}>
           <Image 
             src={product.image_url || "/backpack.png"}

@@ -8,6 +8,7 @@ import { ShoppingCart, Heart, Share2, Package, Calendar, Tag } from "lucide-reac
 import { Product } from "@/lib/definitions"
 import Image from "next/image"
 import { useCart } from "@/contexts/cart-context"
+import Link from "next/link"
 
 interface ProductDetailProps {
   product: Product
@@ -17,7 +18,9 @@ interface ProductDetailProps {
 
 
 export function ProductDetail({ product}: ProductDetailProps) {
-
+  
+  console.log(product)
+  
   const { addItem } = useCart(); 
 
   const formatPrice = (price: number) => {
@@ -74,9 +77,9 @@ export function ProductDetail({ product}: ProductDetailProps) {
               {/* Status badges */}
               <div className="absolute top-4 right-4 flex flex-col gap-2">
                 {isInactive && <Badge variant="destructive">Producto Inactivo</Badge>}
-                {isOutOfStock && <Badge variant="secondary">Agotado</Badge>}
+                {isOutOfStock && <Badge variant="secondary" className="bg-red-100 border border-red-300 rounded-lg">Agotado</Badge>}
                 {isLowStock && (
-                  <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                  <Badge variant="outline" className="bg-yellow-100 text-yellow-700 border-yellow-300">
                     Últimas unidades
                   </Badge>
                 )}
@@ -89,12 +92,19 @@ export function ProductDetail({ product}: ProductDetailProps) {
         <div className="space-y-6">
           <div>
 
-                {/* Terminar de redondear la idea */}
-              <div className="container mx-auto py-3">
-                <div className="text-sm text-muted-foreground">
-                  {product.category} / {product.subcategory}
-                </div>
+            {/* Terminar de redondear la idea */}
+
+            <Link href={`/productos/${product.category.toLowerCase()}`}>
+              <span className="cursor-pointer hover:underline">
+                {product.category}
+              </span>
+            </Link>
+
+            <div className="container mx-auto py-3">
+              <div className="text-sm text-muted-foreground">
+                {product.category} / {product.subcategory}
               </div>
+            </div>
 
 
             <h1 className="text-2xl font-bold text-balance mb-2">{product.title}</h1>
@@ -164,18 +174,18 @@ export function ProductDetail({ product}: ProductDetailProps) {
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 {isOutOfStock ? "Agotado" : isInactive ? "No Disponible" : "Añadir al Carrito"}
               </Button>
-
+{/* 
               <Button size="lg" variant="outline" onClick={() => handleAddToWishlist?.(product)}>
-              {/* <Button size="lg" variant="outline"> */}
-                <Heart className="w-5 h-5" />
-              </Button>
-
               <Button size="lg" variant="outline">
+                <Heart className="w-5 h-5" />
+              </Button> */}
+
+              {/* <Button size="lg" variant="outline">
                 <Share2 className="w-5 h-5" />
-              </Button>
+              </Button> */}
             </div>
 
-            {isLowStock && !isOutOfStock && (
+            {/* {isLowStock && !isOutOfStock && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                 <p className="text-sm text-yellow-800">
                   <strong>¡Últimas unidades!</strong> Solo quedan {product.stock} productos en stock.
@@ -189,7 +199,7 @@ export function ProductDetail({ product}: ProductDetailProps) {
                   <strong>Producto agotado.</strong> Este producto no está disponible actualmente.
                 </p>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

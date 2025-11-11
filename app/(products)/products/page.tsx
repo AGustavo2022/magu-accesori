@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 
 export default async function ProductItemPage() {
   const product = await getProductos2()
-  console.log(product)
+  // console.log(product)
   if (!product || product.length === 0) {
     notFound()
   }

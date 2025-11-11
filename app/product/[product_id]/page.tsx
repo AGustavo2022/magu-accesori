@@ -6,6 +6,8 @@ export default async function ProductItemPage(props: { params: Promise<{ product
   
   const { product_id } = await props.params;
 
+  console.log(product_id)
+
   const product = await getProductById(product_id)
   if (!product || product.length === 0) {
     notFound()
