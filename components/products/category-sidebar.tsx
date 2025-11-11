@@ -1,4 +1,4 @@
-import { getCategorias2 } from "@/lib/data"
+import { getCategoryAll } from "@/lib/data"
 import Link from "next/link"
 
 import {
@@ -15,7 +15,7 @@ import { createSlug } from "@/lib/utils"
 
 export default async function CategorySidebar() {
 
-  const productCategories = await getCategorias2()
+  const productCategories = await getCategoryAll()
 
 
   // console.log(JSON.stringify(productCategories, null, 2))

@@ -1,10 +1,10 @@
 
 import {CardProducts, CardProductsTable} from "@/components/dashboard/card-products" 
-import { getProductos2 } from '@/lib/data'
+import { getProductsAll } from '@/lib/data'
 
 export default async function DashboardPage() {
 
-  const products = await getProductos2()
+  const products = await getProductsAll()
 
   console.log(products)
 

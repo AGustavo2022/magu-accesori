@@ -1,10 +1,10 @@
 
 import ProductGrid from '@/components/products/product-grid'
-import { getProductos2 } from '@/lib/data'
+import { getProductsAll } from '@/lib/data'
 import { notFound } from 'next/navigation';
 
 export default async function ProductItemPage() {
-  const product = await getProductos2()
+  const product = await getProductsAll()
   // console.log(product)
   if (!product || product.length === 0) {
     notFound()

@@ -7,21 +7,8 @@ const sqlDb = `${process.env.DATABASE_URL}`
 
 const sql = neon(sqlDb);
 
-export async function getCategorias() {
 
-  const response = await sql`
-   SELECT 
-      id,
-      name,
-      description
-    FROM categories
-    ORDER BY id ASC
-  `;
-  return response;
-}
-
-
-export async function getCategorias2() {
+export async function getCategoryAll() {
     
     try {
         const response = await sql`
@@ -53,38 +40,7 @@ export async function getCategorias2() {
     }
 }
 
-export async function getProductos() {
-
-  try {
-    // We artificially delay a response for demo purposes.
-    // Don't do this in production :)
-    console.log('Fetching revenue data...');
-    
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  const response = await sql`
-    SELECT 
-      id,
-      name,
-      price,
-      description,
-      image_url,
-      stock,
-      category_id,
-      status
-    FROM products
-    ORDER BY id ASC
-  `;
-   console.log('Data fetch completed after 3 seconds.');
- 
-    return response as Product[];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch revenue data.');
-  }
-}
-
-export async function getProductos2() {
+export async function getProductsAll() {
 
   try {
 
@@ -113,7 +69,6 @@ export async function getProductos2() {
   }
 }
 
-
 export async function getProductsBySubcategory(subcategoryName: string): Promise<Product[]> {
   const result = await sql`
     SELECT 
@@ -131,36 +86,14 @@ export async function getProductsBySubcategory(subcategoryName: string): Promise
       p.created_at
     FROM products2 p
     
-    -- Unir con la tabla de categorías para obtener el nombre
     INNER JOIN categories c ON p.category = c.id
     
-    -- Unir con la tabla de subcategorías (sc)
     INNER JOIN subcategories sc ON p.subcategory = sc.id
     
-    -- FILTRO: Usamos el nombre de la subcategoría de la tabla 'sc' (subcategories)
     WHERE sc.name = ${subcategoryName} 
     ORDER BY p.id ASC
   `;
 
-  return result as Product[];
-}
-
-export async function getProductsByCategory(categoryId: number, subcategory_id: number): Promise<Product[]> {
-  const result = await sql`
-    SELECT 
-      id,
-      sku,
-      name,
-      price,
-      description,
-      image_url,
-      stock,
-      subcategory_id,
-      status
-    FROM products
-    WHERE subcategory_id = ${categoryId}
-    ORDER BY id ASC
-  `;
   return result as Product[];
 }
 
