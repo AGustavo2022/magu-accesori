@@ -22,27 +22,35 @@ export async function getCategorias() {
 
 
 export async function getCategorias2() {
+    
+    try {
+        const response = await sql`
+            SELECT 
+                c.id AS category_id,
+                c.name AS category_name,
+                c.description,
+                COALESCE(
+                    json_agg(
+                        json_build_object(
+                            'subcategory_id', s.id,
+                            'subcategory_name', s.name
+                        )
+                    ) FILTER (WHERE s.id IS NOT NULL),
+                    '[]'
+                ) AS subcategories
+            FROM categories c
+            LEFT JOIN subcategories s ON s.category_id = c.id
+            GROUP BY c.id, c.name, c.description
+            ORDER BY c.id;
+        `;
 
-  const response = await sql`
-  SELECT 
-      c.id AS category_id,
-      c.name AS category_name,
-      c.description,
-      COALESCE(
-        json_agg(
-          json_build_object(
-            'subcategory_id', s.id,
-            'subcategory_name', s.name
-          )
-        ) FILTER (WHERE s.id IS NOT NULL),
-        '[]'
-      ) AS subcategories
-    FROM categories c
-    LEFT JOIN subcategories s ON s.category_id = c.id
-    GROUP BY c.id
-    ORDER BY c.id;
-  `;
-  return response;
+        return response; 
+
+    } catch (error) {
+        // Manejo de errores conciso
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch categories with subcategories.');
+    }
 }
 
 export async function getProductos() {
@@ -110,16 +118,19 @@ export async function getProductsBySubcategory(subcategoryId: number): Promise<P
   const result = await sql`
     SELECT 
       id,
-      name,
-      description,
+      title,
+      short_description,
+      long_description,
       price,
-      image_url,
       stock,
+      image_url,
+      category,
+      subcategory,
       status,
-      category_id,
-      subcategory_id
-    FROM products
-    WHERE subcategory_id = ${subcategoryId}
+      discount,
+      created_at
+    FROM products2
+    WHERE subcategory = ${subcategoryId}
     ORDER BY id ASC
   `;
   return result as Product[];

@@ -1,5 +1,4 @@
 
-import Breadcrumbs from "@/components/breadcrumbs";
 import Form from "@/components/dashboard/edit-form"
 import { getProductById } from "@/lib/data";
 
@@ -17,10 +16,6 @@ export default async function EditProductPage(props: { params: Promise<{ id: str
 
   return (
     <main>
-      {/* <h1>Editar: {product.title}</h1> */}
-
-      <Breadcrumbs/>
-
       <Form product={product} />
     </main>
   );
