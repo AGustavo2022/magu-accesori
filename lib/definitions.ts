@@ -70,5 +70,5 @@ export type ProductFormState = {
 };
 
 export type DeleteProductArgs = {
-  id: number;
+  id: string;
 }
