@@ -1,5 +1,5 @@
-//import { fetchProducts } from "@/lib/data"
-import Breadcrumbs from "@/components/dashboard/breadcrumbs";
+
+import Breadcrumbs from "@/components/breadcrumbs";
 import Form from "@/components/dashboard/edit-form"
 import { getProductById } from "@/lib/data";
 
@@ -7,30 +7,21 @@ export default async function EditProductPage(props: { params: Promise<{ id: str
 
   const { id } = await props.params;
 
-  const productData = await getProductById(id)
+  const productData = await getProductById(id);
 
-  console.log(productData)
-  if (!productData) {
-    // Manejar el caso de que el producto no exista (ej: mostrar 404)
+  if (!productData || productData.length === 0) {
     return <div>Producto no encontrado.</div>;
   }
 
   const product = productData[0];
 
-  console.log(productData)
   return (
     <main>
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: 'Productos', href: '/dashboard/products' }, // Asumo que esta es la lista de productos
-          {
-            label: `Editar: ${product.title}`, // Usamos el título del producto
-            href: `/dashboard/products/${id}/edit`, // La ruta actual
-            active: true,
-          },
-        ]}
-      />
+      {/* <h1>Editar: {product.title}</h1> */}
+
+      <Breadcrumbs/>
+
       <Form product={product} />
     </main>
-  )
+  );
 }

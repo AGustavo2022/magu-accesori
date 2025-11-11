@@ -144,26 +144,29 @@ export async function getProductsByCategory(categoryId: number, subcategory_id: 
   return result as Product[];
 }
 
-
 export async function getProductById(product_id: string): Promise<Product []> {
     
     try {
         const response = await sql`
             SELECT 
-                id,
-                title,
-                short_Description, 
-                long_Description,
-                price,
-                stock,
-                image_url,
-                category,
-                subcategory,
-                status,
-                discount,
-                created_at
-            FROM products2 
-            WHERE id = ${product_id}
+                p.id,
+                p.title,
+                p.short_Description, 
+                p.long_Description,
+                p.price,
+                p.stock,
+                p.image_url,
+                c.name AS category,       
+                sc.name AS subcategory,   
+                p.status,
+                p.discount,
+                p.created_at
+            FROM products2 p
+            
+            INNER JOIN categories c ON p.category = c.id
+            INNER JOIN subcategories sc ON p.subcategory = sc.id
+
+            WHERE p.id = ${product_id}::uuid 
         `;
 
         return response as Product[] ; 

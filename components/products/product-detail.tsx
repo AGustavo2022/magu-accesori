@@ -21,9 +21,9 @@ export function ProductDetail({ product}: ProductDetailProps) {
   const { addItem } = useCart(); 
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("es-ES", {
+    return new Intl.NumberFormat("es-AR", {
       style: "currency",
-      currency: "ARG",
+      currency:"ARS",
     }).format(price)
   }
 
@@ -88,7 +88,16 @@ export function ProductDetail({ product}: ProductDetailProps) {
         {/* Product Information */}
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-balance mb-2">{product.title}</h1>
+
+                {/* Terminar de redondear la idea */}
+              <div className="container mx-auto py-3">
+                <div className="text-sm text-muted-foreground">
+                  {product.category} / {product.subcategory}
+                </div>
+              </div>
+
+
+            <h1 className="text-2xl font-bold text-balance mb-2">{product.title}</h1>
             <div className="text-3xl font-bold text-primary mb-4">{formatPrice(product.price)}</div>
           </div>
 
