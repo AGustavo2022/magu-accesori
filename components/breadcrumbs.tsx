@@ -15,7 +15,7 @@ export default function Breadcrumbs({
   return (
 
     <nav aria-label="Breadcrumb" className="mb-2 block">
-      <ol className={clsx('flex text-xl md:text-2xl')}>
+      <ol className={clsx('flex text-sm md:text-base')}>
         {breadcrumbs.map((breadcrumb, index) => (
           <li
             key={breadcrumb.href}

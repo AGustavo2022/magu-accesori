@@ -105,19 +105,6 @@ export function ProductDetail({ product}: ProductDetailProps) {
               ]}
             />
 
-            <Link href={`/products/${product.category.toLowerCase()}`}>
-              <span className="cursor-pointer hover:underline">
-                {product.category}
-              </span>
-            </Link>
-
-            <div className="container mx-auto py-3">
-              <div className="text-sm text-muted-foreground">
-                {product.category} / {product.subcategory}
-              </div>
-            </div>
-
-
             <h1 className="text-2xl font-bold text-balance mb-2">{product.title}</h1>
             <div className="text-3xl font-bold text-primary mb-4">{formatPrice(product.price)}</div>
           </div>
