@@ -31,16 +31,24 @@ export default async function CategorySidebar() {
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-2 pl-4">
             {cat.subcategories.map((sub: Subcategory) => (
+
               <Link
                 key={sub.subcategory_id}
-                href={`/category/${createSlug(sub.subcategory_name)}`}
+                href={`/category/subcategory/${createSlug(sub.subcategory_name)}`}
                 className="text-gray-700 hover:text-blue-600 text-sm"
               >
                 {sub.subcategory_name}
               </Link>
-
             ))
             }
+
+            <Link
+              href={`/category/${createSlug(cat.category_name)}`} // Asumiendo que esta es la ruta para la categoría completa
+              className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+            >
+              Ver todos
+            </Link>
+
           </AccordionContent>
         </AccordionItem>
       ))}

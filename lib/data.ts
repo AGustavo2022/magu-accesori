@@ -69,6 +69,34 @@ export async function getProductsAll() {
   }
 }
 
+export async function getProductsByCategory(categoryName: string): Promise<Product[]> {
+  const result = await sql`
+    SELECT 
+      p.id,
+      p.title,
+      p.short_description,
+      p.long_description,
+      p.price,
+      p.stock,
+      p.image_url,
+      c.name AS category,        
+      sc.name AS subcategory,     
+      p.status,
+      p.discount,
+      p.created_at
+    FROM products2 p
+    
+    INNER JOIN categories c ON p.category = c.id
+    
+    INNER JOIN subcategories sc ON p.subcategory = sc.id
+    
+    WHERE c.name = ${categoryName} 
+    ORDER BY p.id ASC
+  `;
+
+  return result as Product[];
+}
+
 export async function getProductsBySubcategory(subcategoryName: string): Promise<Product[]> {
   const result = await sql`
     SELECT 

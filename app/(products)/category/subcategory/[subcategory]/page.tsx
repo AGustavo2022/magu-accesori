@@ -3,11 +3,11 @@ import { getProductsBySubcategory } from "@/lib/data"
 import { unslugify } from "@/lib/utils"
 
 
-export default async function CategoryPage(props: { params: Promise<{ subcategory_id: string }> }) {
+export default async function CategoryPage(props: { params: Promise<{ subcategory: string }> }) {
 
-  const {subcategory_id} = await props.params
+  const {subcategory} = await props.params
 
-  const products = await getProductsBySubcategory(unslugify(subcategory_id))
+  const products = await getProductsBySubcategory(unslugify(subcategory))
 
   return (
     <div className="container mx-auto px-4 py-8">

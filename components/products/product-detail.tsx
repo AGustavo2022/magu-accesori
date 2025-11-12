@@ -99,7 +99,7 @@ export function ProductDetail({ product}: ProductDetailProps) {
                 { label: `${product.category}`, href: `/category/${product.category}` },
                 {
                   label: `${product.subcategory}`,
-                  href: `/category/${createSlug (product.subcategory)}`,
+                  href: `/category/subcategory/${createSlug (product.subcategory)}`,
                   active: true,
                 },
               ]}
