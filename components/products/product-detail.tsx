@@ -9,6 +9,8 @@ import { Product } from "@/lib/definitions"
 import Image from "next/image"
 import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
+import Breadcrumbs from "../breadcrumbs"
+import { createSlug } from "@/lib/utils"
 
 interface ProductDetailProps {
   product: Product
@@ -42,11 +44,6 @@ export function ProductDetail({ product}: ProductDetailProps) {
       addItem(product)
     console.log("Añadiendo al carrito:", product.title)
     // Aquí implementarías la lógica del carrito
-  }
-
-  const handleAddToWishlist = (product: Product) => {
-    console.log("Añadiendo a favoritos:", product.title)
-    // Aquí implementarías la lógica de favoritos
   }
 
   const isOutOfStock = product.stock === 0
@@ -94,7 +91,21 @@ export function ProductDetail({ product}: ProductDetailProps) {
 
             {/* Terminar de redondear la idea */}
 
-            <Link href={`/productos/${product.category.toLowerCase()}`}>
+            <Breadcrumbs
+              
+              breadcrumbs={[
+                { label: 'Inicio', href: '/' },
+                { label: 'Productos', href: '/products' },
+                { label: `${product.category}`, href: `/category/${product.category}` },
+                {
+                  label: `${product.subcategory}`,
+                  href: `/category/${createSlug (product.subcategory)}`,
+                  active: true,
+                },
+              ]}
+            />
+
+            <Link href={`/products/${product.category.toLowerCase()}`}>
               <span className="cursor-pointer hover:underline">
                 {product.category}
               </span>
