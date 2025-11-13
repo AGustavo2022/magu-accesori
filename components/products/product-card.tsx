@@ -15,6 +15,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
   return (
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[380px] p-0">
+      
+      {/* 1. IMAGEN (Parte superior) */}
       <div className="relative">
         <Link href={`/product/${product.id}`}>
         <Suspense fallback={<InvoiceSkeleton />}>
@@ -29,14 +31,22 @@ export default function ProductCard({ product }: ProductCardProps) {
         </Link>
       </div>
 
-      <CardContent className="p-3 flex flex-col flex-1">
+      {/* 2. CONTENIDO PRINCIPAL (Ocupa el resto del espacio vertical) */}
+      <CardContent className="p-3 flex flex-col flex-1"> 
+        
+        {/* Este contenedor necesita ser flex y ocupar el espacio disponible */}
         <div className="flex flex-col flex-1">
-          <div className="flex-1">
-            <h3 className="text-base line-clamp-2 mb-1">{product.title}</h3>
-            <p className="text-xs text-gray-600 line-clamp-3">{product.short_description}</p>
+          
+          {/* 3. TEXTO (Título y descripción - flex-1 para empujar hacia abajo) */}
+          <div className="flex-1"> 
+            <Link href={`/product/${product.id}`}>
+              <h3 className="text-base line-clamp-2 mb-1 font-semibold hover:text-blue-600 transition-colors">{product.title}</h3>
+            </Link>
+            <p className="text-xs text-gray-600 line-clamp-2">{product.short_description}</p>
           </div>
 
-          <div className="mt-auto pt-3">
+          {/* 4. PRECIO Y BOTÓN (Parte inferior - fijo) */}
+          <div className="pt-3"> {/* Eliminé mt-auto, que ya no es necesario si el div superior tiene flex-1 */}
             <div className="flex items-center mb-2">
               <span className="text-xl font-bold text-green-600">${product.price}</span>
             </div>
