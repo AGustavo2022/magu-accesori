@@ -1,5 +1,6 @@
 
-import {CardProducts, CardProductsTable} from "@/components/dashboard/card-products" 
+import { MetricCard } from "@/components/dashboard/metric-card" 
+import {ProductTableCard } from "@/components/dashboard/products-table-card"
 import { getProductsAll } from '@/lib/data'
 import { Plus } from "lucide-react"
 import Link from "next/link"
@@ -35,23 +36,21 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <CardProducts
+        <MetricCard
           products={products.length}
           cardTitle="Cantidad de Productos"
         />
-        <CardProducts
+        <MetricCard
           products={products.reduce((sum, product) => sum + product.stock, 0)}
           cardTitle="Stock Total"
         />
-        <CardProducts
+        <MetricCard
           products={products.reduce((sum, product) => sum + product.price * product.stock, 0).toFixed(2)}
           cardTitle="Valor del Inventario"
           unitSigla="$"
         />
       </div>
-        <CardProductsTable
-          products={products}
-        />
+        <ProductTableCard products={products} />
     </div>
   )
 }
