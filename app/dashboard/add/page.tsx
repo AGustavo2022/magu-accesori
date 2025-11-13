@@ -1,12 +1,13 @@
 //import { fetchProducts } from "@/lib/data"
 import Form from "@/components/dashboard/create-form"
-import { SquareChartGantt } from "lucide-react"
+import { FileChartColumn } from "lucide-react"
 import Link from "next/link"
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button"
 
 export default async function AddProductPage() {
   //const produts = await fetchProducts()
@@ -19,14 +20,24 @@ export default async function AddProductPage() {
           <p className="text-muted-foreground">Formulario para el ingreso de nuevos productos</p>
         </div>
         <div>
-          <HoverCard>
-            <HoverCardTrigger>
-              <Link href='/dashboard'><SquareChartGantt /></Link>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              Ir a Productos
-            </HoverCardContent>
-          </HoverCard>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                asChild
+                variant="outline"
+                className="w-16 h-16 p-3 rounded-full">
+                <Link
+                  href={'/dashboard'}
+                  className=" hover:bg-gray-100"
+                >
+                  <FileChartColumn size={24} />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Ir Producto</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
       <Form />

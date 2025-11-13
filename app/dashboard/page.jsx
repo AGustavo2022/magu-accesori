@@ -5,10 +5,12 @@ import { getProductsAll } from '@/lib/data'
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button"
+
 
 export default async function DashboardPage() {
 
@@ -24,14 +26,24 @@ export default async function DashboardPage() {
           <p className="text-muted-foreground">Gestiona tu inventario de productos</p>
         </div>
         <div>
-          <HoverCard>
-            <HoverCardTrigger>
-              <Link href='/dashboard/add'><Plus /></Link>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              Agregar Producto
-            </HoverCardContent>
-          </HoverCard>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                asChild
+                variant="outline"
+                className="w-16 h-16 p-3 rounded-full">
+                <Link
+                  href={'/dashboard/add'}
+                  className=" hover:bg-gray-100"
+                >
+                  <Plus size={24}/>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Agregar Producto</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
 
@@ -50,7 +62,7 @@ export default async function DashboardPage() {
           unitSigla="$"
         />
       </div>
-        <ProductTableCard products={products} />
+      <ProductTableCard products={products} />
     </div>
   )
 }

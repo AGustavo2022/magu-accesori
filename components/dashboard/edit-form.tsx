@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { ProductsField } from '@/lib/definitions';
-import { createProduct, updateProduct } from '@/lib/actions';
+import {  updateProduct } from '@/lib/actions';
 
 interface ProductForm {
     id: string;
@@ -24,7 +24,7 @@ export default function EditProductForm({ product }: { product: ProductForm }) {
   // Nota: El prop 'customers' se mantiene en la firma por consistencia con tu código,
   // pero ya no se usa.
   const updateProductWithId = updateProduct.bind(null, product.id);  
-    console.log(product)
+    //console.log(product)
   return (
     <form action={updateProductWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
