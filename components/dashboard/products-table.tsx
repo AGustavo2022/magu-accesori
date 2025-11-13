@@ -11,18 +11,22 @@ import { ProductTableProps } from "@/lib/definitions" // Asumimos que ProductsTa
 import { deleteProduct } from "@/lib/actions"
 import Link from "next/link"
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 
 export function ProductsTable({ products }: ProductTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
 
-  // Get unique categories
-  // Usamos el encadenamiento opcional para evitar errores si 'products' es temporalmente undefined, aunque lo inicializamos vacío en el padre.
+  //console.log(products)
+
   const categories = Array.from(new Set(products.map((p) => p.category)))
 
-  // Filter products based on search and category
   const filteredProducts = products.filter((product) => {
-    // 🚨 ATENCIÓN: Se asume que 'title' y 'shortDescription' existen en tu tipo Product.
     const matchesSearch =
       product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.short_description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -43,13 +47,11 @@ export function ProductsTable({ products }: ProductTableProps) {
 
   return (
     <div className="space-y-4">
-      {/* Search and Filter Controls */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          {/* 👈 CAMBIO 2: Implementación del buscador de producto */}
           <Input
             type="text"
-            placeholder="Buscar por título o descripción..."
+            placeholder="Buscar por Producto o Descripción..."
             className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -70,29 +72,27 @@ export function ProductsTable({ products }: ProductTableProps) {
         </select>
       </div>
 
-      {/* Results count */}
       <div className="text-sm text-muted-foreground">
-        Mostrando **{filteredProducts.length}** de **{products.length}** productos
+        Mostrando {filteredProducts.length} de {products.length} productos
       </div>
 
-      {/* Products Table */}
       <div className="border rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
             {/* ... Encabezados de tabla ... */}
-            <TableRow>
-              <TableHead className="w-16">Imagen</TableHead>
-              <TableHead>Producto</TableHead>
-              <TableHead>Categoría</TableHead>
-              <TableHead>Precio</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead>Fecha</TableHead>
-              <TableHead className="text-right">Acciones</TableHead>
+            <TableRow >
+              <TableHead className="text-center w-24">Imagen</TableHead>
+              <TableHead className="text-center">Producto</TableHead>
+              <TableHead className="text-center">Categoría</TableHead>
+              <TableHead className="text-center">Precio</TableHead>
+              <TableHead className="text-center">Stock</TableHead>
+              <TableHead className="text-center">Estado</TableHead>
+              <TableHead className="text-center">Fecha</TableHead>
+              <TableHead className="text-center">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* ... Comprobación de no hay resultados ... */}
+
             {filteredProducts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
@@ -120,7 +120,7 @@ export function ProductsTable({ products }: ProductTableProps) {
                       <div className="text-sm text-muted-foreground line-clamp-1">{product.short_description}</div>
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-center">
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
                   <TableCell className="font-medium">${Number(product.price).toFixed(2)}</TableCell>
@@ -132,23 +132,27 @@ export function ProductsTable({ products }: ProductTableProps) {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      {/* <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          console.log("[v0] Edit product:", product.id)
-                        }}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button> */}
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Button
+                            asChild
+                            variant="outline"
+                            size="sm">
+                            <Link
+                              href={`/dashboard/${product.id}/edit`}
+                              className=" hover:bg-gray-100"
+                            >
+                              <Pencil size={16} />
+                            </Link>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Editar Producto</p>
+                        </TooltipContent>
+                      </Tooltip>
 
-                      <Link
-                        href={`/dashboard/${product.id}/edit`}
-                        className="rounded-md border p-2 hover:bg-gray-100"
-                      >
-                        <Pencil className="w-5" />
-                      </Link>
-
+                      <Tooltip>
+                        <TooltipTrigger>
                       <Button
                         variant="outline"
                         size="sm"
@@ -157,8 +161,13 @@ export function ProductsTable({ products }: ProductTableProps) {
                         // onClick={()=>console.log(typeof product.id, product.id )}
                         className="text-destructive hover:bg-destructive/10" // Estilo para destacar eliminación
                       >
-                        <Trash className="h-4 w-4" /> 
+                        <Trash size={16} /> 
                       </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Eliminar Producto</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </TableCell>
                 </TableRow>

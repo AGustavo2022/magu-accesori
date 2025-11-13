@@ -41,27 +41,26 @@ export async function getCategoryAll() {
 }
 
 export async function getProductsAll() {
-
   try {
-
-  const response = await sql`
-  SELECT 
-  id,
-  title,
-  short_description,
-  long_description,
-  price,
-  stock,
-  image_url,
-  category,
-  subcategory,
-  status,
-  discount,
-  created_at
-    FROM products2
-    ORDER BY id ASC
-  `;
-    // console.log(response)
+    const response = await sql`
+      SELECT 
+        p.id, -- Puedes usar p.id para mayor claridad, aunque no es estrictamente necesario aquí
+        p.title,
+        p.short_description,
+        p.long_description,
+        p.price,
+        p.stock,
+        p.image_url,
+        c.name AS category, 
+        sc.name AS subcategory, 
+        p.status,
+        p.discount,
+        p.created_at
+      FROM products2 p
+      INNER JOIN categories c ON p.category = c.id
+      INNER JOIN subcategories sc ON p.subcategory = sc.id
+      ORDER BY p.id ASC
+    `;
     return response as Product[];
   } catch (error) {
     console.error('Database Error:', error);
