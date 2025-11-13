@@ -67,7 +67,7 @@ export default function DashboardLayout({children,}: {children: React.ReactNode}
 
         <div className="flex">
           {/* Sidebar */}
-          <nav className="w-64 border-r border-border bg-card">
+          {/* <nav className="w-64 border-r border-border bg-card">
             <div className="p-4">
               <ul className="space-y-2">
                 {navigation.map((item) => {
@@ -91,7 +91,7 @@ export default function DashboardLayout({children,}: {children: React.ReactNode}
                 })}
               </ul>
             </div>
-          </nav>
+          </nav> */}
 
           {/* Main content */}
           <main className="flex-1 p-6">{children}</main>
