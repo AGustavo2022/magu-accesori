@@ -41,7 +41,7 @@ export async function createProduct(formData: FormData) {
         image_url: formData.get('image_url'),
         category: formData.get('category'),
         subcategory: formData.get('subcategory'),
-        status: formData.get('status'), // Nota: Esto será un string, necesitará conversión a booleano
+        //status: formData.get('status'), // Nota: Esto será un string, necesitará conversión a booleano
         discount: formData.get('discount'),
     };
 // 1. **Conversión de Tipos y Validación (¡Recomendado!)**
@@ -51,7 +51,7 @@ export async function createProduct(formData: FormData) {
     const stockNew = Number(rawFormData.stock) || 0;
     const discountNew = Number(rawFormData.discount) || 0;
     // Si 'status' es un booleano en la BD:
-    const status = rawFormData.status === 'on' || rawFormData.status === 'true'; // Asumiendo que viene de un checkbox
+    const status = 'true'; // Asumiendo que viene de un checkbox
 
     // 2. **Fecha de Creación**
     // Obtenemos la fecha actual para la columna de fecha de creación.
@@ -85,7 +85,7 @@ export async function createProduct(formData: FormData) {
                 ${rawFormData.longDescription}, 
                 ${priceNew}, 
                 ${stockNew}, 
-                ${rawFormData.image_url}, 
+                ${rawFormData.image_url},                
                 ${rawFormData.category}, 
                 ${rawFormData.subcategory}, 
                 ${status}, 

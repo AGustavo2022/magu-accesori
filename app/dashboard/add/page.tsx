@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { getCategoryAll } from "@/lib/data"
+import { Category } from "@/lib/definitions"
 
 export default async function AddProductPage() {
   //const produts = await fetchProducts()
@@ -44,7 +45,7 @@ export default async function AddProductPage() {
           </Tooltip>
         </div>
       </div>
-      <Form categories={category}/>
+      <Form categories={category as Category[]}/>
     </>
   )
 }
