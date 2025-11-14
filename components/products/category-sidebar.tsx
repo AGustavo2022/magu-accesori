@@ -44,7 +44,7 @@ export default async function CategorySidebar() {
 
             <Link
               href={`/category/${createSlug(cat.category_name)}`} // Asumiendo que esta es la ruta para la categoría completa
-              className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+              className="text-gray-700 hover:text-blue-800 font-semibold text-sm"
             >
               Ver todos
             </Link>
