@@ -96,7 +96,7 @@ export function ProductDetail({ product}: ProductDetailProps) {
               breadcrumbs={[
                 { label: 'Inicio', href: '/' },
                 { label: 'Productos', href: '/products' },
-                { label: `${product.category}`, href: `/category/${product.category}` },
+                { label: `${product.category}`, href: `/category/${createSlug(product.category)}` },
                 {
                   label: `${product.subcategory}`,
                   href: `/category/subcategory/${createSlug (product.subcategory)}`,
