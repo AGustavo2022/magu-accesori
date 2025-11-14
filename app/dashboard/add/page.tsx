@@ -8,9 +8,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
+import { getCategoryAll } from "@/lib/data"
 
 export default async function AddProductPage() {
   //const produts = await fetchProducts()
+
+    const category = await getCategoryAll()
+    console.log(category)
 
   return (
     <>
@@ -40,7 +44,7 @@ export default async function AddProductPage() {
           </Tooltip>
         </div>
       </div>
-      <Form />
+      <Form categories={category}/>
     </>
   )
 }

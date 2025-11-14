@@ -7,7 +7,7 @@ function AcmeLogo() {
         key='AcmeLogo001'
         href="/"
       >
-        <h1 className='text-2xl font-bold'>MAGU
+        <h1 className='text-2xl font-bold'>GUSTAVO
           <span>-accesori</span>
         </h1>
       </Link>
