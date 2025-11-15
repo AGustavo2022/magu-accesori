@@ -176,28 +176,18 @@ export async function updateProduct(id: string, formData: FormData) {
 
 export async function deleteProduct({ id }: DeleteProductArgs) {
 
-  if (!id || typeof id !== 'number' || id <= 0) {
-    console.error('ID de producto inválido para la eliminación:', id);
-    throw new Error('Debe proporcionar un ID de producto válido para eliminar.');
-  }
-  
   try {
     await sql`
       DELETE FROM products2
       WHERE id = ${id};
     `;
 
-    // 3. **Revalidar el Caché**
+    // **Revalidar el Caché**
     // Indicamos a Next.js que olvide los datos cacheados de la ruta donde se listan los productos.
-    // Esto asegura que al volver a la página, se carguen los datos actualizados (sin el producto eliminado).
-    // Adapta la ruta a donde se lista tu tabla de productos (e.g., '/dashboard/products' o similar).
-    revalidatePath('/dashboard'); // <-- ¡Asegúrate de que esta es la ruta correcta!
+    revalidatePath('/dashboard'); 
     
-    console.log(`Producto con ID ${id} eliminado exitosamente.`);
-
-    // Opcional: Si quieres redirigir a la lista de productos después de la eliminación exitosa.
-    // redirect('/dashboard/products'); 
-
+    //console.log(`Producto con ID ${id} eliminado exitosamente.`);
+ 
   } catch (error) {
     console.error(`Error al eliminar el producto con ID ${id}:`, error);
     // Lanzamos un error más amigable para manejarlo en la interfaz de usuario si es necesario.
