@@ -135,6 +135,7 @@ export async function updateProduct(id: string, formData: FormData) {
 
     // Para probarlo:
     console.log(`Actualizando producto ID: ${id}`);
+    console.log(`${rawFormData}`);
 
     // 4. **Consulta SQL UPDATE**
     // Usamos la sentencia UPDATE y la cláusula WHERE para asegurarnos de que
