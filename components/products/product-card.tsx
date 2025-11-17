@@ -1,4 +1,5 @@
 import { ShoppingCart } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
@@ -13,20 +14,33 @@ export default function ProductCard({ product }: ProductCardProps) {
   if (!product) {
     return <p>Producto no encontrado</p>
   }
+
+  const isDiscount = product.discount > 0
+
   return (
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[380px] p-0">
       
       {/* 1. IMAGEN (Parte superior) */}
       <div className="relative">
         <Link href={`/product/${product.id}`}>
-        <Suspense fallback={<InvoiceSkeleton />}>
-          <Image 
-            src={product.image_url || "/backpack.png"}
-            width={500}
-            height={300}
-            className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
-            alt={product.title}
-          />
+          <Suspense fallback={<InvoiceSkeleton />}>
+            <Image
+              src={product.image_url || "/backpack.png"}
+              width={500}
+              height={300}
+              className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
+              alt={product.title}
+            />
+            <div className="absolute top-1 right-1 flex flex-col gap-1">
+              {isDiscount &&
+                <Badge
+                  className="h-12 w-14 rounded-full text-xl bg-red-600/70"
+                  variant="destructive"
+                >
+                  {`${product.discount}%`}
+                </Badge>
+              }
+            </div>
           </Suspense>
         </Link>
       </div>

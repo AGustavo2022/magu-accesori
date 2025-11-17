@@ -49,6 +49,8 @@ export function ProductDetail({ product}: ProductDetailProps) {
   const isOutOfStock = product.stock === 0
   const isInactive = !product.status
   const isLowStock = product.stock <= 5 && product.stock > 0
+  const isDiscount = product.discount > 0
+
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -73,6 +75,14 @@ export function ProductDetail({ product}: ProductDetailProps) {
 
               {/* Status badges */}
               <div className="absolute top-4 right-4 flex flex-col gap-2">
+                {isDiscount &&
+                  <Badge
+                    className="h-16 w-16 rounded-full text-3xl bg-red-600/70"
+                    variant="destructive"
+                  >
+                    {`${product.discount}%`}
+                  </Badge>
+                }
                 {isInactive && <Badge variant="destructive">Producto Inactivo</Badge>}
                 {isOutOfStock && <Badge variant="secondary" className="bg-red-100 border border-red-300 rounded-lg">Agotado</Badge>}
                 {isLowStock && (
