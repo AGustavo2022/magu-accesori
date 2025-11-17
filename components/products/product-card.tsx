@@ -85,10 +85,10 @@ export default function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
 
-            <Button className="w-full text-xs">
+            {/* <Button className="w-full text-xs">
               <ShoppingCart className="h-3 w-3 mr-1" />
               Agregar al carrito
-            </Button>
+            </Button> */}
           </div>
         </div>
       </CardContent>
