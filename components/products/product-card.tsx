@@ -59,7 +59,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <Link href={`/product/${product.id}`}>
               <h3 className="text-base line-clamp-2 mb-1 font-semibold hover:text-blue-600 transition-colors">{product.title}</h3>
             </Link>
-            <p className="text-xs text-gray-600 line-clamp-2">{product.short_description}</p>
+            <p className="text-xs text-gray-600 line-clamp-3">{product.short_description}</p>
           </div>
 
           {/* 4. PRECIO Y BOTÓN (Parte inferior - fijo) */}
@@ -73,13 +73,13 @@ export default function ProductCard({ product }: ProductCardProps) {
                   </span>
 
                   {/* 2. Precio Final (Grande y Destacado) */}
-                  <span className="text-xl font-bold text-red-600">
+                  <span className="text-2xl font-bold text-red-600">
                     {formatPrice(priceDiscount)}
                   </span>
                 </>
               ) : (
                 // Si no hay descuento, solo muestra el precio normal
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-2xl font-bold text-gray-900">
                   {formatPrice(product.price)}
                 </span>
               )}
