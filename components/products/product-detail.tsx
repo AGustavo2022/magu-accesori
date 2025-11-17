@@ -10,7 +10,7 @@ import Image from "next/image"
 import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
 import Breadcrumbs from "../breadcrumbs"
-import { createSlug } from "@/lib/utils"
+import { createSlug, formatPrice } from "@/lib/utils"
 
 interface ProductDetailProps {
   product: Product
@@ -24,13 +24,6 @@ export function ProductDetail({ product}: ProductDetailProps) {
   console.log(product)
   
   const { addItem } = useCart(); 
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("es-AR", {
-      style: "currency",
-      currency:"ARS",
-    }).format(price)
-  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
@@ -50,6 +43,8 @@ export function ProductDetail({ product}: ProductDetailProps) {
   const isInactive = !product.status
   const isLowStock = product.stock <= 5 && product.stock > 0
   const isDiscount = product.discount > 0
+  const priceDiscount = product.price * (1 - (product.discount / 100));
+
 
 
   return (
@@ -116,7 +111,26 @@ export function ProductDetail({ product}: ProductDetailProps) {
             />
 
             <h1 className="text-2xl font-bold text-balance mb-2">{product.title}</h1>
-            <div className="text-3xl font-bold text-primary mb-4">{formatPrice(product.price)}</div>
+            {/* <div className="text-3xl font-bold text-primary mb-4">{formatPrice(product.price)}</div> */}
+
+              {isDiscount ? (
+                <>
+                  {/* 1. Precio Original (Tachado y Pequeño) */}
+                  <span className="text-xl text-gray-500 line-through pr-5">
+                    {formatPrice(product.price)}
+                  </span>
+
+                  {/* 2. Precio Final (Grande y Destacado) */}
+                  <span className="text-3xl font-bold text-red-600">
+                    {formatPrice(priceDiscount)}
+                  </span>
+                </>
+              ) : (
+                // Si no hay descuento, solo muestra el precio normal
+                <span className="text-3xl font-bold text-gray-900">
+                  {formatPrice(product.price)}
+                </span>
+              )}
           </div>
 
           {product.short_description && (

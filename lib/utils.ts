@@ -24,3 +24,10 @@ export function unslugify(slug: string): string {
     )
     .join(' ');
 }
+
+  export const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency:"ARS",
+    }).format(price)
+  }

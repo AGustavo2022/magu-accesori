@@ -7,6 +7,7 @@ import Link from "next/link"
 import { ProductCardProps } from "@/lib/definitions"
 import { Suspense } from "react"
 import { InvoiceSkeleton } from "../skeletons"
+import { formatPrice } from "@/lib/utils"
 
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -16,10 +17,12 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   const isDiscount = product.discount > 0
+  const priceDiscount = product.price * (1 - (product.discount / 100));
+
 
   return (
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[380px] p-0">
-      
+
       {/* 1. IMAGEN (Parte superior) */}
       <div className="relative">
         <Link href={`/product/${product.id}`}>
@@ -46,13 +49,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* 2. CONTENIDO PRINCIPAL (Ocupa el resto del espacio vertical) */}
-      <CardContent className="p-3 flex flex-col flex-1"> 
-        
+      <CardContent className="p-3 flex flex-col flex-1">
+
         {/* Este contenedor necesita ser flex y ocupar el espacio disponible */}
         <div className="flex flex-col flex-1">
-          
+
           {/* 3. TEXTO (Título y descripción - flex-1 para empujar hacia abajo) */}
-          <div className="flex-1"> 
+          <div className="flex-1">
             <Link href={`/product/${product.id}`}>
               <h3 className="text-base line-clamp-2 mb-1 font-semibold hover:text-blue-600 transition-colors">{product.title}</h3>
             </Link>
@@ -60,9 +63,26 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* 4. PRECIO Y BOTÓN (Parte inferior - fijo) */}
-          <div className="pt-3"> {/* Eliminé mt-auto, que ya no es necesario si el div superior tiene flex-1 */}
-            <div className="flex items-center mb-2">
-              <span className="text-xl font-bold text-green-600">${product.price}</span>
+          <div className="pt-1"> {/* Eliminé mt-auto, que ya no es necesario si el div superior tiene flex-1 */}
+            <div className="flex items-baseline gap-2">
+              {isDiscount ? (
+                <>
+                  {/* 1. Precio Original (Tachado y Pequeño) */}
+                  <span className="text-sm text-gray-500 line-through">
+                    {formatPrice(product.price)}
+                  </span>
+
+                  {/* 2. Precio Final (Grande y Destacado) */}
+                  <span className="text-xl font-bold text-red-600">
+                    {formatPrice(priceDiscount)}
+                  </span>
+                </>
+              ) : (
+                // Si no hay descuento, solo muestra el precio normal
+                <span className="text-xl font-bold text-gray-900">
+                  {formatPrice(product.price)}
+                </span>
+              )}
             </div>
 
             <Button className="w-full text-xs">
