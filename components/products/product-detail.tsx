@@ -29,7 +29,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-  const { addItem } = useCart();
+  const { addItem, items } = useCart();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
@@ -49,6 +49,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const isLowStock = product.stock <= 5 && product.stock > 0
   const isDiscount = product.discount > 0
   const priceDiscount = product.price * (1 - (product.discount / 100));
+  const isProductInCart = items.some(item => item.product.id === product.id);
 
   const handleQuantityChange = (newQuantity: number) => {
     setSelectedQuantity(newQuantity);
@@ -206,10 +207,16 @@ return (
               size="lg"
               className="flex-1 h-[44px]"
               onClick={() => handleAddToCart(product)}
-              disabled={isOutOfStock || isInactive || selectedQuantity === 0}
+              disabled={isOutOfStock || isInactive || selectedQuantity === 0 || isProductInCart}
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
-              {isOutOfStock ? "Agotado" : isInactive ? "No Disponible" : "Añadir al Carrito"}
+              {isOutOfStock
+                ? "Agotado"
+                : isInactive
+                  ? "No Disponible"
+                  : isProductInCart
+                    ? "Añadido al Carrito"
+                    : "Añadir al Carrito"}
             </Button>
           </div>
 
