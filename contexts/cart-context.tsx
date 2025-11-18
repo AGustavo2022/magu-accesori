@@ -1,6 +1,6 @@
 "use client"
 
-import { Product } from "@/lib/definitions" // Asegúrate que 'Product' tiene id: string
+import { Product } from "@/lib/definitions"
 import type React from "react"
 import { createContext, useContext, useReducer, useEffect } from "react"
 
@@ -15,19 +15,19 @@ interface CartState {
   itemCount: number
 }
 
-// 1. CAMBIO: Los IDs en las acciones son string
+// 1. MODIFICACIÓN: La acción ADD_ITEM ahora acepta la cantidad seleccionada.
 type CartAction =
-  | { type: "ADD_ITEM"; payload: Product }
-  | { type: "REMOVE_ITEM"; payload: string } // <-- string (UUID)
-  | { type: "UPDATE_QUANTITY"; payload: { id: string; quantity: number } } // <-- string (UUID)
+  | { type: "ADD_ITEM"; payload: { product: Product; quantity: number } } // <-- CAMBIO
+  | { type: "REMOVE_ITEM"; payload: string }
+  | { type: "UPDATE_QUANTITY"; payload: { id: string; quantity: number } }
   | { type: "CLEAR_CART" }
   | { type: "LOAD_CART"; payload: CartItem[] }
 
-// 2. CAMBIO: Los parámetros en el contexto son string
+// 2. MODIFICACIÓN: La firma de addItem ahora requiere la cantidad.
 interface CartContextType extends CartState {
-  addItem: (product: Product) => void
-  removeItem: (productId: string) => void // <-- string (UUID)
-  updateQuantity: (productId: string, quantity: number) => void // <-- string (UUID)
+  addItem: (product: Product, quantity: number) => void // <-- CAMBIO
+  removeItem: (productId: string) => void
+  updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
 }
 
@@ -36,19 +36,23 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
-      // El .id de product (action.payload) ahora es string
-      const existingItem = state.items.find((item) => item.product.id === action.payload.id)
+      const { product, quantity } = action.payload // Desestructuramos el product y la quantity
+      const existingItem = state.items.find((item) => item.product.id === product.id)
 
       let newItems: CartItem[]
       if (existingItem) {
-        newItems = state.items.map((item) =>
-          item.product.id === action.payload.id
-            // El stock en Product es un number, asumimos que está bien
-            ? { ...item, quantity: Math.min(item.quantity + 1, item.product.stock) } 
-            : item,
-        )
+        newItems = state.items.map((item) => {
+          if (item.product.id === product.id) {
+            // 4. MODIFICACIÓN: Suma la nueva cantidad al stock existente, 
+            // respetando el límite máximo del stock.
+            const newQuantity = item.quantity + quantity;
+            return { ...item, quantity: Math.min(newQuantity, product.stock) };
+          }
+          return item;
+        });
       } else {
-        newItems = [...state.items, { product: action.payload, quantity: 1 }]
+        // Si no existe, lo agrega con la cantidad inicial (ya validada en QuantitySelector)
+        newItems = [...state.items, { product: product, quantity: Math.min(quantity, product.stock) }]
       }
 
       const total = newItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
@@ -58,7 +62,6 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case "REMOVE_ITEM": {
-      // action.payload (el ID) es ahora string
       const newItems = state.items.filter((item) => item.product.id !== action.payload)
       const total = newItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
       const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0)
@@ -67,7 +70,6 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case "UPDATE_QUANTITY": {
-      // action.payload.id es ahora string
       const newItems = state.items
         .map((item) =>
           item.product.id === action.payload.id
@@ -100,7 +102,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, {
     items: [],
     total: 0,
-    itemCount: 0, // Corregido: Si el carrito está vacío, itemCount debería ser 0.
+    itemCount: 0,
   })
 
   useEffect(() => {
@@ -119,16 +121,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("shopping-cart", JSON.stringify(state.items))
   }, [state.items])
 
-  const addItem = (product: Product) => {
-    dispatch({ type: "ADD_ITEM", payload: product })
+  // 3. MODIFICACIÓN: Ahora acepta 'quantity' y lo pasa al dispatch
+  const addItem = (product: Product, quantity: number) => {
+    dispatch({ type: "ADD_ITEM", payload: { product, quantity } })
   }
 
-  // 3. CAMBIO: Acepta un string para el ID
   const removeItem = (productId: string) => {
     dispatch({ type: "REMOVE_ITEM", payload: productId })
   }
 
-  // 4. CAMBIO: Acepta un string para el ID
   const updateQuantity = (productId: string, quantity: number) => {
     dispatch({ type: "UPDATE_QUANTITY", payload: { id: productId, quantity } })
   }

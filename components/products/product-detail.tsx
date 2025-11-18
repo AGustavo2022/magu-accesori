@@ -11,6 +11,8 @@ import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
 import Breadcrumbs from "../breadcrumbs"
 import { createSlug, formatPrice } from "@/lib/utils"
+import { QuantitySelector } from "./quantity-selector"
+import { useState } from "react"
 
 interface ProductDetailProps {
   product: Product
@@ -19,11 +21,11 @@ interface ProductDetailProps {
 }
 
 
-export function ProductDetail({ product}: ProductDetailProps) {
-  
-  console.log(product)
-  
-  const { addItem } = useCart(); 
+export function ProductDetail({ product }: ProductDetailProps) {
+
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+
+  const { addItem } = useCart();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
@@ -33,10 +35,9 @@ export function ProductDetail({ product}: ProductDetailProps) {
     })
   }
 
-    const handleAddToCart = (product: Product) => {
-      addItem(product)
-    console.log("Añadiendo al carrito:", product.title)
-    // Aquí implementarías la lógica del carrito
+  const handleAddToCart = (product: Product) => {
+    addItem(product, selectedQuantity);
+    console.log("Añadiendo al carrito:", product.title, "Cantidad:", selectedQuantity)
   }
 
   const isOutOfStock = product.stock === 0
@@ -45,15 +46,22 @@ export function ProductDetail({ product}: ProductDetailProps) {
   const isDiscount = product.discount > 0
   const priceDiscount = product.price * (1 - (product.discount / 100));
 
+  const handleQuantityChange = (newQuantity: number) => {
+    setSelectedQuantity(newQuantity);
+    console.log(`Nueva cantidad seleccionada: ${newQuantity}`);
+  };
 
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Product Image */}
+      {/* Contenedor Principal: 2 Columnas, usa h-full para que se estiren */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:h-full">
+
+        {/* COLUMNA 1: Imagen del Producto */}
         <div className="space-y-4">
           <Card className="p-0 overflow-hidden">
             <div className="aspect-square relative p-0">
+              {/* ... Contenido de la Imagen (mantener) ... */}
               {product.image_url ? (
                 <Image
                   src={product.image_url || "/placeholder.svg"}
@@ -90,138 +98,93 @@ export function ProductDetail({ product}: ProductDetailProps) {
           </Card>
         </div>
 
-        {/* Product Information */}
-        <div className="space-y-6">
+        {/* COLUMNA 2: Información del Producto (Contenedor FLEX principal) */}
+        <div className="flex flex-col space-y-6"> {/* Agregado flex flex-col para apilar verticalmente */}
           <div>
-
-            {/* Terminar de redondear la idea */}
-
             <Breadcrumbs
-              
               breadcrumbs={[
                 { label: 'Inicio', href: '/' },
                 { label: 'Productos', href: '/products' },
                 { label: `${product.category}`, href: `/category/${createSlug(product.category)}` },
                 {
                   label: `${product.subcategory}`,
-                  href: `/category/subcategory/${createSlug (product.subcategory)}`,
+                  href: `/category/subcategory/${createSlug(product.subcategory)}`,
                   active: true,
                 },
               ]}
             />
 
             <h1 className="text-2xl font-bold text-balance mb-2">{product.title}</h1>
-            {/* <div className="text-3xl font-bold text-primary mb-4">{formatPrice(product.price)}</div> */}
 
-              {isDiscount ? (
-                <>
-                  {/* 1. Precio Original (Tachado y Pequeño) */}
-                  <span className="text-xl text-gray-500 line-through pr-5">
-                    {formatPrice(product.price)}
-                  </span>
-
-                  {/* 2. Precio Final (Grande y Destacado) */}
-                  <span className="text-3xl font-bold text-red-600">
-                    {formatPrice(priceDiscount)}
-                  </span>
-                </>
-              ) : (
-                // Si no hay descuento, solo muestra el precio normal
-                <span className="text-3xl font-bold text-gray-900">
+            {isDiscount ? (
+              <>
+                <span className="text-xl text-gray-500 line-through pr-5">
                   {formatPrice(product.price)}
                 </span>
-              )}
+                <span className="text-3xl font-bold text-red-600">
+                  {formatPrice(priceDiscount)}
+                </span>
+              </>
+            ) : (
+              <span className="text-3xl font-bold text-gray-900">
+                {formatPrice(product.price)}
+              </span>
+            )}
           </div>
 
-          {product.short_description && (
+          {product.long_description && (
             <div>
-              <h3 className="text-lg font-semibold mb-2">Descripción</h3>
-              <p className="text-muted-foreground leading-relaxed">{product.short_description}</p>
+              <p className="text-muted-foreground leading-relaxed">{product.long_description}</p>
             </div>
           )}
 
           <Separator />
 
-          {/* Product Details */}
+          {/* Product Details (Información de Stock) */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Detalles del Producto</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
-                <Package className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm">
                   <strong>Stock:</strong> {product.stock} unidades
                 </span>
               </div>
-
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm">
-                  <strong>Agregado:</strong> 
-                  {/* {formatDate(product.created_at)} */}
-                  se devuelve la fecha
-                </span>
-              </div>
-
-              {product.category && (
-                <div className="flex items-center gap-2">
-                  <Tag className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">
-                    <strong>Categoría ID:</strong> {product.category}
-                  </span>
-                </div>
-              )}
-
-              {product.subcategory && (
-                <div className="flex items-center gap-2">
-                  <Tag className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">
-                    <strong>Subcategoría ID:</strong> {product.subcategory}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
 
           <Separator />
 
-          {/* Action Buttons */}
-          <div className="space-y-4">
-            <div className="flex gap-3">
+          {/* Action Buttons: ESTE BLOQUE AHORA USA mt-auto PARA IR ABAJO */}
+          <div className="space-y-4 lg:mt-auto"> {/* CAMBIO CLAVE: lg:mt-auto */}
+            {/* Selector de Cantidad y Botón Añadir (Horizontal) */}
+            <div className="flex items-end gap-3">
+              {/* 1. Selector de Cantidad */}
+              <div className="flex-none">
+                <label className="block text-sm font-medium mb-1">Cantidad</label>
+                <QuantitySelector
+                  maxStock={product.stock}
+                  onQuantityChange={handleQuantityChange}
+                  initialQuantity={selectedQuantity}
+                />
+              </div>
+
+              {/* 2. Botón "Añadir al Carrito" */}
               <Button
                 size="lg"
-                className="flex-1"
-                onClick={() => handleAddToCart?.(product)}
-                disabled={isOutOfStock || isInactive}
+                className="flex-1 h-[44px]"
+                onClick={() => handleAddToCart(product)}
+                disabled={isOutOfStock || isInactive || selectedQuantity === 0}
               >
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 {isOutOfStock ? "Agotado" : isInactive ? "No Disponible" : "Añadir al Carrito"}
               </Button>
-{/* 
-              <Button size="lg" variant="outline" onClick={() => handleAddToWishlist?.(product)}>
-              <Button size="lg" variant="outline">
-                <Heart className="w-5 h-5" />
-              </Button> */}
-
-              {/* <Button size="lg" variant="outline">
-                <Share2 className="w-5 h-5" />
-              </Button> */}
             </div>
 
-            {/* {isLowStock && !isOutOfStock && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <p className="text-sm text-yellow-800">
-                  <strong>¡Últimas unidades!</strong> Solo quedan {product.stock} productos en stock.
-                </p>
-              </div>
+            {/* Mensaje de error para cantidad > stock */}
+            {selectedQuantity > product.stock && (
+              <p className="text-red-500 text-sm mt-2">
+                ⚠️ ¡Error! La cantidad (**{selectedQuantity}**) excede el stock disponible (**{product.stock}**).
+              </p>
             )}
-
-            {isOutOfStock && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-sm text-red-800">
-                  <strong>Producto agotado.</strong> Este producto no está disponible actualmente.
-                </p>
-              </div>
-            )} */}
           </div>
         </div>
       </div>
