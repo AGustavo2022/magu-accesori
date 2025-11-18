@@ -82,7 +82,7 @@ return (
             )}
 
             {/* Status badges */}
-            <div className="absolute top-4 right-4 flex flex-col gap-2">
+            <div className="absolute top-2 right-4 flex flex-col gap-2">
               {isDiscount &&
                 <Badge
                   className="h-16 w-16 rounded-full text-3xl bg-red-600/70"

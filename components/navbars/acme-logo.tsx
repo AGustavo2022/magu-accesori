@@ -7,8 +7,8 @@ function AcmeLogo() {
         key='AcmeLogo001'
         href="/"
       >
-        <h1 className='text-2xl font-bold'>MUGU
-          <span>-accesori</span>
+        <h1 className='text-2xl font-bold'>SHOP
+          <span>-Rio Grande</span>
         </h1>
       </Link>
     </div>
