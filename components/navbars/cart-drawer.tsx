@@ -7,16 +7,24 @@ import { Separator } from "@/components/ui/separator"
 import { ShoppingCart, Plus, Minus, Trash2, Package } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import Image from "next/image"
+import { redirect } from "next/navigation"
+import { useState } from "react"
 
 export function CartDrawer() {
+
+  const [isOpen, setIsOpen] = useState(false);
+
   const { items, total, itemCount, updateQuantity, removeItem, clearCart } = useCart()
 
-    const handleCheckout = async () => {
-      console.log(items, total, itemCount)
-    // if (state.items.length === 0) {
-    //   alert("El carrito está vacío.");
-    //   return;
-    }
+const handleCheckout = async () => {
+    console.log(items, total, itemCount);
+
+    // 2. Cierra el Drawer
+    setIsOpen(false); 
+
+    // 3. Redirige a la página de checkout
+    redirect('/checkout');
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-ES", {
@@ -26,7 +34,7 @@ export function CartDrawer() {
   }
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="relative bg-transparent">
           <ShoppingCart className="h-4 w-4" />
