@@ -9,6 +9,7 @@ import { useCart } from "@/contexts/cart-context"
 import Image from "next/image"
 import { redirect } from "next/navigation"
 import { useState } from "react"
+import { CartItem } from "../cart-item"
 
 export function CartDrawer() {
 
@@ -67,69 +68,16 @@ const handleCheckout = async () => {
             </div>
           ) : (
             <>
-              <div className="flex-1 overflow-y-auto py-4">
-                <div className="space-y-4">
-                  {items.map((item) => (
-                    <div key={item.product.id} className="flex gap-3 p-3 border rounded-lg">
-                      <div className="w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0">
-                        {item.product.image_url ? (
-                          <Image
-                            src={item.product.image_url || "/placeholder.svg"}
-                            width={400}
-                            height={200}
-                            alt={item.product.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Package className="w-6 h-6 text-muted-foreground" />
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm line-clamp-2 mb-1">{item.product.title}</h4>
-                        <p className="text-sm font-semibold text-primary mb-2">{formatPrice(item.product.price)}</p>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Button
-                              size="icon"
-                              variant="outline"
-                              className="h-7 w-7 bg-transparent"
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                              disabled={item.quantity <= 1}
-                            >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-
-                            <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
-
-                            <Button
-                              size="icon"
-                              variant="outline"
-                              className="h-7 w-7 bg-transparent"
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                              disabled={item.quantity >= item.product.stock}
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                          </div>
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 text-destructive hover:text-destructive"
-                            onClick={() => removeItem(item.product.id)}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex-1 overflow-y-auto py-4">
+                  <div className="space-y-4">
+                    {items.map((item) => (
+                      <CartItem
+                        key={item.product.id}
+                        item={item}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
 
               <Separator />
 
