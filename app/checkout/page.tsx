@@ -13,9 +13,22 @@ import { Package, CreditCard, CheckCircle2, Minus, Plus, Trash2 } from "lucide-r
 import { useCart } from "@/contexts/cart-context"
 import Image from "next/image"
 import { formatPrice } from "@/lib/utils"
+import PaymentPage from "@/components/checkout/payment-options"
 
 export default function CheckoutPage() {
+
     const [currentStep, setCurrentStep] = useState(1)
+    // Definimos el ID inicial que queremos pre-seleccionar.
+    const initialPaymentId = 'transfer';
+    
+    // Estado para guardar la selección final del usuario
+    const [finalSelection, setFinalSelection] = useState(initialPaymentId);
+
+    // Función que recibirá el ID seleccionado del componente hijo
+    const handlePaymentSelected = (selectedId: string) => {
+        setFinalSelection(selectedId);
+        console.log("Método de pago final seleccionado en la página:", selectedId);
+    };
 
     const { items } = useCart()
 
@@ -84,39 +97,24 @@ export default function CheckoutPage() {
                                     <div className="grid gap-4 sm:grid-cols-3">
                                         <div className="space-y-2">
                                             <Label htmlFor="city">Ciudad</Label>
-                                            <Input id="city" placeholder="Madrid" />
+                                            <Input id="city" placeholder="Rio Grande" />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="province">Provincia</Label>
-                                            <Input id="province" placeholder="Madrid" />
+                                            <Input id="province" placeholder="Tierra del Fuego" />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="postal">C.P.</Label>
-                                            <Input id="postal" placeholder="28001" />
+                                            <Input id="postal" placeholder="9420" />
                                         </div>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <Label htmlFor="country">País</Label>
-                                        <Select defaultValue="spain">
-                                            <SelectTrigger id="country">
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="spain">España</SelectItem>
-                                                <SelectItem value="france">Francia</SelectItem>
-                                                <SelectItem value="germany">Alemania</SelectItem>
-                                                <SelectItem value="italy">Italia</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="flex items-start gap-2">
+                                    {/* <div className="flex items-start gap-2">
                                         <Checkbox id="saveAddress" />
                                         <Label htmlFor="saveAddress" className="text-sm leading-none">
                                             Guardar esta dirección para futuras compras
                                         </Label>
-                                    </div>
+                                    </div> */}
 
                                     <div className="flex gap-4">
                                         <Button
@@ -137,7 +135,9 @@ export default function CheckoutPage() {
 
                         {currentStep === 3 && (
                             <div>
-                                <h1 className="mb-6 text-2xl font-bold uppercase">Pago</h1>
+
+                                <PaymentPage/>
+                                {/* <h1 className="mb-6 text-2xl font-bold uppercase">Pago</h1>
                                 <form className="space-y-6">
                                     <div className="space-y-2">
                                         <Label htmlFor="cardNumber">Número de Tarjeta</Label>
@@ -158,14 +158,14 @@ export default function CheckoutPage() {
                                             <Label htmlFor="cvv">CVV</Label>
                                             <Input id="cvv" type="password" placeholder="123" maxLength={3} />
                                         </div>
-                                    </div>
+                                    </div> */}
 
-                                    <div className="flex items-start gap-2">
+                                    {/* <div className="flex items-start gap-2 pb-8">
                                         <Checkbox id="terms" />
                                         <Label htmlFor="terms" className="text-sm leading-none">
                                             Acepto los términos y condiciones y la política de privacidad
                                         </Label>
-                                    </div>
+                                    </div> */}
 
                                     <div className="flex gap-4">
                                         <Button
@@ -180,7 +180,7 @@ export default function CheckoutPage() {
                                             Realizar Pedido
                                         </Button>
                                     </div>
-                                </form>
+                                {/* </form> */}
                             </div>
                         )}
 
