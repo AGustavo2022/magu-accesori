@@ -14,6 +14,7 @@ import { useCart } from "@/contexts/cart-context"
 import Image from "next/image"
 import { formatPrice } from "@/lib/utils"
 import PaymentPage from "@/components/checkout/payment-options"
+import { OrderConfirmation } from "@/components/checkout/order-confirmation"
 
 export default function CheckoutPage() {
 
@@ -32,8 +33,9 @@ export default function CheckoutPage() {
 
     const { items } = useCart()
 
-    //   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    //   const shipping = subtotal > 50 ? 0 : 5.99
+      const subtotal = items.reduce((sum, item) => sum + item.product.price* item.quantity, 0)
+      const shipping = subtotal > 50 ? 0 : 5.99
+
     console.log(items)
 
     return (
@@ -86,7 +88,7 @@ export default function CheckoutPage() {
 
                                     <div className="space-y-2">
                                         <Label htmlFor="phone">Teléfono</Label>
-                                        <Input id="phone" type="tel" placeholder="+34 600 000 000" />
+                                        <Input id="phone" type="tel" placeholder="2964 000 000" />
                                     </div>
 
                                     <div className="space-y-2">
@@ -97,15 +99,15 @@ export default function CheckoutPage() {
                                     <div className="grid gap-4 sm:grid-cols-3">
                                         <div className="space-y-2">
                                             <Label htmlFor="city">Ciudad</Label>
-                                            <Input id="city" placeholder="Rio Grande" />
+                                            <Input id="city" placeholder="Rio Grande" value={"Rio Grande"} disabled />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="province">Provincia</Label>
-                                            <Input id="province" placeholder="Tierra del Fuego" />
+                                            <Input id="province" placeholder="Tierra del Fuego" value={"Tierra del Fuego"} disabled/>
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="postal">C.P.</Label>
-                                            <Input id="postal" placeholder="9420" />
+                                            <Input id="postal" placeholder="9420" value={"9420"} disabled/>
                                         </div>
                                     </div>
 
@@ -135,37 +137,9 @@ export default function CheckoutPage() {
 
                         {currentStep === 3 && (
                             <div>
+                                <h1 className="mb-6 text-2xl font-bold uppercase">Metodo de Pago</h1>
 
                                 <PaymentPage/>
-                                {/* <h1 className="mb-6 text-2xl font-bold uppercase">Pago</h1>
-                                <form className="space-y-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="cardNumber">Número de Tarjeta</Label>
-                                        <Input id="cardNumber" placeholder="1234 5678 9012 3456" maxLength={19} />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="cardName">Nombre en la Tarjeta</Label>
-                                        <Input id="cardName" placeholder="NOMBRE APELLIDOS" />
-                                    </div>
-
-                                    <div className="grid gap-4 sm:grid-cols-2">
-                                        <div className="space-y-2">
-                                            <Label htmlFor="expiry">Fecha de Vencimiento</Label>
-                                            <Input id="expiry" placeholder="MM/AA" maxLength={5} />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="cvv">CVV</Label>
-                                            <Input id="cvv" type="password" placeholder="123" maxLength={3} />
-                                        </div>
-                                    </div> */}
-
-                                    {/* <div className="flex items-start gap-2 pb-8">
-                                        <Checkbox id="terms" />
-                                        <Label htmlFor="terms" className="text-sm leading-none">
-                                            Acepto los términos y condiciones y la política de privacidad
-                                        </Label>
-                                    </div> */}
 
                                     <div className="flex gap-4">
                                         <Button
@@ -180,63 +154,65 @@ export default function CheckoutPage() {
                                             Realizar Pedido
                                         </Button>
                                     </div>
-                                {/* </form> */}
+                                
                             </div>
                         )}
 
                         {currentStep === 4 && (
-                            <div className="py-12 text-center">
-                                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-foreground">
-                                    <CheckCircle2 className="h-10 w-10 text-background" />
-                                </div>
-                                <h1 className="mb-4 text-3xl font-bold uppercase">¡Pedido Confirmado!</h1>
-                                <p className="mb-2 text-muted-foreground">
-                                    Número de pedido: <span className="font-bold">#ADI-2024-1234</span>
-                                </p>
-                                <p className="mb-8 text-muted-foreground">Recibirás un email de confirmación en breve</p>
-                                <div className="mx-auto max-w-md space-y-4">
-                                    <div className="flex items-center gap-4 rounded border p-4 text-left">
-                                        <Package className="h-8 w-8 flex-shrink-0" />
-                                        <div>
-                                            <p className="font-bold">Envío Estimado</p>
-                                            <p className="text-sm text-muted-foreground">3-5 días laborables</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-4 rounded border p-4 text-left">
-                                        <CreditCard className="h-8 w-8 flex-shrink-0" />
-                                        <div>
-                                            <p className="font-bold">Total Pagado</p>
-                                            {/* <p className="text-sm text-muted-foreground">${(subtotal + shipping).toFixed(2)}</p> */}
-                                        </div>
-                                    </div>
-                                </div>
-                                <Button className="mt-8 w-full sm:w-auto" size="lg">
-                                    Ver Mis Pedidos
-                                </Button>
-                            </div>
+
+                            <OrderConfirmation/>
+                            // <div className="py-12 text-center">
+                            //     <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-foreground">
+                            //         <CheckCircle2 className="h-10 w-10 text-background" />
+                            //     </div>
+                            //     <h1 className="mb-4 text-3xl font-bold uppercase">¡Pedido Confirmado!</h1>
+                            //     <p className="mb-2 text-muted-foreground">
+                            //         Número de pedido: <span className="font-bold">#ADI-2024-1234</span>
+                            //     </p>
+                            //     <p className="mb-8 text-muted-foreground">Recibirás un email de confirmación en breve</p>
+                            //     <div className="mx-auto max-w-md space-y-4">
+                            //         <div className="flex items-center gap-4 rounded border p-4 text-left">
+                            //             <Package className="h-8 w-8 flex-shrink-0" />
+                            //             <div>
+                            //                 <p className="font-bold">Envío Estimado</p>
+                            //                 <p className="text-sm text-muted-foreground">3-5 días laborables</p>
+                            //             </div>
+                            //         </div>
+                            //         <div className="flex items-center gap-4 rounded border p-4 text-left">
+                            //             <CreditCard className="h-8 w-8 flex-shrink-0" />
+                            //             <div>
+                            //                 <p className="font-bold">Total Pagado</p>
+                            //                 {/* <p className="text-sm text-muted-foreground">${(subtotal + shipping).toFixed(2)}</p> */}
+                            //             </div>
+                            //         </div>
+                            //     </div>
+                            //     <Button className="mt-8 w-full sm:w-auto" size="lg">
+                            //         Ver Mis Pedidos
+                            //     </Button>
+                            // </div>
                         )}
                     </div>
 
                     {/* Resumen del pedido - sidebar */}
-                    {/* {currentStep < 4 && (
+                    {currentStep < 4 && (
             <div className="lg:col-span-1">
               <div className="sticky top-4 rounded border bg-card p-6">
                 <h2 className="mb-6 text-lg font-bold uppercase">Resumen del Pedido</h2>
                 <div className="space-y-4">
-                  {cartItems.map((item) => (
-                    <div key={item.id} className="flex justify-between text-sm">
+                  {items.map((item) => (
+                    <div key={item.product.id} className="flex justify-between text-sm pb-3">
                       <div className="flex-1">
-                        <p className="font-medium">{item.name}</p>
+                        <p className="font-medium">{item.product.title}</p>
                         <p className="text-xs text-muted-foreground">Cantidad: {item.quantity}</p>
                       </div>
-                      <span className="font-bold">${(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="font-bold">${(item.product.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
                 <OrderSummary subtotal={subtotal} shipping={shipping} />
               </div>
             </div>
-          )} */}
+          )}
                 </div>
             </div>
         </div>

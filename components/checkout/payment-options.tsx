@@ -109,9 +109,9 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
 
     return (
         <div className="max-w-3xl mx-auto p-6 sm:p-8 bg-white dark:bg-gray-800 ">
-            <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-900 dark:text-white">
+            {/* <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-900 dark:text-white">
                 {title}
-            </h1>
+            </h1> */}
             
             {/* Opciones de Pago */}
             <div className="space-y-4">
@@ -153,12 +153,12 @@ const paymentOptionsData: PaymentOptionItem[] = [
         description: 'Paga en efectivo al recibir tu pedido. Solo para pedidos locales.',
         icon: DollarSign,
     },
-    {
-        id: 'mercado_pago',
-        title: 'Mercado Pago (QR/Link)',
-        description: 'Escanea el código QR o usa el link de pago para pagar rápidamente.',
-        icon: Zap,
-    }
+    // {
+    //     id: 'mercado_pago',
+    //     title: 'Mercado Pago (QR/Link)',
+    //     description: 'Escanea el código QR o usa el link de pago para pagar rápidamente.',
+    //     icon: Zap,
+    // }
 ];
 
 export default function PaymentPage() {

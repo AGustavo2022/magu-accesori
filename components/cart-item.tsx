@@ -15,14 +15,29 @@ export interface CartItemData {
 
 interface CartItemProps {
     item: CartItemData; 
+    // NUEVA PROP: Indica si el carrito está en modo de revisión/pago
+    isCheckoutMode?: boolean; 
 }
 
-export function CartItem({ item }: CartItemProps) {
+export function CartItem({ item, isCheckoutMode = true }: CartItemProps) {
 
-    const { total, updateQuantity, removeItem} = useCart()
-   
+    console.log(isCheckoutMode)
+
+    const { updateQuantity, removeItem} = useCart()
+    
     const { product, quantity } = item;
     const { id, title, price, image_url, stock } = product;
+    
+    // Si estamos en modo checkout (o cualquier modo que no permita edición), 
+    // deshabilitamos las acciones de edición.
+    const disableEditing = isCheckoutMode; 
+
+    // Botón de Decrementar: Deshabilitado si la cantidad es 1 O si estamos en modo solo lectura
+    const isMinusDisabled = quantity <= 1 || disableEditing;
+    
+    // Botón de Incrementar: Deshabilitado si se alcanza el stock O si estamos en modo solo lectura
+    const isPlusDisabled = quantity >= stock || disableEditing;
+
 
     return (
         <div className="flex gap-4 border-b py-6 items-center">
@@ -62,7 +77,8 @@ export function CartItem({ item }: CartItemProps) {
                             // Usa la función 'updateQuantity'
                             onClick={() => updateQuantity(id, quantity - 1)}
                             className="h-8 w-8"
-                            disabled={quantity <= 1}
+                            // AÑADIDO: Usa la variable de deshabilitación
+                            // disabled={isMinusDisabled} 
                         >
                             <Minus className="h-4 w-4" />
                         </Button>
@@ -73,22 +89,27 @@ export function CartItem({ item }: CartItemProps) {
                             // Usa la función 'updateQuantity'
                             onClick={() => updateQuantity(id, quantity + 1)}
                             className="h-8 w-8"
-                            disabled={quantity >= stock}
+                            // AÑADIDO: Usa la variable de deshabilitación
+                            // disabled={isPlusDisabled}
                         >
                             <Plus className="h-4 w-4" />
                         </Button>
                     </div>
 
                     {/* Botón de Eliminar */}
+                    {!disableEditing && (
                     <Button
                         variant="ghost"
                         size="icon"
                         // Usa la función 'removeItem'
                         onClick={() => removeItem(id)}
                         className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                        // AÑADIDO: Usa la prop para deshabilitar el botón de eliminar
+                        // disabled={disableEditing}
                     >
                         <Trash2 className="h-4 w-4" />
                     </Button>
+                    )}
                 </div>
             </div>
         </div>
