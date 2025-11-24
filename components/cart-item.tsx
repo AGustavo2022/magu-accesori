@@ -14,30 +14,19 @@ export interface CartItemData {
 
 
 interface CartItemProps {
-    item: CartItemData; 
+    item: CartItemData;
     // NUEVA PROP: Indica si el carrito está en modo de revisión/pago
-    isCheckoutMode?: boolean; 
+    isCheckoutMode?: boolean;
 }
 
-export function CartItem({ item, isCheckoutMode = true }: CartItemProps) {
+export function CartItem({ item, isCheckoutMode = false }: CartItemProps) {
 
     console.log(isCheckoutMode)
 
-    const { updateQuantity, removeItem} = useCart()
-    
+    const { updateQuantity, removeItem } = useCart()
+
     const { product, quantity } = item;
     const { id, title, price, image_url, stock } = product;
-    
-    // Si estamos en modo checkout (o cualquier modo que no permita edición), 
-    // deshabilitamos las acciones de edición.
-    const disableEditing = isCheckoutMode; 
-
-    // Botón de Decrementar: Deshabilitado si la cantidad es 1 O si estamos en modo solo lectura
-    const isMinusDisabled = quantity <= 1 || disableEditing;
-    
-    // Botón de Incrementar: Deshabilitado si se alcanza el stock O si estamos en modo solo lectura
-    const isPlusDisabled = quantity >= stock || disableEditing;
-
 
     return (
         <div className="flex gap-4 border-b py-6 items-center">
@@ -57,7 +46,7 @@ export function CartItem({ item, isCheckoutMode = true }: CartItemProps) {
                     <div className="flex justify-between items-start">
                         {/* Título y Precio Total de la Línea */}
                         <h3 className="text-base font-bold line-clamp-2">{title}</h3>
-                        <span className="text-base font-bold ml-4">{formatPrice(price*quantity)}</span>
+                        <span className="text-base font-bold ml-4">{formatPrice(price * quantity)}</span>
                     </div>
 
                     <p className="mt-1 text-xs text-muted-foreground">
@@ -69,47 +58,70 @@ export function CartItem({ item, isCheckoutMode = true }: CartItemProps) {
 
                 {/* Controles de Cantidad y Eliminar */}
                 <div className="flex items-center justify-between mt-3">
+
                     {/* Control de Cantidad */}
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            // Usa la función 'updateQuantity'
-                            onClick={() => updateQuantity(id, quantity - 1)}
-                            className="h-8 w-8"
-                            // AÑADIDO: Usa la variable de deshabilitación
-                            // disabled={isMinusDisabled} 
-                        >
-                            <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="w-8 text-center text-sm font-bold">{quantity}</span>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            // Usa la función 'updateQuantity'
-                            onClick={() => updateQuantity(id, quantity + 1)}
-                            className="h-8 w-8"
-                            // AÑADIDO: Usa la variable de deshabilitación
-                            // disabled={isPlusDisabled}
-                        >
-                            <Plus className="h-4 w-4" />
-                        </Button>
-                    </div>
+                    {isCheckoutMode && (
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                // Usa la función 'updateQuantity'
+                                onClick={() => updateQuantity(id, quantity - 1)}
+                                className="h-8 w-8"
+                                // AÑADIDO: Usa la variable de deshabilitación
+                                disabled={quantity <= 1}
+                            >
+                                <Minus className="h-4 w-4" />
+                            </Button>
+                            <span className="w-8 text-center text-sm font-bold">{quantity}</span>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                // Usa la función 'updateQuantity'
+                                onClick={() => updateQuantity(id, quantity + 1)}
+                                className="h-8 w-8"
+                                // AÑADIDO: Usa la variable de deshabilitación
+                                disabled={quantity >= stock}
+                            >
+                                <Plus className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    )}
+
+                    {!isCheckoutMode && (
+                        <div>
+                          <p className="mt-1 text-xs text-muted-foreground">Cantidad :{quantity}</p>  
+                        </div>
+                    )}
 
                     {/* Botón de Eliminar */}
-                    {!disableEditing && (
-                    <Button
+                    {isCheckoutMode && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            // Usa la función 'removeItem'
+                            onClick={() => removeItem(id)}
+                            className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                        // AÑADIDO: Usa la prop para deshabilitar el botón de eliminar
+
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+
+                    )}
+
+                    {/* <Button
                         variant="ghost"
                         size="icon"
                         // Usa la función 'removeItem'
                         onClick={() => removeItem(id)}
                         className="h-8 w-8 text-destructive hover:bg-destructive/10"
                         // AÑADIDO: Usa la prop para deshabilitar el botón de eliminar
-                        // disabled={disableEditing}
+
                     >
                         <Trash2 className="h-4 w-4" />
-                    </Button>
-                    )}
+                    </Button> */}
+
                 </div>
             </div>
         </div>

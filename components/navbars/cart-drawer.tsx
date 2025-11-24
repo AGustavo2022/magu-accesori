@@ -74,6 +74,7 @@ const handleCheckout = async () => {
                       <CartItem
                         key={item.product.id}
                         item={item}
+                        isCheckoutMode={true}
                       />
                     ))}
                   </div>
