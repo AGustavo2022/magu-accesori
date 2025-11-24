@@ -42,7 +42,7 @@ export function CartItem({ item }: CartItemProps) {
                     <div className="flex justify-between items-start">
                         {/* Título y Precio Total de la Línea */}
                         <h3 className="text-base font-bold line-clamp-2">{title}</h3>
-                        <span className="text-base font-bold ml-4">{formatPrice(total)}</span>
+                        <span className="text-base font-bold ml-4">{formatPrice(price*quantity)}</span>
                     </div>
 
                     <p className="mt-1 text-xs text-muted-foreground">
