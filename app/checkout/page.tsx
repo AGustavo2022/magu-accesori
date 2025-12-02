@@ -48,7 +48,7 @@ export default function CheckoutPage() {
   const [createdOrder, setCreatedOrder] = useState<any | null>(null)
 
   // cart
-  const { items } = useCart()
+  const { items, clearCart } = useCart()
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
   const shipping = subtotal > 50 ? 0 : 5.99
 
@@ -56,7 +56,11 @@ export default function CheckoutPage() {
     setShippingData({ ...shippingData, [e.target.name]: e.target.value })
 
   async function handleSubmit(formData: FormData) {
-    await createOrder(formData);
+    const result = await createOrder(formData);
+    setCurrentStep(4)
+    setCreatedOrder(result)
+    console.log(createdOrder)
+    clearCart()
   }
 
   return (
@@ -169,7 +173,7 @@ export default function CheckoutPage() {
             {/* STEP 4 - Solo muestra lo creado. createdOrder viene del server action (set en action) */}
             {currentStep === 4 && (
               <div>
-                <h1 className="mb-6 text-2xl font-bold uppercase">Pedido Confirmado</h1>
+                {/* <h1 className="mb-6 text-2xl font-bold uppercase">Pedido Confirmado</h1> */}
                 {createdOrder ? (
                   <OrderConfirmation order={createdOrder} />
                 ) : (

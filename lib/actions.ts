@@ -303,5 +303,12 @@ export async function createOrder(formData: FormData) {
     throw new Error("No se pudo crear la orden. Intente nuevamente.");
   }
 
-  return orderId;
+  return {
+    orderId,
+    items,
+    total,
+    shippingData,
+    paymentMethod,
+    created_at,
+  };
 }
