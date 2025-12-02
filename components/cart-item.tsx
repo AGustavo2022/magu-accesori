@@ -21,7 +21,7 @@ interface CartItemProps {
 
 export function CartItem({ item, isCheckoutMode = false }: CartItemProps) {
 
-    console.log(isCheckoutMode)
+    //console.log(isCheckoutMode)
 
     const { updateQuantity, removeItem } = useCart()
 

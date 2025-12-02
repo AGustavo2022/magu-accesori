@@ -41,7 +41,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
   const handleAddToCart = (product: Product) => {
     addItem(product, selectedQuantity);
-    console.log("Añadiendo al carrito:", product.title, "Cantidad:", selectedQuantity)
+    //console.log("Añadiendo al carrito:", product.title, "Cantidad:", selectedQuantity)
   }
 
   const isOutOfStock = product.stock === 0

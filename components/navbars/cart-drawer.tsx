@@ -18,7 +18,7 @@ export function CartDrawer() {
   const { items, total, itemCount, updateQuantity, removeItem, clearCart } = useCart()
 
 const handleCheckout = async () => {
-    console.log(items, total, itemCount);
+    //console.log(items, total, itemCount);
 
     // 2. Cierra el Drawer
     setIsOpen(false); 

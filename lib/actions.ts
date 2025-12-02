@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { neon } from '@neondatabase/serverless';
 import { DeleteProductArgs } from './definitions';
+import { UUID } from 'crypto';
 
 
 const sqlDb = `${process.env.DATABASE_URL}`
@@ -194,4 +195,113 @@ export async function deleteProduct({ id }: DeleteProductArgs) {
     // Lanzamos un error más amigable para manejarlo en la interfaz de usuario si es necesario.
     throw new Error('Fallo al eliminar el producto de la base de datos.');
   }
+}
+
+type CartItem = {
+  productId: string;
+  quantity: number;
+  price: number;
+};
+
+export async function createOrder(formData: FormData) {
+  // --- 1. Leer datos del form ---
+  const rawFormData = {
+    items: formData.get("items"),
+    shippingData: formData.get("shippingData"),
+    paymentMethod: formData.get("paymentMethod"),
+  };
+
+  const items: CartItem[] = rawFormData.items
+    ? JSON.parse(rawFormData.items as string)
+    : [];
+
+  const shippingData = rawFormData.shippingData
+    ? JSON.parse(rawFormData.shippingData as string)
+    : {};
+
+  const paymentMethod = String(rawFormData.paymentMethod || "");
+
+  if (!items.length) throw new Error("No se enviaron items.");
+  if (!paymentMethod) throw new Error("Método de pago inválido.");
+
+  const total = items.reduce(
+    (acc, i) => acc + i.price * i.quantity,
+    0
+  );
+
+  const created_at = new Date().toISOString();
+  let orderId: string;
+
+  // --- 2. INICIAR TRANSACCIÓN ---
+  await sql`BEGIN`;
+
+  try {
+    // --- 3. Verificar stock de todos los productos ---
+    for (const item of items) {
+      const product = await sql`
+        SELECT stock FROM products2
+        WHERE id = ${item.productId};
+      `;
+
+      if (!product[0]) {
+        throw new Error(`Producto ${item.productId} no existe.`);
+      }
+
+      if (product[0].stock < item.quantity) {
+        throw new Error(
+          `Stock insuficiente para el producto ${item.productId}.`
+        );
+      }
+    }
+
+    // --- 4. Crear la orden principal ---
+    const orderResult = await sql`
+      INSERT INTO orders (
+        shipping_data,
+        payment_method,
+        total,
+        status,
+        created_at
+      )
+      VALUES (
+        ${JSON.stringify(shippingData)}::jsonb,
+        ${paymentMethod},
+        ${total},
+        'pending',
+        ${created_at}
+      )
+      RETURNING id;
+    `;
+
+    orderId = orderResult[0].id;
+
+    // --- 5. Insertar items y descontar stock ---
+    for (const item of items) {
+      await sql`
+        INSERT INTO order_items (order_id, product_id, quantity, price)
+        VALUES (${orderId}, ${item.productId}, ${item.quantity}, ${item.price});
+      `;
+
+      await sql`
+        UPDATE products2
+        SET stock = stock - ${item.quantity}
+        WHERE id = ${item.productId};
+      `;
+    }
+
+    // --- 6. CONFIRMAR TRANSACCIÓN ---
+    await sql`COMMIT`;
+
+    console.log(`Pedido ${orderId} creado correctamente.`);
+
+  } catch (err) {
+    console.error("Error creando pedido:", err);
+
+    // Si todo falla, revertimos todo ✔️
+    await sql`ROLLBACK`;
+
+    throw new Error("No se pudo crear la orden. Intente nuevamente.");
+  }
+
+  return orderId;
 }
