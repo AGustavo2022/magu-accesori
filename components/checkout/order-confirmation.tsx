@@ -6,7 +6,10 @@ import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 
+
 export default function OrderConfirmation({ order }: { order: any }) {
+
+
 
   const {
     orderId,
@@ -14,6 +17,7 @@ export default function OrderConfirmation({ order }: { order: any }) {
     total,
     shippingData,
     paymentMethod,
+    order_number,
     created_at,
   } = order
 
@@ -23,8 +27,10 @@ export default function OrderConfirmation({ order }: { order: any }) {
     total,
     shippingData,
     paymentMethod,
+    order_number,
     created_at,)
 
+  const isoString = new Date(created_at);
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,12 +49,12 @@ export default function OrderConfirmation({ order }: { order: any }) {
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             <Card className="p-6">
               <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide mb-2">Número de pedido</p>
-              <p className="text-lg font-medium">{orderId}</p>
+              <p className="text-lg font-medium">{order_number}</p>
             </Card>
 
             <Card className="p-6">
               <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide mb-2">Fecha del pedido</p>
-              <p className="text-lg font-medium">{created_at}</p>
+              <p className="text-lg font-medium">{isoString.toLocaleString()}</p>
             </Card>
           </div>
 

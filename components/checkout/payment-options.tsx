@@ -79,13 +79,13 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({ options, selected, onSe
 // Opciones disponibles
 const paymentOptionsData: PaymentOptionItem[] = [
     {
-        id: 'transfer',
+        id: 'Transferencia',
         title: 'Transferencia Bancaria (CBU/Alias)',
         description: 'Se te enviarán los datos bancarios para completar la transferencia.',
         icon: CheckCircle2,
     },
     {
-        id: 'cash_on_delivery',
+        id: 'Pago_en_Efectivo',
         title: 'Pago en Efectivo (Contra Entrega)',
         description: 'Paga en efectivo al recibir tu pedido.',
         icon: DollarSign,

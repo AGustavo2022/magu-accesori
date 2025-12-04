@@ -29,7 +29,7 @@ export default function CheckoutPage() {
   const [currentStep, setCurrentStep] = useState<number>(1)
 
   // payment (controlled by parent)
-  const [paymentMethod, setPaymentMethod] = useState<string>("transfer")
+  const [paymentMethod, setPaymentMethod] = useState<string>("Transferencia")
   const handlePaymentSelected = (id: string) => setPaymentMethod(id)
 
   // shipping state

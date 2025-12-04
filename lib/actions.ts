@@ -231,6 +231,7 @@ export async function createOrder(formData: FormData) {
 
   const created_at = new Date().toISOString();
   let orderId: string;
+  let order_number = "";
 
   // --- 2. INICIAR TRANSACCIÓN ---
   await sql`BEGIN`;
@@ -275,11 +276,13 @@ export async function createOrder(formData: FormData) {
 
     orderId = orderResult[0].id;
 
+    order_number = "ORD-" + orderId.substring(0, 8).toUpperCase();
+
     // --- 5. Insertar items y descontar stock ---
     for (const item of items) {
       await sql`
-        INSERT INTO order_items (order_id, product_id, quantity, price)
-        VALUES (${orderId}, ${item.productId}, ${item.quantity}, ${item.price});
+        INSERT INTO order_items (order_id, product_id, quantity, price, order_number)
+        VALUES (${orderId}, ${item.productId}, ${item.quantity}, ${item.price}, ${order_number});
       `;
 
       await sql`
@@ -309,6 +312,7 @@ export async function createOrder(formData: FormData) {
     total,
     shippingData,
     paymentMethod,
+    order_number,
     created_at,
   };
 }
