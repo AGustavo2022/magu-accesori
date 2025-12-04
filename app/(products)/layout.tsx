@@ -1,6 +1,7 @@
 
 import CategorySidebar from "@/components/products/category-sidebar";
-import { RevenueChartSkeleton } from "@/components/skeletons";
+import { SkeletonProductsGrid } from "@/components/skeletons";
+// import { RevenueChartSkeleton } from "@/components/skeletons";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -27,7 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         <ResizablePanel>
           <div >
-            <Suspense fallback={<RevenueChartSkeleton />}>
+            <Suspense fallback={<SkeletonProductsGrid />}>
             <span className="font-semibold">{children}</span>
             </Suspense>
           </div>

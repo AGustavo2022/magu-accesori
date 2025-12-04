@@ -1,13 +1,11 @@
-import { ShoppingCart } from "lucide-react"
+
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
 import { ProductCardProps } from "@/lib/definitions"
-import { Suspense } from "react"
-import { InvoiceSkeleton } from "../skeletons"
 import { formatPrice } from "@/lib/utils"
+
 
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -26,7 +24,6 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* 1. IMAGEN (Parte superior) */}
       <div className="relative">
         <Link href={`/product/${product.id}`}>
-          <Suspense fallback={<InvoiceSkeleton />}>
             <Image
               src={product.image_url || "/backpack.png"}
               width={500}
@@ -44,7 +41,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </Badge>
               }
             </div>
-          </Suspense>
+          
         </Link>
       </div>
 
