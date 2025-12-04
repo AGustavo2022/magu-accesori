@@ -1,7 +1,7 @@
 
 import { MetricCard } from "@/components/dashboard/metric-card" 
 import {ProductTableCard } from "@/components/dashboard/products-table-card"
-import { getProductsAll } from '@/lib/data'
+import { getProductsDashboard } from '@/lib/data'
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import {
@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 
 export default async function DashboardPage() {
 
-  const products = await getProductsAll()
+  const products = await getProductsDashboard()
 
   // console.log(products)
 
