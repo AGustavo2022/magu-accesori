@@ -43,7 +43,7 @@ export async function getCategoryAll() {
 export async function getProductsAll() {
 
   // se le agrega un retraso para probar el skeletor
-  await new Promise(resolve => setTimeout(resolve, 4000));
+  // await new Promise(resolve => setTimeout(resolve, 4000));
 
   try {
     const response = await sql`

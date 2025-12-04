@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import { getProductById } from "@/lib/data"
 import { ProductDetail } from "@/components/products/product-detail"
+import { Spinner } from "@/components/ui/spinner";
 
 export default async function ProductItemPage(props: { params: Promise<{ product_id: string }> }) {
   
@@ -14,6 +15,9 @@ export default async function ProductItemPage(props: { params: Promise<{ product
   }
 
 
-  return <ProductDetail product={product[0]}/>
+  return (
+    
+    <ProductDetail product={product[0]}/>
+  )
 }
 
