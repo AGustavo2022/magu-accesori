@@ -6,7 +6,7 @@ export default function Loading() {
     <div className="flex justify-center items-center h-80">
       <Button disabled size="sm">
         <Spinner />
-        Loading...
+        Cargando..
       </Button>
     </div>
   )
