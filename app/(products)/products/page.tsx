@@ -4,9 +4,14 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import PaginationProducts from "@/components/pagination-products";
 
-export default async function ProductItemPage({ searchParams,}: {searchParams?: { page?: string };}) {
-  
-  const page = Number(searchParams?.page) || 1;
+export default async function ProductItemPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ page?: string }>;
+}) {
+
+  const params = await searchParams;
+  const page = Number(params?.page) || 1;
 
   const products = await getProductsPages(page);
   const totalPages = await getProductsTotalPages();
