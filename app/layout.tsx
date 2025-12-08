@@ -5,7 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/navbars/navbar";
 import { CartProvider } from "@/contexts/cart-context";
 
-export const experimental_ppr = true;
+// export const experimental_ppr = true;
 
 export const metadata: Metadata = {
   title: "SHOP-Rio Grande",
