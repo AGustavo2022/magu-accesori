@@ -2,6 +2,7 @@ import ProductGrid from "@/components/products/product-grid"
 import { getProductsBySubcategory } from "@/lib/data"
 import { unslugify } from "@/lib/utils"
 
+export const dynamic = "force-dynamic";
 
 export default async function CategoryPage(props: { params: Promise<{ subcategory: string }> }) {
 
