@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import PaginationProducts from "@/components/pagination-products";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function ProductItemPage({
   searchParams,
 }: {

@@ -1,13 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  cacheComponents: true, // reemplaza al viejo experimental.ppr
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "ibb.co",
-        port: "",
+        hostname: "i.ibb.co",
         pathname: "/**",
       },
     ],
