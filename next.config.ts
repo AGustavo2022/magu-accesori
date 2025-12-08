@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    ppr: true // Rendering parcial (Progressive Page Rendering)
-  },
+  cacheComponents: true, // reemplaza al viejo experimental.ppr
   images: {
     remotePatterns: [
       {
