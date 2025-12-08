@@ -4,18 +4,18 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { ShoppingCart, Plus, Minus, Trash2, Package } from "lucide-react"
+import { ShoppingCart, Package } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
-import Image from "next/image"
 import { redirect } from "next/navigation"
 import { useState } from "react"
 import { CartItem } from "../cart-item"
+import { formatPrice } from "@/lib/utils"
 
 export function CartDrawer() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const { items, total, itemCount, updateQuantity, removeItem, clearCart } = useCart()
+  const { items, total, itemCount, clearCart } = useCart()
 
 const handleCheckout = async () => {
     //console.log(items, total, itemCount);
@@ -26,13 +26,6 @@ const handleCheckout = async () => {
     // 3. Redirige a la página de checkout
     redirect('/checkout');
   };
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("es-ES", {
-      style: "currency",
-      currency: "ARS",
-    }).format(price)
-  }
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -50,7 +43,7 @@ const handleCheckout = async () => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="w-full sm:max-w-lg">
+      <SheetContent className="w-full sm:max-w-lg px-4">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
@@ -85,14 +78,14 @@ const handleCheckout = async () => {
               <div className="py-4 space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-semibold">Total:</span>
-                  <span className="text-2xl font-bold text-primary">{formatPrice(total)}</span>
+                  <span className="text-2xl font-bold text-primary"> {formatPrice(total)} </span>
                 </div>
 
                 <div className="space-y-2">
                   <Button 
                     onClick={() => handleCheckout()}
                     className="w-full" size="lg">
-                    Proceder al Checkout
+                    Finalizar compra
                   </Button>
 
                   <Button variant="outline" className="w-full bg-transparent" onClick={clearCart}>
