@@ -1,13 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  cacheComponents: true, // reemplaza al viejo experimental.ppr
+  // Reemplazo oficial del antiguo experimental.ppr
+  cacheComponents: true,
+
+  // Habilita la optimización automática de imágenes remotas en Next 16
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "ibb.co",
-        port: "",
+        hostname: "i.ibb.co", // ← CORRECCIÓN IMPORTANTE
         pathname: "/**",
       },
     ],
