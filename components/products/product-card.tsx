@@ -58,7 +58,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="absolute top-1 right-1 flex flex-col gap-1">
               {isDiscount &&
                 <Badge
-                  className="h-12 w-12 rounded-full text-xl bg-red-600/70"
+                  className="top-2 left-2 rounded-full w-12 h-12 flex items-center justify-center bg-red-400 text-white text-xl font-bold shadow-lg z-10"
                   variant="destructive"
                 >
                   {`${product.discount}%`}
