@@ -17,13 +17,10 @@ export function CartDrawer() {
 
   const { items, total, itemCount, clearCart } = useCart()
 
-const handleCheckout = async () => {
-    //console.log(items, total, itemCount);
+  const handleCheckout = async () => {
 
-    // 2. Cierra el Drawer
-    setIsOpen(false); 
+    setIsOpen(false);
 
-    // 3. Redirige a la página de checkout
     redirect('/checkout');
   };
 
@@ -46,13 +43,12 @@ const handleCheckout = async () => {
       <SheetContent className="w-full sm:max-w-lg px-4">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            <ShoppingCart className="h-5 w-5" />
+            <ShoppingCart />
             Carrito de Compras
             {itemCount > 0 && <Badge variant="secondary">{itemCount} productos</Badge>}
           </SheetTitle>
         </SheetHeader>
-
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-[90vh]"> 
           {items.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
               <Package className="h-16 w-16 text-muted-foreground mb-4" />
@@ -61,34 +57,40 @@ const handleCheckout = async () => {
             </div>
           ) : (
             <>
-                <div className="flex-1 overflow-y-auto py-4">
-                  <div className="space-y-4">
-                    {items.map((item) => (
-                      <CartItem
-                        key={item.product.id}
-                        item={item}
-                        isCheckoutMode={true}
-                      />
-                    ))}
-                  </div>
-                </div>
+
+              <div className="flex-1 overflow-y-auto pr-2">
+                {items.map((item) => (
+                  <CartItem
+                    key={item.product.id}
+                    item={item}
+                    isCheckoutMode={true}
+                  />
+                ))}
+              </div>
 
               <Separator />
 
-              <div className="py-4 space-y-4">
+              <div className="py-4 space-y-4 bg-background sticky bottom-0">
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-semibold">Total:</span>
-                  <span className="text-2xl font-bold text-primary"> {formatPrice(total)} </span>
+                  <span className="text-2xl font-bold text-primary">
+                    {formatPrice(total)}
+                  </span>
                 </div>
 
                 <div className="space-y-2">
-                  <Button 
+                  <Button
                     onClick={() => handleCheckout()}
-                    className="w-full" size="lg">
+                    className="w-full"
+                    size="lg">
                     Finalizar compra
                   </Button>
 
-                  <Button variant="outline" className="w-full bg-transparent" onClick={clearCart}>
+                  <Button
+                    variant="outline"
+                    className="w-full bg-transparent"
+                    onClick={clearCart}
+                  >
                     Vaciar Carrito
                   </Button>
                 </div>
