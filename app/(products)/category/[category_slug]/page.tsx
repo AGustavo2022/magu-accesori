@@ -1,5 +1,4 @@
-import PaginationProducts from "@/components/pagination-products";
-import ProductGrid from "@/components/products/product-grid"
+import PageWithGrid from "@/components/page-with-grid";
 import { getCategoryTotalPages, getProductsByCategory } from "@/lib/data"
 import { unslugify } from "@/lib/utils"
 
@@ -23,21 +22,10 @@ export default async function CategoryPage({
   console.log(totalPages)
 
   return (
-  <div className="container mx-auto flex flex-col min-h-screen">
-
-    <div className="flex-1">
-      <ProductGrid products={products} />
-    </div>
-
-    <div className="mt-8">
-    {totalPages > 1 && (
-      <PaginationProducts
-        currentPage={pageNumber}
-        totalPages={totalPages}
-      />
-    )}
-    </div>
-
-  </div>
+    <PageWithGrid
+      products={products}
+      pageNumber={pageNumber}
+      totalPages={totalPages}
+    />
   )
 }

@@ -1,12 +1,10 @@
-import ProductGrid from "@/components/products/product-grid";
 import {
   getProductsBySubcategory,
   getSubcategoryTotalPages
 } from "@/lib/data";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import PaginationProducts from "@/components/pagination-products";
 import { unslugify } from "@/lib/utils";
+import PageWithGrid from "@/components/page-with-grid";
 
 export const dynamic = "force-dynamic";
 
@@ -33,21 +31,10 @@ export default async function SubCategoryPage({
 
 
   return (
-  <div className="container mx-auto flex flex-col min-h-screen">
-
-    <div className="flex-1">
-      <ProductGrid products={products} />
-    </div>
-
-    <div className="mt-8">
-    {totalPages > 1 && (
-      <PaginationProducts
-        currentPage={pageNumber}
-        totalPages={totalPages}
-      />
-    )}
-    </div>
-
-  </div>
+    <PageWithGrid
+      products={products}
+      pageNumber={pageNumber}
+      totalPages={totalPages}
+    />
   )
 }
