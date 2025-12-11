@@ -1,7 +1,7 @@
 import ProductGrid from "@/components/products/product-grid";
-import { 
-  getProductsBySubcategory, 
-  getSubcategoryTotalPages 
+import {
+  getProductsBySubcategory,
+  getSubcategoryTotalPages
 } from "@/lib/data";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -26,21 +26,28 @@ export default async function SubCategoryPage({
   const products = await getProductsBySubcategory(unslugify(subcategory), pageNumber);
   const totalPages = await getSubcategoryTotalPages(subcategory);
 
-  // if (!products || products.length === 0) {
-  //   notFound();
-  // }
+  if (!products || products.length === 0) {
+    notFound();
+  }
 
-  console.log(totalPages)
+
+
   return (
-  <div className="space-y-6">
-    <ProductGrid products={products} />
+  <div className="container mx-auto flex flex-col min-h-screen">
 
-    {totalPages > 0 && (
+    <div className="flex-1">
+      <ProductGrid products={products} />
+    </div>
+
+    <div className="mt-8">
+    {totalPages > 1 && (
       <PaginationProducts
         currentPage={pageNumber}
         totalPages={totalPages}
       />
     )}
+    </div>
+
   </div>
-  );
+  )
 }

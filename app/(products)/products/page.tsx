@@ -14,9 +14,9 @@ export default async function ProductItemPage({
 }) {
 
   const params = await searchParams;
-  const page = Number(params?.page) || 1;
+  const pageNumber = Number(params?.page) || 1;
 
-  const products = await getProductsPages(page);
+  const products = await getProductsPages(pageNumber);
   const totalPages = await getProductsTotalPages();
 
   if (!products || products.length === 0) {
@@ -25,17 +25,22 @@ export default async function ProductItemPage({
 
   return (
     <Suspense fallback={<p className="text-center py-10">Cargando productos...</p>}>
-      <div className="space-y-6">
+  <div className="container mx-auto flex flex-col min-h-screen">
 
-        {/* PRODUCT GRID */}
-        <ProductGrid products={products} />
+    <div className="flex-1">
+      <ProductGrid products={products} />
+    </div>
 
-        {/* PAGINATION */}
-        <PaginationProducts
-          currentPage={page}
-          totalPages={totalPages}
-        />
-      </div>
+    <div className="mt-8">
+    {totalPages > 1 && (
+      <PaginationProducts
+        currentPage={pageNumber}
+        totalPages={totalPages}
+      />
+    )}
+    </div>
+
+  </div>
     </Suspense>
   );
 }
