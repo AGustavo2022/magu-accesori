@@ -74,14 +74,7 @@ return (
 
 
             <div className="absolute top-2 right-4 flex flex-col gap-2">
-              {isDiscount &&
-                <Badge
-                  className="h-16 w-16 rounded-full text-3xl bg-red-600/70"
-                  variant="destructive"
-                >
-                  {`${product.discount}%`}
-                </Badge>
-              }
+
               {isInactive && <Badge variant="destructive">Producto Inactivo</Badge>}
               {isOutOfStock && <Badge variant="secondary" className="bg-red-100 border border-red-300 rounded-lg">Agotado</Badge>}
               {isLowStock && (
@@ -113,7 +106,7 @@ return (
           />
         </div>
 
-       
+
         <div>
           <h1 className="text-2xl font-bold text-balance mb-2">{product.title}</h1>
 
@@ -122,9 +115,17 @@ return (
               <span className="text-xl text-gray-500 line-through pr-5">
                 {formatPrice(product.price)}
               </span>
-              <span className="text-3xl font-bold text-red-600">
+              <span className="text-3xl font-bold text-red-600 pr-8">
                 {formatPrice(priceDiscount)}
               </span>
+
+              <Badge
+                className="h-8 w-24 rounded-b-md text-2xl bg-red-600/70"
+                variant="destructive"
+              >
+                {`- ${product.discount}%`}
+              </Badge>
+
             </>
           ) : (
             <span className="text-3xl font-bold text-gray-900">
