@@ -1,22 +1,46 @@
+"use client"
+
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
-import { ProductCardProps } from "@/lib/definitions"
+import { Product, ProductCardProps } from "@/lib/definitions"
 import { formatPrice } from "@/lib/utils"
+import { Button } from "../ui/button"
+import { ShoppingCart } from "lucide-react"
+import { useCart } from "@/contexts/cart-context"
+import { useState } from "react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 
 
 export default function ProductCard({ product }: ProductCardProps) {
 
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+
+  const { addItem, items } = useCart();
+
+  console.log(product)
+
   if (!product) {
     return <p>Producto no encontrado</p>
   }
 
+  const isOutOfStock = product.stock === 0
+  const isInactive = !product.status
   const isDiscount = product.discount > 0
   const priceDiscount = product.price * (1 - (product.discount / 100));
+  const isProductInCart = items.some(item => item.product.id === product.id);
 
+  const handleAddToCart = (product: Product) => {
+    addItem(product, selectedQuantity);
+    //console.log("Añadiendo al carrito:", product.title, "Cantidad:", selectedQuantity)
+  }
 
   return (
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[380px] p-0">
@@ -34,7 +58,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="absolute top-1 right-1 flex flex-col gap-1">
               {isDiscount &&
                 <Badge
-                  className="h-12 w-12 rounded-full text-xl bg-red-600/70"
+                  className="top-2 left-2 rounded-full w-12 h-12 flex items-center justify-center bg-red-400 text-white text-xl font-bold shadow-lg z-10"
                   variant="destructive"
                 >
                   {`${product.discount}%`}
@@ -59,9 +83,13 @@ export default function ProductCard({ product }: ProductCardProps) {
             <p className="text-xs text-gray-600 line-clamp-3">{product.short_description}</p>
           </div>
 
+          <div>
+            <span className="text-xs text-gray-600">Stock : {product.stock}</span>
+          </div>
+
           {/* 4. PRECIO Y BOTÓN (Parte inferior - fijo) */}
           <div className="pt-1"> {/* Eliminé mt-auto, que ya no es necesario si el div superior tiene flex-1 */}
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline justify-between gap-1">
               {isDiscount ? (
                 <>
                   {/* 1. Precio Original (Tachado y Pequeño) */}
@@ -70,25 +98,41 @@ export default function ProductCard({ product }: ProductCardProps) {
                   </span>
 
                   {/* 2. Precio Final (Grande y Destacado) */}
-                  <span className="text-2xl font-bold text-red-600">
+                  <span className="text-xl font-bold text-red-600">
                     {formatPrice(priceDiscount)}
                   </span>
                 </>
               ) : (
                 // Si no hay descuento, solo muestra el precio normal
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-gray-900">
                   {formatPrice(product.price)}
                 </span>
               )}
+
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="rounded-full"
+                    onClick={() => handleAddToCart(product)}
+                    disabled={isOutOfStock || isInactive || selectedQuantity === 0 || isProductInCart}
+                  >
+                    <ShoppingCart />
+                  </Button>
+
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Agregar al carrito</p>
+                </TooltipContent>
+              </Tooltip>
+
             </div>
 
-            {/* <Button className="w-full text-xs">
-              <ShoppingCart className="h-3 w-3 mr-1" />
-              Agregar al carrito
-            </Button> */}
           </div>
         </div>
       </CardContent>
     </Card>
   )
 }
+

@@ -11,12 +11,42 @@ import {
 
 import { Subcategory } from "@/lib/definitions";
 
+/* 🔹 Componente Link reutilizable */
+function SidebarLink({
+  href,
+  label,
+  className = "",
+}: {
+  href: string;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`text-gray-700 hover:text-blue-600 text-sm ${className}`}
+    >
+      {label}
+    </Link>
+  );
+}
+
+
 export default async function CategorySidebar() {
   const categories = await getCategoryAll();
 
   if (!categories?.length) return null;
 
   return (
+    <>
+      <div className="pt-8 pb-4">
+        <h2 className="text-2xl font-semibold pb-4">Categorias</h2>
+        <SidebarLink
+          label="Ver todos los Productos"
+          href={`/products`}
+          className="font-normal"
+        />
+      </div>
     <Accordion type="single" collapsible className="w-full">
       {categories.map((cat) => (
         <AccordionItem
@@ -29,7 +59,7 @@ export default async function CategorySidebar() {
           </AccordionTrigger>
 
           {/* SUBCATEGORÍAS */}
-          <AccordionContent className="flex flex-col gap-2 pl-4">
+          <AccordionContent className="flex flex-col gap-2 pl-10">
             {cat.subcategories?.map((sub: Subcategory) => (
               <SidebarLink
                 key={sub.subcategory_id}
@@ -50,25 +80,7 @@ export default async function CategorySidebar() {
         </AccordionItem>
       ))}
     </Accordion>
+    </>
   );
 }
 
-/* 🔹 Componente Link reutilizable */
-function SidebarLink({
-  href,
-  label,
-  className = "",
-}: {
-  href: string;
-  label: string;
-  className?: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`text-gray-700 hover:text-blue-600 text-sm ${className}`}
-    >
-      {label}
-    </Link>
-  );
-}

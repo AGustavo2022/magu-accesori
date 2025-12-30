@@ -128,7 +128,8 @@ export async function updateProduct(id: string, formData: FormData) {
     const stockNew = Number(rawFormData.stock) || 0;
     const discountNew = Number(rawFormData.discount) || 0;
     // Si 'status' es un booleano en la BD:
-    const status = rawFormData.status === 'on' || rawFormData.status === 'true';
+    // const status = rawFormData.status === 'on' || rawFormData.status === 'true';
+    const status = 'true';
 
     // 3. **Fecha de Actualización (Opcional, pero recomendado)**
     // Agregamos una columna para rastrear cuándo fue la última modificación.

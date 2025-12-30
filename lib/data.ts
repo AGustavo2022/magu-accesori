@@ -99,7 +99,15 @@ export async function getProductsDashboard() {
   }
 }
 
-export async function getProductsByCategory(categoryName: string): Promise<Product[]> {
+const ITEMS_PER_PAGECAT = 12; // elegí el número que quieras
+
+export async function getProductsByCategory(
+  categoryName: string,
+  page: number = 1
+): Promise<Product[]> {
+
+  const offset = (page - 1) * ITEMS_PER_PAGECAT;
+
   const result = await sql`
     SELECT 
       p.id,
@@ -115,44 +123,97 @@ export async function getProductsByCategory(categoryName: string): Promise<Produ
       p.discount,
       p.created_at
     FROM products2 p
-    
     INNER JOIN categories c ON p.category = c.id
-    
     INNER JOIN subcategories sc ON p.subcategory = sc.id
-    
-    WHERE c.name = ${categoryName} 
+    WHERE c.name = ${categoryName}
+      AND p.status = true
+      AND p.stock > 0
     ORDER BY p.id ASC
+    LIMIT ${ITEMS_PER_PAGECAT}
+    OFFSET ${offset}
   `;
 
   return result as Product[];
 }
 
-export async function getProductsBySubcategory(subcategoryName: string): Promise<Product[]> {
+export async function getCategoryTotalPages(
+  categoryName: string
+): Promise<number> {
+
   const result = await sql`
-    SELECT 
-      p.id,
-      p.title,
-      p.short_description,
-      p.long_description,
-      p.price,
-      p.stock,
-      p.image_url,
-      c.name AS category,        
-      sc.name AS subcategory,     
-      p.status,
-      p.discount,
-      p.created_at
+    SELECT COUNT(*) AS count
     FROM products2 p
-    
     INNER JOIN categories c ON p.category = c.id
-    
-    INNER JOIN subcategories sc ON p.subcategory = sc.id
-    
-    WHERE sc.name = ${subcategoryName} 
-    ORDER BY p.id ASC
+    WHERE c.name = ${categoryName}
+      AND p.status = true
+      AND p.stock > 0
   `;
 
-  return result as Product[];
+  const totalItems = Number(result[0]?.count) || 0;
+  return Math.ceil(totalItems / ITEMS_PER_PAGECAT);
+}
+
+
+const ITEMS_PER_PAGESUB = 12; // mismo valor que usás arriba
+
+export async function getProductsBySubcategory(
+  subcategoryName: string,
+  page: number = 1
+): Promise<Product[]> {
+  const offset = (page - 1) * ITEMS_PER_PAGESUB;
+
+  try {
+    const result = await sql`
+      SELECT 
+        p.id,
+        p.title,
+        p.short_description,
+        p.long_description,
+        p.price,
+        p.stock,
+        p.image_url,
+        c.name AS category,        
+        sc.name AS subcategory,     
+        p.status,
+        p.discount,
+        p.created_at
+      FROM products2 p
+      INNER JOIN categories c ON p.category = c.id
+      INNER JOIN subcategories sc ON p.subcategory = sc.id
+      WHERE sc.name = ${subcategoryName}
+        AND p.status = true
+        AND p.stock > 0
+      ORDER BY p.id ASC
+      LIMIT ${ITEMS_PER_PAGESUB}
+      OFFSET ${offset};
+    `;
+
+    return result as Product[];
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch paginated subcategory products.");
+  }
+}
+
+export async function getSubcategoryTotalPages(
+  subcategoryName: string
+): Promise<number> {
+  try {
+    const count = await sql`
+      SELECT COUNT(*)
+      FROM products2 p
+      INNER JOIN subcategories sc ON p.subcategory = sc.id
+      WHERE sc.name = ${subcategoryName}
+        AND p.status = true
+        AND p.stock > 0
+    `;
+
+    const total = Number(count[0].count);
+    return Math.ceil(total / ITEMS_PER_PAGE);
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch total pages for subcategory.");
+  }
 }
 
 export async function getProductById(product_id: string): Promise<Product []> {
@@ -187,8 +248,6 @@ export async function getProductById(product_id: string): Promise<Product []> {
         throw new Error('Failed to fetch product by ID.');
     }
 }
-
-
 
 const ITEMS_PER_PAGE = 12; // Cambialo según tu diseño
 

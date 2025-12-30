@@ -31,17 +31,8 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
   const { addItem, items } = useCart();
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-  }
-
   const handleAddToCart = (product: Product) => {
     addItem(product, selectedQuantity);
-    //console.log("Añadiendo al carrito:", product.title, "Cantidad:", selectedQuantity)
   }
 
   const isOutOfStock = product.stock === 0
@@ -58,15 +49,15 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
 
 return (
-  <div className="max-w-6xl mx-auto p-6">
-    {/* Contenedor Principal: 2 Columnas. Usa h-full para que las columnas hijas se estiren */}
+  <div className="max-w-6xl mx-auto p-8">
+
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:h-full">
 
-      {/* COLUMNA 1: Imagen del Producto (Mantener) */}
+
       <div className="space-y-4">
         <Card className="p-0 overflow-hidden">
           <div className="aspect-square relative p-0">
-            {/* ... Contenido de la Imagen ... */}
+
             {product.image_url ? (
               <Image
                 src={product.image_url || "/placeholder.svg"}
@@ -81,16 +72,9 @@ return (
               </div>
             )}
 
-            {/* Status badges */}
+
             <div className="absolute top-2 right-4 flex flex-col gap-2">
-              {isDiscount &&
-                <Badge
-                  className="h-16 w-16 rounded-full text-3xl bg-red-600/70"
-                  variant="destructive"
-                >
-                  {`${product.discount}%`}
-                </Badge>
-              }
+
               {isInactive && <Badge variant="destructive">Producto Inactivo</Badge>}
               {isOutOfStock && <Badge variant="secondary" className="bg-red-100 border border-red-300 rounded-lg">Agotado</Badge>}
               {isLowStock && (
@@ -103,12 +87,11 @@ return (
         </Card>
       </div>
 
-      {/* COLUMNA 2: Información del Producto (Contenedor FLEX principal) */}
-      {/* Clave: Usa lg:h-full y flex flex-col para controlar el espacio vertical */}
+
+
       <div className="flex flex-col space-y-6 lg:h-full">
 
-        {/* 1. Breadcrumbs (Sección Pequeña) */}
-        <div className="text-sm"> {/* Clase 'text-sm' para hacerlo más chico */}
+        <div className="text-sm">
           <Breadcrumbs
             breadcrumbs={[
               { label: 'Inicio', href: '/' },
@@ -123,7 +106,7 @@ return (
           />
         </div>
 
-        {/* 2. Título y Precio */}
+
         <div>
           <h1 className="text-2xl font-bold text-balance mb-2">{product.title}</h1>
 
@@ -132,9 +115,17 @@ return (
               <span className="text-xl text-gray-500 line-through pr-5">
                 {formatPrice(product.price)}
               </span>
-              <span className="text-3xl font-bold text-red-600">
+              <span className="text-3xl font-bold text-red-600 pr-8">
                 {formatPrice(priceDiscount)}
               </span>
+
+              <Badge
+                className="h-8 w-24 rounded-b-md text-2xl bg-red-600/70"
+                variant="destructive"
+              >
+                {`- ${product.discount}%`}
+              </Badge>
+
             </>
           ) : (
             <span className="text-3xl font-bold text-gray-900">
@@ -143,38 +134,32 @@ return (
           )}
         </div>
         
-        {/* 3. Acordeón con Descripción y Detalles */}
         <Accordion
           type="single"
           collapsible
           className="w-full"
           defaultValue="item-1"
         >
-          {/* Descripción */}
+
           <AccordionItem value="item-1">
-            {/* El Trigger usa el estilo predeterminado, que ya es consistente */}
             <AccordionTrigger>Descripción</AccordionTrigger>
-            <AccordionContent className="text-sm text-muted-foreground flex flex-col gap-4 text-balance">
-              {/* Mantiene el mismo estilo de la descripción larga anterior */}
-              <p className="leading-relaxed">{product.long_description}</p>
+            <AccordionContent className="text-sm text-muted-foreground flex flex-col gap-4 text-balance pl-14">
+              <p className="leading-relaxed ">{product.long_description}</p>
             </AccordionContent>
           </AccordionItem>
 
-          {/* Detalles del Producto (Stock, SKU, etc.) */}
           <AccordionItem value="item-2">
             <AccordionTrigger>Detalles del Producto</AccordionTrigger>
-            {/* CLAVE: Usamos text-sm y text-gray-700 para estilo de detalle */}
-            <AccordionContent className="text-sm text-gray-700 flex flex-col gap-2">
+            <AccordionContent className="text-sm text-gray-700 flex flex-col gap-2 pl-14">
               <p><strong>Stock disponible:</strong> {product.stock} unidades</p>
               <p><strong>SKU:</strong> SKUDELPRODUCTO</p>
             </AccordionContent>
           </AccordionItem>
 
-          {/* Método de Pago */}
+
           <AccordionItem value="item-3">
             <AccordionTrigger>Método de Pago</AccordionTrigger>
-            {/* CLAVE: Usamos text-sm para estilo de detalle */}
-            <AccordionContent className="text-sm text-gray-700 flex flex-col gap-4 text-balance">
+            <AccordionContent className="text-sm text-gray-700 flex flex-col gap-4 text-balance pl-14">
               <div className="flex">
                 <CreditCard />
                 <p className="px-3">Transferencia bancaria</p>
@@ -187,14 +172,9 @@ return (
           </AccordionItem>
         </Accordion>
 
-        {/* CLAVE DEL CAMBIO: Action Buttons (Cantidad y Añadir) */}
-        {/* Usamos lg:mt-auto para empujar este bloque al final de la columna flexible */}
         <div className="space-y-4 lg:mt-auto"> 
-          {/* Selector de Cantidad y Botón Añadir (Horizontal) */}
           <div className="flex items-end gap-3">
-            {/* 1. Selector de Cantidad */}
             <div className="flex-none">
-              {/* <label className="block text-sm font-medium mb-1">Cantidad</label> */}
               <QuantitySelector
                 maxStock={product.stock}
                 onQuantityChange={handleQuantityChange}

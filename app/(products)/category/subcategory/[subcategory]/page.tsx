@@ -1,18 +1,40 @@
-import ProductGrid from "@/components/products/product-grid"
-import { getProductsBySubcategory } from "@/lib/data"
-import { unslugify } from "@/lib/utils"
+import {
+  getProductsBySubcategory,
+  getSubcategoryTotalPages
+} from "@/lib/data";
+import { notFound } from "next/navigation";
+import { unslugify } from "@/lib/utils";
+import PageWithGrid from "@/components/page-with-grid";
 
 export const dynamic = "force-dynamic";
 
-export default async function CategoryPage(props: { params: Promise<{ subcategory: string }> }) {
+export default async function SubCategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ subcategory: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
 
-  const {subcategory} = await props.params
+  const { subcategory } = await params;
+  const { page } = await searchParams;
+  const pageNumber = Number(page) || 1;
 
-  const products = await getProductsBySubcategory(unslugify(subcategory))
+
+  const products = await getProductsBySubcategory(unslugify(subcategory), pageNumber);
+  const totalPages = await getSubcategoryTotalPages(subcategory);
+
+  if (!products || products.length === 0) {
+    notFound();
+  }
+
+
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <ProductGrid products={products} />
-    </div>
+    <PageWithGrid
+      products={products}
+      pageNumber={pageNumber}
+      totalPages={totalPages}
+    />
   )
 }
