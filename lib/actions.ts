@@ -22,48 +22,37 @@ const FormSchema = z.object({
     image_url: z.string(),
     category: z.string(),
     subcategory: z.string(),
-    status: z.enum(['pending', 'paid']),
+    status: z.enum(["true", "false"]).transform(v => v === "true"),
     discount: z.coerce.number(),
     date: z.string(),
 });
 
 
-const CreateProduct = FormSchema.omit({ id: true, date: true });
+const CreateProduct = FormSchema.omit({ id: true, date: true, status: true});
+const UpdateProduct = FormSchema.omit({ id: true, date: true});
 
 export async function createProduct(formData: FormData) {
     
     
-    const rawFormData = {
-        title: formData.get('title'),
-        shortDescription: formData.get('shortDescription'),
-        longDescription: formData.get('longDescription'),
-        price: formData.get('price'),
-        stock: formData.get('stock'),
-        image_url: formData.get('image_url'),
-        category: formData.get('category'),
-        subcategory: formData.get('subcategory'),
-        //status: formData.get('status'), // Nota: Esto será un string, necesitará conversión a booleano
-        discount: formData.get('discount'),
-    };
-// 1. **Conversión de Tipos y Validación (¡Recomendado!)**
-    // Es crucial convertir los valores a los tipos correctos antes de insertarlos.
-    // Por ejemplo, `price`, `stock`, `discount` deben ser números, y `status` un booleano (si aplica).
-    const priceNew = Number(rawFormData.price) || 0; // Convertir a número, usar 0 si falla
-    const stockNew = Number(rawFormData.stock) || 0;
-    const discountNew = Number(rawFormData.discount) || 0;
-    // Si 'status' es un booleano en la BD:
-    const status = 'true'; // Asumiendo que viene de un checkbox
+  const validatedFields = CreateProduct.parse({
+    title: formData.get('title'),
+    shortDescription: formData.get('shortDescription'),
+    longDescription: formData.get('longDescription'),
+    price: formData.get('price'),
+    stock: formData.get('stock'),
+    image_url: formData.get('image_url'),
+    category: formData.get('category'),
+    subcategory: formData.get('subcategory'),
+    discount: formData.get('discount'),
+  });
 
-    // 2. **Fecha de Creación**
-    // Obtenemos la fecha actual para la columna de fecha de creación.
+    const status = 'true';
+
+    // **Fecha de Creación**
     const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
 
     // Para probarlo:
-    console.log(rawFormData);
-
-    // 3. **Consulta SQL Modificada**
-    // Utilizamos los valores ya formateados y la plantilla de cadena (`sql` tag)
-    // para insertar los datos de manera segura, evitando inyección SQL.
+    console.log(validatedFields);
 
     try {
         await sql`
@@ -81,16 +70,16 @@ export async function createProduct(formData: FormData) {
                 created_at
             )
             VALUES (
-                ${rawFormData.title}, 
-                ${rawFormData.shortDescription}, 
-                ${rawFormData.longDescription}, 
-                ${priceNew}, 
-                ${stockNew}, 
-                ${rawFormData.image_url},                
-                ${rawFormData.category}, 
-                ${rawFormData.subcategory}, 
+                ${validatedFields.title}, 
+                ${validatedFields.shortDescription}, 
+                ${validatedFields.longDescription}, 
+                ${validatedFields.price}, 
+                ${validatedFields.stock}, 
+                ${validatedFields.image_url},                
+                ${validatedFields.category}, 
+                ${validatedFields.subcategory}, 
                 ${status}, 
-                ${discountNew}, 
+                ${validatedFields.discount}, 
                 ${created_at}
             )
         `;
@@ -108,9 +97,8 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(id: string, formData: FormData) {
-    // 1. **Obtener y Formatear Datos del Formulario**
-    // (Igual que en la función de creación)
-    const rawFormData = {
+
+    const validatedFields = UpdateProduct.parse({
         title: formData.get('title'),
         shortDescription: formData.get('shortDescription'),
         longDescription: formData.get('longDescription'),
@@ -119,44 +107,30 @@ export async function updateProduct(id: string, formData: FormData) {
         image_url: formData.get('image_url'),
         category: formData.get('category'),
         subcategory: formData.get('subcategory'),
-        status: formData.get('status'), // Nota: Esto será un string
+        status: formData.get('status'),
         discount: formData.get('discount'),
-    };
+    });
 
-    // 2. **Conversión y Validación de Tipos**
-    const priceNew = Number(rawFormData.price) || 0;
-    const stockNew = Number(rawFormData.stock) || 0;
-    const discountNew = Number(rawFormData.discount) || 0;
-    // Si 'status' es un booleano en la BD:
-    // const status = rawFormData.status === 'on' || rawFormData.status === 'true';
-    const status = 'true';
-
-    // 3. **Fecha de Actualización (Opcional, pero recomendado)**
-    // Agregamos una columna para rastrear cuándo fue la última modificación.
     const updated_at = new Date().toISOString();
 
     // Para probarlo:
     console.log(`Actualizando producto ID: ${id}`);
-    console.log(`${rawFormData}`);
-
-    // 4. **Consulta SQL UPDATE**
-    // Usamos la sentencia UPDATE y la cláusula WHERE para asegurarnos de que
-    // solo se modifique el producto con el ID especificado.
+    console.log(validatedFields);
 
     try {
         await sql`
             UPDATE products2
             SET
-                title = ${rawFormData.title},
-                short_description = ${rawFormData.shortDescription},
-                long_description = ${rawFormData.longDescription},
-                price = ${priceNew},
-                stock = ${stockNew},
-                image_url = ${rawFormData.image_url},
-                category = ${rawFormData.category},
-                subcategory = ${rawFormData.subcategory},
-                status = ${status},
-                discount = ${discountNew},
+                title = ${validatedFields.title},
+                short_description = ${validatedFields.shortDescription},
+                long_description = ${validatedFields.longDescription},
+                price = ${validatedFields.price},
+                stock = ${validatedFields.stock},
+                image_url = ${validatedFields.image_url},
+                category = ${validatedFields.category},
+                subcategory = ${validatedFields.subcategory},
+                status = ${validatedFields.status},
+                discount = ${validatedFields.discount},
                 updated_at = ${updated_at} -- Columna para la última actualización
             WHERE id = ${id}
         `;
@@ -186,7 +160,6 @@ export async function deleteProduct({ id }: DeleteProductArgs) {
     `;
 
     // **Revalidar el Caché**
-    // Indicamos a Next.js que olvide los datos cacheados de la ruta donde se listan los productos.
     revalidatePath('/dashboard'); 
     
     //console.log(`Producto con ID ${id} eliminado exitosamente.`);
