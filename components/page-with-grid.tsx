@@ -22,7 +22,9 @@ export default function PageWithGrid({
     <div className="container mx-auto flex flex-col min-h-screen">
 
       {/* Contenido superior opcional */}
+      <div className=" h-16">
       {children}
+      </div>
 
       <div className="flex-1">
         <ProductGrid products={products} />

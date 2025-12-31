@@ -249,11 +249,14 @@ export async function getProductById(product_id: string): Promise<Product []> {
     }
 }
 
-const ITEMS_PER_PAGE = 12; // Cambialo según tu diseño
+const ITEMS_PER_PAGE = 12;
 
-// Versión paginada: getProductsPages(page: number)
-export async function getProductsPages(page: number = 1) {
+export async function getProductsPages(
+  query: string = "",
+  page: number = 1
+) {
   const offset = (page - 1) * ITEMS_PER_PAGE;
+  const search = `%${query}%`;
 
   try {
     const response = await sql`
@@ -273,28 +276,47 @@ export async function getProductsPages(page: number = 1) {
       FROM products2 p
       INNER JOIN categories c ON p.category = c.id
       INNER JOIN subcategories sc ON p.subcategory = sc.id
-      WHERE p.status = true
+      WHERE 
+        p.status = true
         AND p.stock > 0
+        AND (
+          p.title ILIKE ${search}
+          OR p.short_description ILIKE ${search}
+          OR c.name ILIKE ${search}
+          OR sc.name ILIKE ${search}
+          OR p.price::text ILIKE ${search}
+        )
       ORDER BY p.id ASC
       LIMIT ${ITEMS_PER_PAGE}
       OFFSET ${offset}
     `;
 
-    return response as Product[];
+    return response;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch paginated products.");
   }
 }
 
-// Función para saber cuántas páginas hay
-export async function getProductsTotalPages() {
+export async function getProductsTotalPages(query: string = "") {
+  const search = `%${query}%`;
+
   try {
     const count = await sql`
       SELECT COUNT(*) 
-      FROM products2
-      WHERE status = true
-        AND stock > 0
+      FROM products2 p
+      INNER JOIN categories c ON p.category = c.id
+      INNER JOIN subcategories sc ON p.subcategory = sc.id
+      WHERE 
+        p.status = true
+        AND p.stock > 0
+        AND (
+          p.title ILIKE ${search}
+          OR p.short_description ILIKE ${search}
+          OR c.name ILIKE ${search}
+          OR sc.name ILIKE ${search}
+          OR p.price::text ILIKE ${search}
+        )
     `;
 
     const total = Number(count[0].count);
