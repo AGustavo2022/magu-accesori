@@ -1,4 +1,3 @@
-import { ProductForm, Category } from "./definitions";
 
 export type Product = {
   id: string;
