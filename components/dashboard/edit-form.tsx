@@ -11,143 +11,60 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { useState } from 'react';
-import { Category, Subcategory } from '@/lib/definitions';
-
-// Interfaz (sin cambios)
-interface ProductForm {
-    id: string;
-    title: string;
-    short_description: string;
-    long_description: string;
-    price: number;
-    stock: number;
-    image_url: string;
-    category: string;
-    subcategory: string;
-    status: boolean; // Se mantiene en la interfaz, pero se ignora en el formulario
-    discount: number;
-    created_at: Date
-}
-
-interface EditProductFormProps {
-    product: ProductForm;
-    categories: Category[];
-}
+import { EditProductFormProps, Subcategory } from '@/lib/definitions';
+import { getCategoryIdByName, getSubcategoryIdByName } from '@/lib/utils';
+import { Switch } from '../ui/switch';
 
 export default function EditProductForm({ product, categories }: EditProductFormProps) {
 
-    /**
-    * Busca el ID de una categoría dado su nombre.
-    * @param categoryName El nombre de la categoría (p.ej., 'Llaveros').
-    * @param categories El array completo de objetos Category.
-    * @returns El ID de la categoría (como string), o null si no se encuentra.
-    */
-    function getCategoryIdByName(
-      categoryName: string,
-      categories: Category[]
-    ): string | null {
-
-      // 1. Buscar la categoría en el array 'categories' por el nombre
-      const foundCategory = categories.find(
-        (cat) => cat.category_name === categoryName
-      );
-
-      // 2. Devolver el ID (convertido a string para compatibilidad con el Select)
-      return foundCategory ? foundCategory.category_id.toString() : null;
-    }
-
     const categoryId = getCategoryIdByName(product.category, categories)
-
-    /**
-    * Busca el ID de una subcategoría dado su nombre, navegando por todas las categorías.
-    * @param subcategoryName El nombre de la subcategoría (p.ej., 'Regulares').
-    * @param categories El array completo de objetos Category, que contienen las subcategorías.
-    * @returns El ID de la subcategoría (como string), o null si no se encuentra.
-    */
-    function getSubcategoryIdByName(
-        subcategoryName: string, 
-        categories: Category[]
-    ): string | null {
-        
-        let subcategoryId: string | null = null;
-
-        // 1. Iterar sobre cada categoría
-        for (const category of categories) {
-            // 2. Buscar la subcategoría dentro del array 'subcategories' de la categoría actual
-            const foundSubcategory = category.subcategories.find(
-                (sub) => sub.subcategory_name === subcategoryName
-            );
-
-            // 3. Si se encuentra, guardar el ID y salir del bucle
-            if (foundSubcategory) {
-                subcategoryId = foundSubcategory.subcategory_id.toString();
-                break; 
-            }
-        }
-
-        return subcategoryId;
-    }
 
     const subCategoryId = getSubcategoryIdByName(product.subcategory, categories)
 
-    // --- ⬇️ INICIALIZACIÓN DE ESTADOS CORREGIDA ⬇️ ---
-    
-    // 1. selectedCategory ahora es de tipo string, ya que el Select lo requiere.
-    // Usamos el resultado de getCategoryIdByName directamente (que es string|null). 
-    // Usamos el operador coalescing (??) para asegurar un valor inicial si categoryId es null.
     const [selectedCategory, setSelectedCategory] = useState<string>(categoryId ?? '');
     
     const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>(() => {
-        // Usamos el ID de la categoría del producto (que es el valor inicial de selectedCategory)
-        const numericCategoryId = Number(categoryId); // Convertimos el ID inicial a número para la búsqueda
+        const numericCategoryId = Number(categoryId);
         const categoryObject = categories.find(
             (cat) => cat.category_id === numericCategoryId
         );
         return categoryObject ? categoryObject.subcategories : [];
     });
     
-    // 2. selectedSubcategory ahora es de tipo string, ya que el Select lo requiere.
     const [selectedSubcategory, setSelectedSubcategory] = useState<string>(subCategoryId ?? '');
+    const [status, setStatus] = useState<boolean>(product.status);
 
-    // --- ⬆️ INICIALIZACIÓN DE ESTADOS CORREGIDA ⬆️ ---
 
+    // **Puede pasar id a la Acción del Servidor mediante JS bind. 
+    // Esto garantizará que todos los valores que se pasen a la 
+    // Acción del Servidor estén codificados.** 
     const updateProductWithId = updateProduct.bind(null, product.id);
 
-
-    // --- ⬇️ HANDLERS CORREGIDOS ⬇️ ---
-
     const handleCategoryChange = (categoryIdString: string) => {
-        // 1. Actualiza el estado con la string (lo que usa el Select)
+
         setSelectedCategory(categoryIdString); 
 
-        // 2. Convierte a number para buscar en tu array 'categories'
         const numericCategoryId = Number(categoryIdString);
 
         const categoryObject = categories.find(
             (cat) => cat.category_id === numericCategoryId
         );
 
-        // 3. Actualiza las subcategorías disponibles y resetea la subcategoría seleccionada
         const subArray = categoryObject ? categoryObject.subcategories : [];
         setAvailableSubcategories(subArray);
-        setSelectedSubcategory(''); // Usamos string vacía para resetear el valor del Select
+        setSelectedSubcategory(''); 
     };
 
     const handleSubcategoryChange = (subcategoryIdString: string) => {
-        // Acepta string y actualiza el estado (lo que usa el Select)
-        setSelectedSubcategory(subcategoryIdString);
-        // Si necesitas el ID numérico para otra lógica, puedes convertirlo aquí:
-        // const numericSubcategoryId = Number(subcategoryIdString);
-    };
 
-    // --- ⬆️ HANDLERS CORREGIDOS ⬆️ ---
+        setSelectedSubcategory(subcategoryIdString);
+    };
 
 
     return (
         <form action={updateProductWithId} className="max-w-4xl mx-auto my-8">
 
             <div className="rounded-md bg-gray-50 p-4 md:p-6">
-                {/* ... (Otros campos del formulario sin cambios) ... */}
 
                 {/* 1. Título */}
                 <div className="mb-4">
@@ -266,7 +183,6 @@ export default function EditProductForm({ product, categories }: EditProductForm
                         </label>
                         <Select
                             onValueChange={handleCategoryChange}
-                            // El 'value' debe ser la string que espera el Select
                             value={selectedCategory} 
                         >
                             <SelectTrigger className="w-[200px] ">
@@ -276,7 +192,6 @@ export default function EditProductForm({ product, categories }: EditProductForm
                                 {categories.map((cat) => (
                                     <SelectItem 
                                         key={cat.category_id} 
-                                        // El 'value' de SelectItem DEBE ser un string
                                         value={cat.category_id.toString()}
                                     >
                                         {cat.category_name}
@@ -326,12 +241,36 @@ export default function EditProductForm({ product, categories }: EditProductForm
                         />
                     </div>
 
+                    <div className="mb-4 w-1/4">
+                        <label className="mb-2 block text-sm font-medium">
+                            Status
+                        </label>
+
+                        <div className="flex items-center gap-3">
+                            <Switch
+                                checked={status}
+                                onCheckedChange={setStatus}
+                            />
+
+                            <span className="text-sm text-muted-foreground">
+                                {status ? "Activo" : "Inactivo"}
+                            </span>
+                        </div>
+
+                        {/* Input oculto para enviar al server */}
+                        <input
+                            type="hidden"
+                            name="status"
+                            value={status ? "true" : "false"}
+                        />
+                    </div>
+
                 </div>
             </div>
 
             <div className="mt-6 flex justify-end gap-4">
                 <Link
-                    href="/dashboard/products"
+                    href="/dashboard"
                     className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
                 >
                     Cancelar
