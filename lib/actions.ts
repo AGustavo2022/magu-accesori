@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { neon } from '@neondatabase/serverless';
-import { DeleteProductArgs } from './definitions';
 
 
 const sqlDb = `${process.env.DATABASE_URL}`
@@ -30,7 +29,7 @@ const FormSchema = z.object({
 const CreateProduct = FormSchema.omit({ id: true, date: true, status: true });
 const UpdateProduct = FormSchema.omit({ id: true, date: true });
 
-export type ProductActionState = {
+export type CreateProductState = {
   success: boolean;
   message?: string;
   errors?: {
@@ -60,7 +59,7 @@ export type DeleteActionState = {
 }
 
 
-export async function createProduct(prevState: ProductActionState, formData: FormData): Promise<ProductActionState> {
+export async function createProduct(prevState: CreateProductState, formData: FormData): Promise<CreateProductState> {
 
 
   const validatedFields = CreateProduct.safeParse({
