@@ -5,7 +5,6 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { neon } from '@neondatabase/serverless';
 import { DeleteProductArgs } from './definitions';
-import { UUID } from 'crypto';
 
 
 const sqlDb = `${process.env.DATABASE_URL}`
@@ -13,28 +12,58 @@ const sqlDb = `${process.env.DATABASE_URL}`
 const sql = neon(sqlDb);
 
 const FormSchema = z.object({
-    id: z.string(),
-    title: z.string(),
-    shortDescription: z.string(),
-    longDescription: z.string(),
-    price: z.coerce.number(),
-    stock: z.coerce.number(),
-    image_url: z.string(),
-    category: z.string(),
-    subcategory: z.string(),
-    status: z.enum(["true", "false"]).transform(v => v === "true"),
-    discount: z.coerce.number(),
-    date: z.string(),
+  id: z.string(),
+  title: z.string(),
+  shortDescription: z.string(),
+  longDescription: z.string(),
+  price: z.coerce.number(),
+  stock: z.coerce.number(),
+  image_url: z.string(),
+  category: z.string(),
+  subcategory: z.string(),
+  status: z.enum(["true", "false"]).transform(v => v === "true"),
+  discount: z.coerce.number(),
+  date: z.string(),
 });
 
 
-const CreateProduct = FormSchema.omit({ id: true, date: true, status: true});
-const UpdateProduct = FormSchema.omit({ id: true, date: true});
+const CreateProduct = FormSchema.omit({ id: true, date: true, status: true });
+const UpdateProduct = FormSchema.omit({ id: true, date: true });
 
-export async function createProduct(formData: FormData) {
-    
-    
-  const validatedFields = CreateProduct.parse({
+export type ProductActionState = {
+  success: boolean;
+  message?: string;
+  errors?: {
+    title?: string[];
+    shortDescription?: string[];
+    longDescription?: string[];
+    price?: string[];
+    stock?: string[];
+    image_url?: string[];
+    category?: string[];
+    subcategory?: string[];
+    status?: string[];
+    discount?: string[];
+  };
+};
+
+export type UpdateProductState = {
+  success?: boolean;
+  message?: string;
+  errors?: Record<string, string[]>;
+};
+
+export type DeleteActionState = {
+  success: boolean
+  message: string | null
+  errors?: Record<string, string[]>
+}
+
+
+export async function createProduct(prevState: ProductActionState, formData: FormData): Promise<ProductActionState> {
+
+
+  const validatedFields = CreateProduct.safeParse({
     title: formData.get('title'),
     shortDescription: formData.get('shortDescription'),
     longDescription: formData.get('longDescription'),
@@ -46,16 +75,23 @@ export async function createProduct(formData: FormData) {
     discount: formData.get('discount'),
   });
 
-    const status = 'true';
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message: 'Datos inválidos. Revisá el formulario.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+  const status = 'true';
 
-    // **Fecha de Creación**
-    const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
+  // **Fecha de Creación**
+  const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
 
-    // Para probarlo:
-    console.log(validatedFields);
+  // Para probarlo:
+  console.log(validatedFields);
 
-    try {
-        await sql`
+  try {
+    await sql`
             INSERT INTO products2 (
                 title, 
                 short_description, 
@@ -70,106 +106,123 @@ export async function createProduct(formData: FormData) {
                 created_at
             )
             VALUES (
-                ${validatedFields.title}, 
-                ${validatedFields.shortDescription}, 
-                ${validatedFields.longDescription}, 
-                ${validatedFields.price}, 
-                ${validatedFields.stock}, 
-                ${validatedFields.image_url},                
-                ${validatedFields.category}, 
-                ${validatedFields.subcategory}, 
+                ${validatedFields.data.title}, 
+                ${validatedFields.data.shortDescription}, 
+                ${validatedFields.data.longDescription}, 
+                ${validatedFields.data.price}, 
+                ${validatedFields.data.stock}, 
+                ${validatedFields.data.image_url},                
+                ${validatedFields.data.category}, 
+                ${validatedFields.data.subcategory}, 
                 ${status}, 
-                ${validatedFields.discount}, 
+                ${validatedFields.data.discount}, 
                 ${created_at}
             )
         `;
-// "Olvida los datos que tienes guardados" (la caché) para una página en particular.
-// "Cuando un usuario visite esa ruta la próxima vez, vuelve a buscar los datos" (o en el próximo acceso a datos en el servidor).
-        revalidatePath('/dashboard/add');
-        console.log('Producto creado exitosamente.');
-        
-    } catch (error) {
-        console.error('Error al crear el producto:', error);
-        // Aquí podrías manejar el error, quizás lanzando una nueva excepción.
-        throw new Error('Fallo al crear el producto en la base de datos.');
-    }
-    redirect('/dashboard');
+    // "Olvida los datos que tienes guardados" (la caché) para una página en particular.
+    // "Cuando un usuario visite esa ruta la próxima vez, vuelve a buscar los datos" (o en el próximo acceso a datos en el servidor).
+    revalidatePath('/dashboard/add');
+    console.log('Producto creado exitosamente.');
+
+  } catch (error) {
+    console.error('Error DB:', error);
+    return {
+      success: false,
+      message: 'Error al guardar el producto. Intentá nuevamente.',
+    };
+  }
+
+  redirect('/dashboard');
 }
 
-export async function updateProduct(id: string, formData: FormData) {
+export async function updateProduct(id: string,prevState: UpdateProductState,formData: FormData): Promise<UpdateProductState> {
+  
+  const validatedFields = UpdateProduct.safeParse({
+    title: formData.get('title'),
+    shortDescription: formData.get('shortDescription'),
+    longDescription: formData.get('longDescription'),
+    price: formData.get('price'),
+    stock: formData.get('stock'),
+    image_url: formData.get('image_url'),
+    category: formData.get('category'),
+    subcategory: formData.get('subcategory'),
+    status: formData.get('status'),
+    discount: formData.get('discount'),
+  });
 
-    const validatedFields = UpdateProduct.parse({
-        title: formData.get('title'),
-        shortDescription: formData.get('shortDescription'),
-        longDescription: formData.get('longDescription'),
-        price: formData.get('price'),
-        stock: formData.get('stock'),
-        image_url: formData.get('image_url'),
-        category: formData.get('category'),
-        subcategory: formData.get('subcategory'),
-        status: formData.get('status'),
-        discount: formData.get('discount'),
-    });
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message: 'Datos inválidos. Revisá el formulario.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
 
-    const updated_at = new Date().toISOString();
-
-    // Para probarlo:
-    console.log(`Actualizando producto ID: ${id}`);
-    console.log(validatedFields);
-
-    try {
-        await sql`
-            UPDATE products2
-            SET
-                title = ${validatedFields.title},
-                short_description = ${validatedFields.shortDescription},
-                long_description = ${validatedFields.longDescription},
-                price = ${validatedFields.price},
-                stock = ${validatedFields.stock},
-                image_url = ${validatedFields.image_url},
-                category = ${validatedFields.category},
-                subcategory = ${validatedFields.subcategory},
-                status = ${validatedFields.status},
-                discount = ${validatedFields.discount},
-                updated_at = ${updated_at} -- Columna para la última actualización
-            WHERE id = ${id}
-        `;
-
-        // 5. **Invalidación de Caché y Redirección**
-        // Invalida la caché de la página de edición y de la lista principal.
-        revalidatePath('/dashboard');
-        revalidatePath(`/dashboard/${id}/edit`);
-
-        console.log(`Producto ID ${id} actualizado exitosamente.`);
-        
-    } catch (error) {
-        console.error(`Error al actualizar el producto ID ${id}:`, error);
-        throw new Error('Fallo al actualizar el producto en la base de datos.');
-    }
-
-    // Redirige a la página principal de productos o al detalle.
-    redirect('/dashboard');
-}
-
-export async function deleteProduct({ id }: DeleteProductArgs) {
+  const updated_at = new Date().toISOString();
 
   try {
     await sql`
-      DELETE FROM products2
-      WHERE id = ${id};
+      UPDATE products2
+      SET
+        title = ${validatedFields.data.title},
+        short_description = ${validatedFields.data.shortDescription},
+        long_description = ${validatedFields.data.longDescription},
+        price = ${validatedFields.data.price},
+        stock = ${validatedFields.data.stock},
+        image_url = ${validatedFields.data.image_url},
+        category = ${validatedFields.data.category},
+        subcategory = ${validatedFields.data.subcategory},
+        status = ${validatedFields.data.status},
+        discount = ${validatedFields.data.discount},
+        updated_at = ${updated_at}
+      WHERE id = ${id}
     `;
 
-    // **Revalidar el Caché**
-    revalidatePath('/dashboard'); 
-    
-    //console.log(`Producto con ID ${id} eliminado exitosamente.`);
- 
+    revalidatePath('/dashboard');
+    revalidatePath(`/dashboard/${id}/edit`);
+
   } catch (error) {
-    console.error(`Error al eliminar el producto con ID ${id}:`, error);
-    // Lanzamos un error más amigable para manejarlo en la interfaz de usuario si es necesario.
-    throw new Error('Fallo al eliminar el producto de la base de datos.');
+    console.error('Error DB update:', error);
+    return {
+      success: false,
+      message: 'Error al actualizar el producto. Intentá nuevamente.',
+    };
   }
+
+  redirect('/dashboard');
 }
+
+export async function deleteProduct(prevState: DeleteActionState,formData: FormData): Promise<DeleteActionState> {
+
+  const id = formData.get('id') as string;
+
+  if (!id) {
+    return {
+      success: false,
+      message: 'ID de producto inválido.',
+    };
+  }
+
+  try {
+    await sql`
+      UPDATE products2
+      SET status = false
+      WHERE id = ${id};
+      `;
+
+    revalidatePath('/dashboard');
+
+  } catch (error) {
+    console.error('Error DB delete:', error);
+    return {
+      success: false,
+      message: 'Error al eliminar el producto. Intentá nuevamente.',
+    };
+  }
+
+  redirect('/dashboard');
+}
+
 
 type CartItem = {
   productId: string;

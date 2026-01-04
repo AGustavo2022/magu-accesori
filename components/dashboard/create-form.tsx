@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { createProduct } from '@/lib/actions';
-import { Category, Subcategory } from '@/lib/definitions'; 
+import { createProduct, CreateProductState } from '@/lib/actions';
+import { Category, Subcategory } from '@/lib/definitions';
+import { useActionState, useState } from 'react';
 import {
   Select,
   SelectContent,
@@ -11,13 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useState } from 'react';
 
-interface CreateProductFormProps {
-  categories: Category[]; 
-}
+export default function CreateProductForm({ categories }: { categories: Category[] }) {
 
-export default function CreateProductForm({ categories }: CreateProductFormProps) {
+  const initialState: CreateProductState = {success: false,};
+  const [state, formAction] = useActionState(createProduct, initialState);
   
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>([]);
@@ -43,10 +42,10 @@ export default function CreateProductForm({ categories }: CreateProductFormProps
   const handleSubcategoryChange = (subcategoryId: string) => {
     setSelectedSubcategory(subcategoryId);
   };
-
+    
 
   return (
-    <form action={createProduct} className="max-w-4xl mx-auto my-8">
+    <form action={formAction} className="max-w-4xl mx-auto my-8">
 
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
