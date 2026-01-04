@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input" // Importación necesaria para el 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BookImage, Pencil, Trash, Search } from "lucide-react" // Importé Search
 import { ProductTableProps } from "@/lib/definitions" // Asumimos que ProductsTableProps ahora tiene 'onDelete'
-import { deleteProduct } from "@/lib/actions"
+import { DeleteActionState, deleteProduct } from "@/lib/actions"
 import Link from "next/link"
 
 import {
@@ -16,9 +16,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useFormState } from "react-dom"
+
+const initialState: DeleteActionState = {
+  success: false,
+  message: null,
+};
+
 
 
 export function ProductsTable({ products }: ProductTableProps) {
+
+  const [state, formAction] = useFormState(deleteProduct, initialState);
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
 
@@ -153,16 +162,18 @@ export function ProductsTable({ products }: ProductTableProps) {
 
                       <Tooltip>
                         <TooltipTrigger>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        // 👈 CAMBIO 3: Llamar a la función onDelete con el ID del producto
-                        onClick={() => deleteProduct({id:product.id})}
-                        // onClick={()=>console.log(typeof product.id, product.id )}
-                        className="text-destructive hover:bg-destructive/10" // Estilo para destacar eliminación
-                      >
-                        <Trash size={16} /> 
-                      </Button>
+                          <form action={formAction}>
+                            <input type="hidden" name="id" value={product.id} />
+
+                            <Button
+                              type="submit"
+                              variant="outline"
+                              size="sm"
+                              className="text-destructive hover:bg-destructive/10"
+                            >
+                              <Trash size={16} />
+                            </Button>
+                          </form>
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Eliminar Producto</p>

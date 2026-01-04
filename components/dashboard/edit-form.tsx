@@ -2,7 +2,12 @@
 
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { updateProduct } from '@/lib/actions';
+import { updateProduct, UpdateProductState  } from '@/lib/actions';
+import { useState } from 'react';
+import { EditProductFormProps, Subcategory } from '@/lib/definitions';
+import { getCategoryIdByName, getSubcategoryIdByName } from '@/lib/utils';
+import { Switch } from '../ui/switch';
+import { useFormState } from "react-dom";
 import {
     Select,
     SelectContent,
@@ -10,12 +15,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useState } from 'react';
-import { EditProductFormProps, Subcategory } from '@/lib/definitions';
-import { getCategoryIdByName, getSubcategoryIdByName } from '@/lib/utils';
-import { Switch } from '../ui/switch';
 
 export default function EditProductForm({ product, categories }: EditProductFormProps) {
+
+    const initialState: UpdateProductState = {};
+
+    const [state, formAction] = useFormState(updateProduct.bind(null, product.id),initialState);
 
     const categoryId = getCategoryIdByName(product.category, categories)
 
@@ -33,12 +38,6 @@ export default function EditProductForm({ product, categories }: EditProductForm
     
     const [selectedSubcategory, setSelectedSubcategory] = useState<string>(subCategoryId ?? '');
     const [status, setStatus] = useState<boolean>(product.status);
-
-
-    // **Puede pasar id a la Acción del Servidor mediante JS bind. 
-    // Esto garantizará que todos los valores que se pasen a la 
-    // Acción del Servidor estén codificados.** 
-    const updateProductWithId = updateProduct.bind(null, product.id);
 
     const handleCategoryChange = (categoryIdString: string) => {
 
@@ -62,7 +61,7 @@ export default function EditProductForm({ product, categories }: EditProductForm
 
 
     return (
-        <form action={updateProductWithId} className="max-w-4xl mx-auto my-8">
+        <form action={formAction} className="max-w-4xl mx-auto my-8">
 
             <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
