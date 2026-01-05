@@ -25,8 +25,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const { addItem, items } = useCart();
 
-  console.log(product)
-
   if (!product) {
     return <p>Producto no encontrado</p>
   }
@@ -39,7 +37,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = (product: Product) => {
     addItem(product, selectedQuantity);
-    //console.log("Añadiendo al carrito:", product.title, "Cantidad:", selectedQuantity)
   }
 
   return (
