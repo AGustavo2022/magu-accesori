@@ -45,41 +45,37 @@ if (!validatedFields.success) {
   };
 }
 
-  console.log(validatedFields)
-
   const status = 'true';
-
-  // **Fecha de Creación**
   const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
 
-    // await sql`
-    //         INSERT INTO products2 (
-    //             title, 
-    //             short_description, 
-    //             long_description, 
-    //             price, 
-    //             stock, 
-    //             image_url, 
-    //             category, 
-    //             subcategory, 
-    //             status, 
-    //             discount, 
-    //             created_at
-    //         )
-    //         VALUES (
-    //             ${validatedFields.data.title}, 
-    //             ${validatedFields.data.shortDescription}, 
-    //             ${validatedFields.data.longDescription}, 
-    //             ${validatedFields.data.price}, 
-    //             ${validatedFields.data.stock}, 
-    //             ${validatedFields.data.image_url},                
-    //             ${validatedFields.data.category}, 
-    //             ${validatedFields.data.subcategory}, 
-    //             ${status}, 
-    //             ${validatedFields.data.discount}, 
-    //             ${created_at}
-    //         )
-    //     `;
+    await sql`
+            INSERT INTO products2 (
+                title, 
+                short_description, 
+                long_description, 
+                price, 
+                stock, 
+                image_url, 
+                category, 
+                subcategory, 
+                status, 
+                discount, 
+                created_at
+            )
+            VALUES (
+                ${validatedFields.data.title}, 
+                ${validatedFields.data.shortDescription}, 
+                ${validatedFields.data.longDescription}, 
+                ${validatedFields.data.price}, 
+                ${validatedFields.data.stock}, 
+                ${validatedFields.data.image_url},                
+                ${validatedFields.data.category}, 
+                ${validatedFields.data.subcategory}, 
+                ${status}, 
+                ${validatedFields.data.discount}, 
+                ${created_at}
+            )
+        `;
     // "Olvida los datos que tienes guardados" (la caché) para una página en particular.
     // "Cuando un usuario visite esa ruta la próxima vez, vuelve a buscar los datos" (o en el próximo acceso a datos en el servidor).
     revalidatePath('/dashboard/add');

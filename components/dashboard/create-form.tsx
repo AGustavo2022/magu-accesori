@@ -101,6 +101,11 @@ export default function CreateProductForm({ categories }: { categories: Category
               rows={4}
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500 resize-none"
             />
+            {!state.success && state.errors.longDescription && (
+              <p className="text-red-500 text-sm">
+                {state.errors.longDescription[0]}
+              </p>
+            )}
           </div>
         </div>
 
@@ -118,6 +123,11 @@ export default function CreateProductForm({ categories }: { categories: Category
                   placeholder="0.00"
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
                 />
+                {!state.success && state.errors.price && (
+                  <p className="text-red-500 text-sm">
+                    {state.errors.price[0]}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -131,6 +141,11 @@ export default function CreateProductForm({ categories }: { categories: Category
                 placeholder="Cantidad en stock"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
               />
+              {!state.success && state.errors.stock && (
+                <p className="text-red-500 text-sm">
+                  {state.errors.stock[0]}
+                </p>
+              )}
             </div>
           </div>
           <div className="mb-4 w-1/3">
@@ -144,6 +159,11 @@ export default function CreateProductForm({ categories }: { categories: Category
                 placeholder="0"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
               />
+              {!state.success && state.errors.discount && (
+                <p className="text-red-500 text-sm">
+                  {state.errors.discount[0]}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -159,6 +179,11 @@ export default function CreateProductForm({ categories }: { categories: Category
               placeholder="http://..."
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
             />
+            {!state.success && state.errors.image_url && (
+              <p className="text-red-500 text-sm">
+                {state.errors.image_url[0]}
+              </p>
+            )}
           </div>
         </div>
         
@@ -192,6 +217,11 @@ export default function CreateProductForm({ categories }: { categories: Category
               name="category"
               value={selectedCategory}
             />
+            {!state.success && state.errors.category && (
+              <p className="text-red-500 text-sm">
+                {state.errors.category[0]}
+              </p>
+            )}
           </div>
 
           <div className="mb-4 w-1/4">
@@ -222,6 +252,11 @@ export default function CreateProductForm({ categories }: { categories: Category
               name="subcategory"
               value={selectedSubcategory}
             />
+            {!state.success && state.errors.subcategory && (
+              <p className="text-red-500 text-sm">
+                {state.errors.subcategory[0]}
+              </p>
+            )}
           </div>
           
         </div>
