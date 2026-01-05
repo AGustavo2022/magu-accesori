@@ -77,26 +77,33 @@ export async function createProduct(
 
 }
 
-export async function updateProduct(id: string,prevState: UpdateProductState,formData: FormData): Promise<UpdateProductState> {
-  
-  const validatedFields = UpdateProductSchema.safeParse({
-    title: formData.get('title'),
-    shortDescription: formData.get('shortDescription'),
-    longDescription: formData.get('longDescription'),
-    price: formData.get('price'),
-    stock: formData.get('stock'),
-    image_url: formData.get('image_url'),
-    category: formData.get('category'),
-    subcategory: formData.get('subcategory'),
-    status: formData.get('status'),
-    discount: formData.get('discount'),
-  });
+export async function updateProduct(
+  id: string,
+  prevState: UpdateProductState,
+  formData: FormData
+): Promise<UpdateProductState> {
+
+  const rawValues = Object.fromEntries(
+    Array.from(formData.entries()).map(([k, v]) => [k, String(v)])
+  );
+
+  const validatedFields = UpdateProductSchema.safeParse(rawValues);
 
   if (!validatedFields.success) {
+    const tree = z.treeifyError(validatedFields.error);
+
+    const errors = Object.fromEntries(
+      Object.entries(tree.properties ?? {}).map(([key, value]) => [
+        key,
+        value?.errors ?? [],
+      ])
+    );
+
     return {
       success: false,
       message: 'Datos inválidos. Revisá el formulario.',
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors,
+      values: rawValues,
     };
   }
 
@@ -114,25 +121,24 @@ export async function updateProduct(id: string,prevState: UpdateProductState,for
         image_url = ${validatedFields.data.image_url},
         category = ${validatedFields.data.category},
         subcategory = ${validatedFields.data.subcategory},
-
+        status = ${validatedFields.data.status},
         discount = ${validatedFields.data.discount},
         updated_at = ${updated_at}
       WHERE id = ${id}
     `;
-
-    revalidatePath('/dashboard');
-    revalidatePath(`/dashboard/${id}/edit`);
-
   } catch (error) {
     console.error('Error DB update:', error);
+
     return {
       success: false,
       message: 'Error al actualizar el producto. Intentá nuevamente.',
+      values: rawValues,
     };
   }
 
+  revalidatePath('/dashboard');
+  revalidatePath(`/dashboard/${id}/edit`);
   redirect('/dashboard');
-
 }
 
 export async function deleteProduct(prevState: DeleteActionState,formData: FormData): Promise<DeleteActionState> {

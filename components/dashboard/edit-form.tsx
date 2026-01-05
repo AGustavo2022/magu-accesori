@@ -2,281 +2,213 @@
 
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { updateProduct } from '@/lib/schemas/product.schema';
+
 import { UpdateProductState } from '@/lib/types/product-state';
 import { useState } from 'react';
 import { EditProductFormProps, Subcategory } from '@/lib/types/definitions';
 import { getCategoryIdByName, getSubcategoryIdByName } from '@/lib/utils';
 import { Switch } from '../ui/switch';
-import { useFormState } from "react-dom";
+import { useFormState } from 'react-dom';
+import { updateProduct } from '@/lib/actions/actions';
+
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function EditProductForm({ product, categories }: EditProductFormProps) {
 
-    const initialState: UpdateProductState = {};
+  const initialState: UpdateProductState = {
+    success: true,
+    message: undefined,
+    errors: {},
+    values: {},
+  };
 
-    const [state, formAction] = useFormState(updateProduct.bind(null, product.id),initialState);
+  const [state, formAction] = useFormState(
+    updateProduct.bind(null, product.id),
+    initialState
+  );
 
-    const categoryId = getCategoryIdByName(product.category, categories)
+  const categoryId = getCategoryIdByName(product.category, categories);
+  const subCategoryId = getSubcategoryIdByName(product.subcategory, categories);
 
-    const subCategoryId = getSubcategoryIdByName(product.subcategory, categories)
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    state.values?.category ?? categoryId ?? ''
+  );
 
-    const [selectedCategory, setSelectedCategory] = useState<string>(categoryId ?? '');
-    
-    const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>(() => {
-        const numericCategoryId = Number(categoryId);
-        const categoryObject = categories.find(
-            (cat) => cat.category_id === numericCategoryId
-        );
-        return categoryObject ? categoryObject.subcategories : [];
-    });
-    
-    const [selectedSubcategory, setSelectedSubcategory] = useState<string>(subCategoryId ?? '');
-    const [status, setStatus] = useState<boolean>(product.status);
-
-    const handleCategoryChange = (categoryIdString: string) => {
-
-        setSelectedCategory(categoryIdString); 
-
-        const numericCategoryId = Number(categoryIdString);
-
-        const categoryObject = categories.find(
-            (cat) => cat.category_id === numericCategoryId
-        );
-
-        const subArray = categoryObject ? categoryObject.subcategories : [];
-        setAvailableSubcategories(subArray);
-        setSelectedSubcategory(''); 
-    };
-
-    const handleSubcategoryChange = (subcategoryIdString: string) => {
-
-        setSelectedSubcategory(subcategoryIdString);
-    };
-
-
-    return (
-        <form action={formAction} className="max-w-4xl mx-auto my-8">
-
-            <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
-                {/* 1. Título */}
-                <div className="mb-4">
-                    <label htmlFor="title" className="mb-2 block text-sm font-medium">Título</label>
-                    <div className="relative">
-                        <input
-                            id="title"
-                            name="title"
-                            type="text"
-                            placeholder="Introduce el título del producto"
-                            className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-                            defaultValue={product.title}
-                        />
-                    </div>
-                </div>
-
-                {/* 2. Descripción Corta */}
-                <div className="mb-4">
-                    <label htmlFor="shortDescription" className="mb-2 block text-sm font-medium">Descripción Corta</label>
-                    <div className="relative">
-                        <textarea
-                            id="shortDescription"
-                            name="shortDescription"
-                            placeholder="Breve descripción del producto"
-                            rows={2}
-                            className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500 resize-none"
-                            defaultValue={product.short_description}
-                        />
-                    </div>
-                </div>
-
-                {/* 3. Descripción Larga */}
-                <div className="mb-4">
-                    <label htmlFor="longDescription" className="mb-2 block text-sm font-medium">Descripción Larga</label>
-                    <div className="relative">
-                        <textarea
-                            id="longDescription"
-                            name="longDescription"
-                            placeholder="Descripción detallada del producto"
-                            rows={4}
-                            className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500 resize-none"
-                            defaultValue={product.long_description}
-                        />
-                    </div>
-                </div>
-
-                {/* 4. Precio, Stock y Descuento */}
-                <div className="flex gap-4">
-                    <div className="mb-4 w-1/3">
-                        <label htmlFor="price" className="mb-2 block text-sm font-medium">Precio</label>
-                        <div className="relative mt-2 rounded-md">
-                            <div className="relative">
-                                <input
-                                    id="price"
-                                    name="price"
-                                    type="number"
-                                    step="0.01"
-                                    placeholder="0.00"
-                                    className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-                                    defaultValue={product.price}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mb-4 w-1/3">
-                        <label htmlFor="stock" className="mb-2 block text-sm font-medium">Stock</label>
-                        <div className="relative">
-                            <input
-                                id="stock"
-                                name="stock"
-                                type="number"
-                                placeholder="Cantidad en stock"
-                                className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-                                defaultValue={product.stock}
-                            />
-                        </div>
-                    </div>
-                    <div className="mb-4 w-1/3">
-                        <label htmlFor="discount" className="mb-2 block text-sm font-medium">Descuento (%)</label>
-                        <div className="relative">
-                            <input
-                                id="discount"
-                                name="discount"
-                                type="number"
-                                step="1"
-                                placeholder="0"
-                                className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-                                defaultValue={product.discount}
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* 5. URL de Imagen */}
-                <div className="mb-4">
-                    <label htmlFor="image_url" className="mb-2 block text-sm font-medium">URL de la Imagen</label>
-                    <div className="relative">
-                        <input
-                            id="image_url"
-                            name="image_url"
-                            type="text"
-                            placeholder="http://..."
-                            className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-                            defaultValue={product.image_url}
-                        />
-                    </div>
-                </div>
-
-                {/* 6. Categoría y Subcategoría */}
-                <div className="flex gap-4">
-
-                    {/* Selector de Categoría */}
-                    <div className="mb-4 w-1/4">
-                        <label htmlFor="category" className="mb-2 block text-sm font-medium">
-                            Categoría
-                        </label>
-                        <Select
-                            onValueChange={handleCategoryChange}
-                            value={selectedCategory} 
-                        >
-                            <SelectTrigger className="w-[200px] ">
-                                <SelectValue placeholder="Seleccione Categoría" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {categories.map((cat) => (
-                                    <SelectItem 
-                                        key={cat.category_id} 
-                                        value={cat.category_id.toString()}
-                                    >
-                                        {cat.category_name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        {/* Input oculto que envía el ID como string al action */}
-                        <input
-                            type="hidden"
-                            name="category"
-                            value={selectedCategory}
-                        />
-                    </div>
-
-                    {/* Selector de Subcategoría */}
-                    <div className="mb-4 w-1/4">
-                        <label htmlFor="subcategory" className="mb-2 block text-sm font-medium">
-                            Subcategoría
-                        </label>
-                        <Select
-                            onValueChange={handleSubcategoryChange}
-                            // El 'value' debe ser la string que espera el Select
-                            value={selectedSubcategory}
-                            disabled={availableSubcategories.length === 0}
-                        >
-                            <SelectTrigger className="w-[200px]">
-                                <SelectValue placeholder="Seleccione Subcategoría" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {availableSubcategories.map((sub) => (
-                                    <SelectItem
-                                        key={sub.subcategory_id}
-                                        // El 'value' de SelectItem DEBE ser un string
-                                        value={sub.subcategory_id.toString()}
-                                    >
-                                        {sub.subcategory_name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        {/* Input oculto que envía el ID como string al action */}
-                        <input
-                            type="hidden"
-                            name="subcategory"
-                            value={selectedSubcategory}
-                        />
-                    </div>
-
-                    <div className="mb-4 w-1/4">
-                        <label className="mb-2 block text-sm font-medium">
-                            Status
-                        </label>
-
-                        <div className="flex items-center gap-3">
-                            <Switch
-                                checked={status}
-                                onCheckedChange={setStatus}
-                            />
-
-                            <span className="text-sm text-muted-foreground">
-                                {status ? "Activo" : "Inactivo"}
-                            </span>
-                        </div>
-
-                        {/* Input oculto para enviar al server */}
-                        <input
-                            type="hidden"
-                            name="status"
-                            value={status ? "true" : "false"}
-                        />
-                    </div>
-
-                </div>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-4">
-                <Link
-                    href="/dashboard"
-                    className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-                >
-                    Cancelar
-                </Link>
-                <Button type="submit">Editar Producto</Button>
-            </div>
-        </form>
+  const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>(() => {
+    const numericCategoryId = Number(categoryId);
+    const categoryObject = categories.find(
+      (cat) => cat.category_id === numericCategoryId
     );
+    return categoryObject ? categoryObject.subcategories : [];
+  });
+
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>(
+    state.values?.subcategory ?? subCategoryId ?? ''
+  );
+
+  const [status, setStatus] = useState<boolean>(
+    state.values?.status
+      ? state.values.status === 'true'
+      : product.status
+  );
+
+  const handleCategoryChange = (categoryIdString: string) => {
+    setSelectedCategory(categoryIdString);
+
+    const numericCategoryId = Number(categoryIdString);
+    const categoryObject = categories.find(
+      (cat) => cat.category_id === numericCategoryId
+    );
+
+    setAvailableSubcategories(categoryObject?.subcategories ?? []);
+    setSelectedSubcategory('');
+  };
+
+  const handleSubcategoryChange = (subcategoryIdString: string) => {
+    setSelectedSubcategory(subcategoryIdString);
+  };
+
+  return (
+    <form action={formAction} className="max-w-4xl mx-auto my-8">
+
+      <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+        {/* TÍTULO */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium">Título</label>
+          <input
+            name="title"
+            type="text"
+            defaultValue={state.values?.title ?? product.title}
+            className="block w-full rounded-md border py-2 pl-3 text-sm"
+          />
+          {state.errors?.title && (
+            <p className="mt-1 text-sm text-red-500">{state.errors.title[0]}</p>
+          )}
+        </div>
+
+        {/* DESCRIPCIÓN CORTA */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium">Descripción corta</label>
+          <textarea
+            name="shortDescription"
+            rows={2}
+            defaultValue={state.values?.shortDescription ?? product.short_description}
+            className="block w-full rounded-md border py-2 pl-3 text-sm resize-none"
+          />
+          {state.errors?.shortDescription && (
+            <p className="mt-1 text-sm text-red-500">{state.errors.shortDescription[0]}</p>
+          )}
+        </div>
+
+        {/* DESCRIPCIÓN LARGA */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium">Descripción larga</label>
+          <textarea
+            name="longDescription"
+            rows={4}
+            defaultValue={state.values?.longDescription ?? product.long_description}
+            className="block w-full rounded-md border py-2 pl-3 text-sm resize-none"
+          />
+          {state.errors?.longDescription && (
+            <p className="mt-1 text-sm text-red-500">{state.errors.longDescription[0]}</p>
+          )}
+        </div>
+
+        {/* PRECIO / STOCK / DESCUENTO */}
+        <div className="flex gap-4">
+          <input
+            name="price"
+            type="number"
+            defaultValue={state.values?.price ?? product.price}
+            className="w-1/3 rounded-md border py-2 pl-3 text-sm"
+          />
+          <input
+            name="stock"
+            type="number"
+            defaultValue={state.values?.stock ?? product.stock}
+            className="w-1/3 rounded-md border py-2 pl-3 text-sm"
+          />
+          <input
+            name="discount"
+            type="number"
+            defaultValue={state.values?.discount ?? product.discount}
+            className="w-1/3 rounded-md border py-2 pl-3 text-sm"
+          />
+        </div>
+
+        {/* IMAGEN */}
+        <div className="mt-4">
+          <input
+            name="image_url"
+            type="text"
+            defaultValue={state.values?.image_url ?? product.image_url}
+            className="block w-full rounded-md border py-2 pl-3 text-sm"
+          />
+        </div>
+
+        {/* CATEGORÍA / SUB */}
+        <div className="flex gap-4 mt-4">
+
+          <Select value={selectedCategory || undefined} onValueChange={handleCategoryChange}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Categoría" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((cat) => (
+                <SelectItem key={cat.category_id} value={cat.category_id.toString()}>
+                  {cat.category_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <input type="hidden" name="category" value={selectedCategory} />
+
+          <Select
+            value={selectedSubcategory || undefined}
+            onValueChange={handleSubcategoryChange}
+            disabled={!availableSubcategories.length}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Subcategoría" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableSubcategories.map((sub) => (
+                <SelectItem
+                  key={sub.subcategory_id}
+                  value={sub.subcategory_id.toString()}
+                >
+                  {sub.subcategory_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <input type="hidden" name="subcategory" value={selectedSubcategory} />
+
+          {/* STATUS */}
+          <div className="flex items-center gap-3">
+            <Switch checked={status} onCheckedChange={setStatus} />
+            <span className="text-sm">{status ? 'Activo' : 'Inactivo'}</span>
+            <input type="hidden" name="status" value={status ? 'true' : 'false'} />
+          </div>
+
+        </div>
+      </div>
+
+      <div className="mt-6 flex justify-end gap-4">
+        <Link href="/dashboard" className="px-4 py-2 bg-gray-200 rounded-md">
+          Cancelar
+        </Link>
+        <Button type="submit">Editar Producto</Button>
+      </div>
+    </form>
+  );
 }

@@ -47,9 +47,9 @@ export const ProductFormSchema = z.object({
 
 
 export const CreateProductSchema = ProductFormSchema;
-export const UpdateProductSchema = ProductFormSchema;
 
-  const UpdateProduct = ProductFormSchema.extend({
-    status: z.enum(["true", "false"]),
-  });
-
+export const UpdateProductSchema = ProductFormSchema.extend({
+  status: z.enum(['true', 'false'], {
+    message: "El estado del producto es inválido",
+  }),
+});
