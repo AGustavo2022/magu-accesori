@@ -113,11 +113,6 @@
 }
 
 @layer base {
-
-  html {
-  /* scrollbar-gutter: stable; */
-  overflow-y: scroll
-}
   * {
     @apply border-border outline-ring/50;
   }

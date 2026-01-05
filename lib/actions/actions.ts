@@ -11,44 +11,38 @@ import { CreateProductSchema, UpdateProductSchema } from '../schemas/product.sch
 const sql = neon(`${process.env.DATABASE_URL}`);
 
 export async function createProduct(
-  prevState: CreateProductState, 
+  prevState: CreateProductState,
   formData: FormData
 ): Promise<CreateProductState> {
 
-
-  const validatedFields = CreateProductSchema.safeParse({
-    title: formData.get('title'),
-    shortDescription: formData.get('shortDescription'),
-    longDescription: formData.get('longDescription'),
-    price: formData.get('price'),
-    stock: formData.get('stock'),
-    image_url: formData.get('image_url'),
-    category: formData.get('category'),
-    subcategory: formData.get('subcategory'),
-    discount: formData.get('discount'),
-  });
-
-if (!validatedFields.success) {
-  const tree = z.treeifyError(validatedFields.error);
-
-  const errors = Object.fromEntries(
-    Object.entries(tree.properties ?? {}).map(([key, value]) => [
-      key,
-      value?.errors ?? [],
-    ])
+  const rawValues = Object.fromEntries(
+    Array.from(formData.entries()).map(([k, v]) => [k, String(v)])
   );
 
-  return {
-    success: false,
-    message: "Error al crear el producto",
-    errors,
-  };
-}
+  const validatedFields = CreateProductSchema.safeParse(rawValues);
+
+  if (!validatedFields.success) {
+    const tree = z.treeifyError(validatedFields.error);
+
+    const errors = Object.fromEntries(
+      Object.entries(tree.properties ?? {}).map(([key, value]) => [
+        key,
+        value?.errors ?? [],
+      ])
+    );
+
+    return {
+      success: false,
+      message: "Error al crear el producto",
+      errors,
+      values: rawValues,
+    };
+  }
 
   const status = 'true';
   const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
 
-    await sql`
+  await sql`
             INSERT INTO products2 (
                 title, 
                 short_description, 
@@ -76,11 +70,11 @@ if (!validatedFields.success) {
                 ${created_at}
             )
         `;
-    // "Olvida los datos que tienes guardados" (la caché) para una página en particular.
-    // "Cuando un usuario visite esa ruta la próxima vez, vuelve a buscar los datos" (o en el próximo acceso a datos en el servidor).
-    revalidatePath('/dashboard/add');
-    redirect('/dashboard');
-  
+  // "Olvida los datos que tienes guardados" (la caché) para una página en particular.
+  // "Cuando un usuario visite esa ruta la próxima vez, vuelve a buscar los datos" (o en el próximo acceso a datos en el servidor).
+  revalidatePath('/dashboard/add');
+  redirect('/dashboard');
+
 }
 
 export async function updateProduct(id: string,prevState: UpdateProductState,formData: FormData): Promise<UpdateProductState> {
