@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Minus, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatPrice } from "@/lib/utils"
-import { Product } from "@/lib/definitions"
+import { Product } from "@/lib/types/definitions"
 import { useCart } from "@/contexts/cart-context"
 
 export interface CartItemData {

@@ -1,68 +1,22 @@
 'use server';
 
+import { neon } from '@neondatabase/serverless';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { neon } from '@neondatabase/serverless';
+
+import { CreateProductState, DeleteActionState, UpdateProductState } from '../types/product-state';
+import { CreateProductSchema, UpdateProductSchema } from '../schemas/product.schema';
+
+const sql = neon(`${process.env.DATABASE_URL}`);
+
+export async function createProduct(
+  prevState: CreateProductState, 
+  formData: FormData
+): Promise<CreateProductState> {
 
 
-const sqlDb = `${process.env.DATABASE_URL}`
-
-const sql = neon(sqlDb);
-
-const FormSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  shortDescription: z.string(),
-  longDescription: z.string(),
-  price: z.coerce.number(),
-  stock: z.coerce.number(),
-  image_url: z.string(),
-  category: z.string(),
-  subcategory: z.string(),
-  status: z.enum(["true", "false"]).transform(v => v === "true"),
-  discount: z.coerce.number(),
-  date: z.string(),
-});
-
-
-const CreateProduct = FormSchema.omit({ id: true, date: true, status: true });
-const UpdateProduct = FormSchema.omit({ id: true, date: true });
-
-export type CreateProductState = {
-  success: boolean;
-  message?: string;
-  errors?: {
-    title?: string[];
-    shortDescription?: string[];
-    longDescription?: string[];
-    price?: string[];
-    stock?: string[];
-    image_url?: string[];
-    category?: string[];
-    subcategory?: string[];
-    status?: string[];
-    discount?: string[];
-  };
-};
-
-export type UpdateProductState = {
-  success?: boolean;
-  message?: string;
-  errors?: Record<string, string[]>;
-};
-
-export type DeleteActionState = {
-  success: boolean
-  message: string | null
-  errors?: Record<string, string[]>
-}
-
-
-export async function createProduct(prevState: CreateProductState, formData: FormData): Promise<CreateProductState> {
-
-
-  const validatedFields = CreateProduct.safeParse({
+  const validatedFields = CreateProductSchema.safeParse({
     title: formData.get('title'),
     shortDescription: formData.get('shortDescription'),
     longDescription: formData.get('longDescription'),
@@ -74,69 +28,68 @@ export async function createProduct(prevState: CreateProductState, formData: For
     discount: formData.get('discount'),
   });
 
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      message: 'Datos inválidos. Revisá el formulario.',
-      errors: validatedFields.error.flatten().fieldErrors,
-    };
-  }
+if (!validatedFields.success) {
+  const tree = z.treeifyError(validatedFields.error);
+
+  const errors = Object.fromEntries(
+    Object.entries(tree.properties ?? {}).map(([key, value]) => [
+      key,
+      value?.errors ?? [],
+    ])
+  );
+
+  return {
+    success: false,
+    message: "Error al crear el producto",
+    errors,
+  };
+}
+
+  console.log(validatedFields)
+
   const status = 'true';
 
   // **Fecha de Creación**
   const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
 
-  // Para probarlo:
-  console.log(validatedFields);
-
-  try {
-    await sql`
-            INSERT INTO products2 (
-                title, 
-                short_description, 
-                long_description, 
-                price, 
-                stock, 
-                image_url, 
-                category, 
-                subcategory, 
-                status, 
-                discount, 
-                created_at
-            )
-            VALUES (
-                ${validatedFields.data.title}, 
-                ${validatedFields.data.shortDescription}, 
-                ${validatedFields.data.longDescription}, 
-                ${validatedFields.data.price}, 
-                ${validatedFields.data.stock}, 
-                ${validatedFields.data.image_url},                
-                ${validatedFields.data.category}, 
-                ${validatedFields.data.subcategory}, 
-                ${status}, 
-                ${validatedFields.data.discount}, 
-                ${created_at}
-            )
-        `;
+    // await sql`
+    //         INSERT INTO products2 (
+    //             title, 
+    //             short_description, 
+    //             long_description, 
+    //             price, 
+    //             stock, 
+    //             image_url, 
+    //             category, 
+    //             subcategory, 
+    //             status, 
+    //             discount, 
+    //             created_at
+    //         )
+    //         VALUES (
+    //             ${validatedFields.data.title}, 
+    //             ${validatedFields.data.shortDescription}, 
+    //             ${validatedFields.data.longDescription}, 
+    //             ${validatedFields.data.price}, 
+    //             ${validatedFields.data.stock}, 
+    //             ${validatedFields.data.image_url},                
+    //             ${validatedFields.data.category}, 
+    //             ${validatedFields.data.subcategory}, 
+    //             ${status}, 
+    //             ${validatedFields.data.discount}, 
+    //             ${created_at}
+    //         )
+    //     `;
     // "Olvida los datos que tienes guardados" (la caché) para una página en particular.
     // "Cuando un usuario visite esa ruta la próxima vez, vuelve a buscar los datos" (o en el próximo acceso a datos en el servidor).
     revalidatePath('/dashboard/add');
-    console.log('Producto creado exitosamente.');
-
-  } catch (error) {
-    console.error('Error DB:', error);
-    return {
-      success: false,
-      message: 'Error al guardar el producto. Intentá nuevamente.',
-    };
-  }
-
-  redirect('/dashboard');
+    redirect('/dashboard');
+  
 }
 
 export async function updateProduct(id: string,prevState: UpdateProductState,formData: FormData): Promise<UpdateProductState> {
   
-  const validatedFields = UpdateProduct.safeParse({
+  const validatedFields = UpdateProductSchema.safeParse({
     title: formData.get('title'),
     shortDescription: formData.get('shortDescription'),
     longDescription: formData.get('longDescription'),
@@ -171,7 +124,7 @@ export async function updateProduct(id: string,prevState: UpdateProductState,for
         image_url = ${validatedFields.data.image_url},
         category = ${validatedFields.data.category},
         subcategory = ${validatedFields.data.subcategory},
-        status = ${validatedFields.data.status},
+
         discount = ${validatedFields.data.discount},
         updated_at = ${updated_at}
       WHERE id = ${id}
@@ -189,6 +142,7 @@ export async function updateProduct(id: string,prevState: UpdateProductState,for
   }
 
   redirect('/dashboard');
+
 }
 
 export async function deleteProduct(prevState: DeleteActionState,formData: FormData): Promise<DeleteActionState> {

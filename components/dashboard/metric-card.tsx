@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ProductArrayProps} from "@/lib/definitions"
+import { ProductArrayProps} from "@/lib/types/definitions"
 
 
  export function MetricCard({ products, cardTitle, unitSigla }: ProductArrayProps) {

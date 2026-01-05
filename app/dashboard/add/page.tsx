@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { getCategoryAll } from "@/lib/data"
-import { Category } from "@/lib/definitions"
+import { Category } from "@/lib/types/definitions"
 
 export default async function AddProductPage() {
   //const produts = await fetchProducts()

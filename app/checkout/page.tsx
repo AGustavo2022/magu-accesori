@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { useCart } from "@/contexts/cart-context"
 import PaymentPage from "@/components/checkout/payment-options"
 import OrderConfirmation from "@/components/checkout/order-confirmation"
-import { createOrder } from "@/lib/actions"
+import { createOrder } from "@/lib/actions/actions"
 
 // Types
 type ShippingData = {

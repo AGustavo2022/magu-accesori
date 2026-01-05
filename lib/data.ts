@@ -1,7 +1,7 @@
 // app/actions.ts
 "use server";
 import { neon } from '@neondatabase/serverless';
-import { Product } from './definitions';
+import { Product } from './types/definitions';
 
 const sqlDb = `${process.env.DATABASE_URL}`
 

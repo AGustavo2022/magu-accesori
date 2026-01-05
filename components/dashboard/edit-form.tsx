@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { updateProduct, UpdateProductState  } from '@/lib/actions';
+import { updateProduct } from '@/lib/schemas/product.schema';
+import { UpdateProductState } from '@/lib/types/product-state';
 import { useState } from 'react';
-import { EditProductFormProps, Subcategory } from '@/lib/definitions';
+import { EditProductFormProps, Subcategory } from '@/lib/types/definitions';
 import { getCategoryIdByName, getSubcategoryIdByName } from '@/lib/utils';
 import { Switch } from '../ui/switch';
 import { useFormState } from "react-dom";

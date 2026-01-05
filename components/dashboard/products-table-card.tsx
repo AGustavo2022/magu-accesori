@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ProductTableProps } from "@/lib/definitions"
+import { ProductTableProps } from "@/lib/types/definitions"
 import { ProductsTable } from "@/components/dashboard/products-table"
 
 

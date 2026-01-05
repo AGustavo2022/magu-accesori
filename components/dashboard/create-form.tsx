@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { createProduct, CreateProductState } from '@/lib/actions';
-import { Category, Subcategory } from '@/lib/definitions';
+import { createProduct } from '@/lib/actions/actions';
+import { CreateProductState } from '@/lib/types/product-state';
+
+import { Category, Subcategory } from '@/lib/types/definitions';
 import { useActionState, useState } from 'react';
 import {
   Select,
@@ -15,13 +17,13 @@ import {
 
 export default function CreateProductForm({ categories }: { categories: Category[] }) {
 
-  const initialState: CreateProductState = {success: false,};
+  const initialState: CreateProductState = {success: false, message: null, errors: {}};
   const [state, formAction] = useActionState(createProduct, initialState);
+
   
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('');
-
 
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -60,7 +62,13 @@ export default function CreateProductForm({ categories }: { categories: Category
               placeholder="Introduce el título del producto"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
             />
+            {!state.success && state.errors.title && (
+              <p className="text-red-500 text-sm">
+                {state.errors.title[0]}
+              </p>
+            )}
           </div>
+
         </div>
         
         {/* 2. Descripción Corta */}
@@ -74,6 +82,11 @@ export default function CreateProductForm({ categories }: { categories: Category
               rows={2}
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500 resize-none"
             />
+            {!state.success && state.errors.shortDescription && (
+              <p className="text-red-500 text-sm">
+                {state.errors.shortDescription[0]}
+              </p>
+            )}
           </div>
         </div>
 
