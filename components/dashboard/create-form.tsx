@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { createProduct } from '@/lib/actions/actions';
-import { CreateProductState } from '@/lib/types/product-state';
+import { CreateProductState } from '@/lib/types/product.types';
 import { Category, Subcategory } from '@/lib/types/definitions';
 import { useActionState, useEffect, useState } from 'react';
 

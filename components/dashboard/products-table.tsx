@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BookImage, Pencil, Trash, Search } from "lucide-react" // Importé Search
 import { ProductTableProps } from "@/lib/types/definitions" // Asumimos que ProductsTableProps ahora tiene 'onDelete'
 import { deleteProduct } from "@/lib/actions/actions"
-import { DeleteActionState } from '@/lib/types/product-state'
+import { DeleteActionState } from '@/lib/types/product.types'
 import Link from "next/link"
 
 import {
