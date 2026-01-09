@@ -31,6 +31,7 @@ type CreateOrderState = {
   message?: string
   errors?: Record<string, string[]>
   order?: any
+  items?: any
 }
 
 /* -------------------- INITIAL STATE -------------------- */
@@ -45,7 +46,10 @@ const initialState: CreateOrderState = {
 export default function CheckoutPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [paymentMethod, setPaymentMethod] = useState("Transferencia")
-  const [createdOrder, setCreatedOrder] = useState<any | null>(null)
+  const [createdOrderFrom, setCreatedOrder] = useState<{
+    order: any
+    items: any[]
+  } | null>(null)
 
   const { items, clearCart } = useCart()
 
@@ -66,7 +70,10 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (state.success && state.order) {
-      setCreatedOrder(state.order)
+      setCreatedOrder({
+        order: state.order,
+        items: state.items,
+      })
       setCurrentStep(4)
       clearCart()
     }
@@ -93,6 +100,7 @@ export default function CheckoutPage() {
   const shipping = subtotal > 50000 ? 0 : 599
 
   /* -------------------- RENDER -------------------- */
+  console.log(createdOrderFrom)
 
   return (
     <div className="min-h-screen bg-background">
@@ -314,8 +322,11 @@ export default function CheckoutPage() {
             )}
 
             {/* STEP 4 */}
-            {currentStep === 4 && createdOrder && (
-              <OrderConfirmation order={createdOrder} />
+            {currentStep === 4 && createdOrderFrom && (
+              <OrderConfirmation
+                order={createdOrderFrom.order}
+                items={createdOrderFrom.items}
+              />
             )}
           </div>
 

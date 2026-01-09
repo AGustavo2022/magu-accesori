@@ -407,6 +407,7 @@ export async function createOrder(
   const products = await sql`
     SELECT
       id,
+      title,
       ROUND(
         price - (price * COALESCE(discount, 0) / 100.0),
         2
@@ -426,8 +427,7 @@ export async function createOrder(
     subtotal += product.final_price * item.quantity;
   }
 
-  const shippingCost = subtotal > 50000 ? 0 : 599;
-  const total = subtotal + shippingCost;
+  const total = subtotal;
   const status = "pending";
   const created_at = new Date().toISOString();
 
@@ -460,7 +460,7 @@ export async function createOrder(
       }
     }
 
-    /* 5️⃣ Crear orden (order_number ACÁ) */
+    /* 5️⃣ Crear orden */
     const [order] = await sql`
       INSERT INTO orders (
         shipping_data,
@@ -482,11 +482,13 @@ export async function createOrder(
       RETURNING *
     `;
 
-    /* 6️⃣ Items */
+    /* 6️⃣ Crear items y devolverlos */
+    const itemsArray: any[] = [];
+
     for (const item of items) {
       const product = productMap.get(item.productId)!;
 
-      await sql`
+      const [orderItem] = await sql`
         INSERT INTO order_items (
           order_id,
           product_id,
@@ -499,15 +501,29 @@ export async function createOrder(
           ${item.quantity},
           ${product.final_price}
         )
+        RETURNING
+          id,
+          order_id,
+          product_id,
+          quantity,
+          price
       `;
+
+      itemsArray.push({
+        ...orderItem,
+        title: product.title,
+      });
     }
 
     await sql`COMMIT`;
+
+    console.log(order, itemsArray)
 
     return {
       success: true,
       message: "Orden creada correctamente",
       order,
+      items: itemsArray,
     };
 
   } catch (error: any) {

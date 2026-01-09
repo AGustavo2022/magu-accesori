@@ -6,160 +6,203 @@ import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 
+/* -------------------- TYPES -------------------- */
 
-export default function OrderConfirmation({ order }: { order: any }) {
+type OrderItem = {
+  id: string
+  title: string
+  quantity: number
+  price: string
+}
 
+type ShippingData = {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  address: string
+  city: string
+  province: string
+  postal: string
+}
 
+type Order = {
+  order_number: string
+  total: string
+  payment_method: string
+  created_at: string
+  shipping_data: ShippingData
+}
+
+type OrderConfirmationProps = {
+  order: Order
+  items: OrderItem[]
+}
+
+/* -------------------- COMPONENT -------------------- */
+
+export default function OrderConfirmation({
+  order,
+  items,
+}: OrderConfirmationProps) {
 
   const {
-    orderId,
-    items,
-    total,
-    shippingData,
-    paymentMethod,
     order_number,
+    total,
+    payment_method,
     created_at,
+    shipping_data,
   } = order
 
-  console.log( 
-    orderId,
-    items,
-    total,
-    shippingData,
-    paymentMethod,
-    order_number,
-    created_at,)
-
-  const isoString = new Date(created_at);
+  const date = new Date(created_at)
 
   return (
     <div className="min-h-screen bg-background">
+      {/* HEADER */}
       <div className="border-b">
         <div className="container mx-auto px-4 py-12 md:py-16">
           <div className="max-w-2xl mx-auto text-center space-y-4">
             <CheckCircle2 className="h-16 w-16 text-primary mx-auto" />
-            <h1 className="text-4xl md:text-5xl font-semibold text-balance">Pedido confirmado</h1>
-            <p className="text-lg text-muted-foreground">Hemos recibido tu pedido y lo procesaremos pronto</p>
+            <h1 className="text-4xl md:text-5xl font-semibold">
+              Pedido confirmado
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Hemos recibido tu pedido y lo procesaremos pronto
+            </p>
           </div>
         </div>
       </div>
 
+      {/* CONTENT */}
       <div className="container mx-auto px-4 py-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6 mb-12">
-            <Card className="p-6">
-              <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide mb-2">Número de pedido</p>
-              <p className="text-lg font-medium">{order_number}</p>
-            </Card>
+        <div className="max-w-5xl mx-auto grid gap-8 lg:grid-cols-3">
 
-            <Card className="p-6">
-              <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide mb-2">Fecha del pedido</p>
-              <p className="text-lg font-medium">{isoString.toLocaleString()}</p>
-            </Card>
-          </div>
+          {/* MAIN */}
+          <div className="lg:col-span-2 space-y-8">
 
+            {/* ORDER INFO */}
+            <div className="grid sm:grid-cols-2 gap-6">
+              <Card className="p-6">
+                <p className="text-xs uppercase text-muted-foreground mb-1">
+                  Número de pedido
+                </p>
+                <p className="text-lg font-medium">{order_number}</p>
+              </Card>
 
-            {/* Order Items */}
-            <div className="lg:col-span-2 space-y-8">
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Productos</h2>
-                <Card className="p-6">
-                  <div className="space-y-6">
+              <Card className="p-6">
+                <p className="text-xs uppercase text-muted-foreground mb-1">
+                  Fecha del pedido
+                </p>
+                <p className="text-lg font-medium">
+                  {date.toLocaleString()}
+                </p>
+              </Card>
+            </div>
 
-                    {items.map((item: any) => (
-                      <div key={item.productId} className="py-4 border-b last:border-none flex items-center justify-between">
+            {/* ITEMS */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Productos</h2>
+              <Card className="p-6">
+                <div className="space-y-4">
+                  {items.map(item => {
+                    const { id, title, quantity, price } = item
 
-                        {/* Info del producto */}
+                    return (
+                      <div
+                        key={id}
+                        className="flex items-center justify-between border-b last:border-none py-3"
+                      >
                         <div>
-                          <p className="font-medium">{item.title}</p>
+                          <p className="font-medium">{title}</p>
                           <p className="text-sm text-muted-foreground">
-                            Cantidad: {item.quantity}
+                            Cantidad: {quantity}
                           </p>
                         </div>
 
-                        {/* Precio */}
                         <p className="font-semibold">
-                          ${Number(item.price).toFixed(2)}
+                          ${(Number(price) * quantity).toFixed(2)}
                         </p>
                       </div>
-                    ))}
-                  </div>
-                </Card>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Dirección de envío</h2>
-                <Card className="p-6">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <div className="space-y-1">
-                      <p className="font-medium">
-                        {shippingData.firstName} {shippingData.lastName}
-                      </p>
-
-                      <p className="text-sm text-muted-foreground">{shippingData.address}</p>
-
-                      <p className="text-sm text-muted-foreground">
-                        {shippingData.city}, {shippingData.province} {shippingData.postal}
-                      </p>
-
-                      <p className="text-sm text-muted-foreground">
-                        Tel: {shippingData.phone}
-                      </p>
-
-                      <p className="text-sm text-muted-foreground">
-                        Email: {shippingData.email}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Método de pago</h2>
-                <Card className="p-6">
-                  <div className="flex items-start gap-3">
-                    <CreditCard className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="font-medium">{paymentMethod}</p>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+                    )
+                  })}
+                </div>
+              </Card>
             </div>
 
-            <div className="lg:col-span-1">
-              <div className="sticky top-4">
-                <h2 className="text-xl font-semibold mb-4">Resumen</h2>
-                <Card className="p-6">
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Subtotal</span>
-                      <span className="font-medium">${total.toFixed(2)}</span>
-                    </div>
-                    <Separator className="my-4" />
-                    <div className="flex justify-between text-lg">
-                      <span className="font-semibold">Total</span>
-                      <span className="font-semibold">${total.toFixed(2)}</span>
-                    </div>
+            {/* SHIPPING */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4">
+                Dirección de envío
+              </h2>
+              <Card className="p-6">
+                <div className="flex gap-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground mt-1" />
+                  <div className="space-y-1">
+                    <p className="font-medium">
+                      {shipping_data.firstName} {shipping_data.lastName}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {shipping_data.address}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {shipping_data.city}, {shipping_data.province}{" "}
+                      {shipping_data.postal}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Tel: {shipping_data.phone}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Email: {shipping_data.email}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* PAYMENT */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4">
+                Método de pago
+              </h2>
+              <Card className="p-6">
+                <div className="flex gap-3">
+                  <CreditCard className="h-5 w-5 text-muted-foreground mt-1" />
+                  <p className="font-medium">{payment_method}</p>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* SIDEBAR */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-4 space-y-6">
+              <h2 className="text-xl font-semibold">Resumen</h2>
+
+              <Card className="p-6">
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Total</span>
+                    <span className="font-semibold">
+                      ${Number(total).toFixed(2)}
+                    </span>
                   </div>
 
-                  <div className="mt-6 space-y-3">
-                  <Link href="/products" className="w-full block">
-                    <Button className="w-full" size="lg" >
+                  <Separator />
+
+                  <Link href="/products">
+                    <Button className="w-full" size="lg">
                       Seguir comprando
                     </Button>
                   </Link>
-                  </div>
-                </Card>
-
-                <div className="mt-6 p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-center text-muted-foreground">
-                    Recibirás un correo electrónico con los detalles de tu pedido
-                  </p>
                 </div>
+              </Card>
+
+              <div className="p-4 bg-muted rounded-lg text-center text-sm text-muted-foreground">
+                Recibirás un correo electrónico con los detalles de tu pedido
               </div>
             </div>
+          </div>
+
         </div>
       </div>
     </div>
