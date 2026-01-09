@@ -12,6 +12,7 @@ import { useCart } from "@/contexts/cart-context"
 import PaymentPage from "@/components/checkout/payment-options"
 import OrderConfirmation from "@/components/checkout/order-confirmation"
 import { createOrder } from "@/lib/actions/actions"
+import { shippingSchema } from "@/lib/schemas/order.schema"
 
 /* -------------------- TYPES -------------------- */
 
@@ -64,6 +65,10 @@ export default function CheckoutPage() {
     postal: "9420",
   })
 
+  const [clientErrors, setClientErrors] = useState<
+    Record<string, string[]>
+  >({})
+
   const [state, formAction] = useFormState(createOrder, initialState)
 
   /* -------------------- EFFECTS -------------------- */
@@ -84,10 +89,19 @@ export default function CheckoutPage() {
   const handleShippingChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
+    const { name, value } = e.target
+
     setShippingData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }))
+
+    // 🔥 limpiar error al escribir
+    setClientErrors(prev => {
+      const copy = { ...prev }
+      delete copy[`shipping.${name}`]
+      return copy
+    })
   }
 
   /* -------------------- CALCULATIONS -------------------- */
@@ -100,7 +114,6 @@ export default function CheckoutPage() {
   const shipping = subtotal > 50000 ? 0 : 599
 
   /* -------------------- RENDER -------------------- */
-  console.log(createdOrderFrom)
 
   return (
     <div className="min-h-screen bg-background">
@@ -151,9 +164,11 @@ export default function CheckoutPage() {
                         value={shippingData.firstName}
                         onChange={handleShippingChange}
                       />
-                      {state.errors?.["shipping.firstName"] && (
+                      {(clientErrors["shipping.firstName"] ||
+                        state.errors?.["shipping.firstName"]) && (
                         <p className="text-sm text-red-500">
-                          {state.errors["shipping.firstName"][0]}
+                          {clientErrors["shipping.firstName"]?.[0] ??
+                            state.errors?.["shipping.firstName"]?.[0]}
                         </p>
                       )}
                     </div>
@@ -165,9 +180,11 @@ export default function CheckoutPage() {
                         value={shippingData.lastName}
                         onChange={handleShippingChange}
                       />
-                      {state.errors?.["shipping.lastName"] && (
+                      {(clientErrors["shipping.lastName"] ||
+                        state.errors?.["shipping.lastName"]) && (
                         <p className="text-sm text-red-500">
-                          {state.errors["shipping.lastName"][0]}
+                          {clientErrors["shipping.lastName"]?.[0] ??
+                            state.errors?.["shipping.lastName"]?.[0]}
                         </p>
                       )}
                     </div>
@@ -180,9 +197,11 @@ export default function CheckoutPage() {
                       value={shippingData.email}
                       onChange={handleShippingChange}
                     />
-                    {state.errors?.["shipping.email"] && (
+                    {(clientErrors["shipping.email"] ||
+                      state.errors?.["shipping.email"]) && (
                       <p className="text-sm text-red-500">
-                        {state.errors["shipping.email"][0]}
+                        {clientErrors["shipping.email"]?.[0] ??
+                          state.errors?.["shipping.email"]?.[0]}
                       </p>
                     )}
                   </div>
@@ -194,9 +213,11 @@ export default function CheckoutPage() {
                       value={shippingData.phone}
                       onChange={handleShippingChange}
                     />
-                    {state.errors?.["shipping.phone"] && (
+                    {(clientErrors["shipping.phone"] ||
+                      state.errors?.["shipping.phone"]) && (
                       <p className="text-sm text-red-500">
-                        {state.errors["shipping.phone"][0]}
+                        {clientErrors["shipping.phone"]?.[0] ??
+                          state.errors?.["shipping.phone"]?.[0]}
                       </p>
                     )}
                   </div>
@@ -208,9 +229,11 @@ export default function CheckoutPage() {
                       value={shippingData.address}
                       onChange={handleShippingChange}
                     />
-                    {state.errors?.["shipping.address"] && (
+                    {(clientErrors["shipping.address"] ||
+                      state.errors?.["shipping.address"]) && (
                       <p className="text-sm text-red-500">
-                        {state.errors["shipping.address"][0]}
+                        {clientErrors["shipping.address"]?.[0] ??
+                          state.errors?.["shipping.address"]?.[0]}
                       </p>
                     )}
                   </div>
@@ -244,7 +267,25 @@ export default function CheckoutPage() {
 
                     <Button
                       className="flex-1"
-                      onClick={() => setCurrentStep(3)}
+                      onClick={() => {
+                        const result = shippingSchema.safeParse(shippingData)
+
+                        if (!result.success) {
+                          const errors: Record<string, string[]> = {}
+
+                          result.error.issues.forEach(issue => {
+                            const key = `shipping.${issue.path.join(".")}`
+                            if (!errors[key]) errors[key] = []
+                            errors[key].push(issue.message)
+                          })
+
+                          setClientErrors(errors)
+                          return
+                        }
+
+                        setClientErrors({})
+                        setCurrentStep(3)
+                      }}
                     >
                       Continuar al Pago
                     </Button>
@@ -264,12 +305,6 @@ export default function CheckoutPage() {
                   selected={paymentMethod}
                   onSelect={setPaymentMethod}
                 />
-
-                {state.errors?.paymentMethod && (
-                  <p className="text-sm text-red-500">
-                    {state.errors.paymentMethod[0]}
-                  </p>
-                )}
 
                 {/* Hidden inputs */}
                 <input
@@ -298,12 +333,6 @@ export default function CheckoutPage() {
                 <input type="hidden" name="shipping_province" value={shippingData.province} />
                 <input type="hidden" name="shipping_postal" value={shippingData.postal} />
 
-                {state.errors?._form && (
-                  <div className="rounded bg-red-50 p-3 text-sm text-red-600">
-                    {state.errors._form[0]}
-                  </div>
-                )}
-
                 <div className="mt-8 flex gap-4">
                   <Button
                     type="button"
@@ -329,22 +358,6 @@ export default function CheckoutPage() {
               />
             )}
           </div>
-
-          {/* SIDEBAR */}
-          {currentStep < 4 && (
-            <div className="lg:col-span-1">
-              <div className="sticky top-4 rounded border bg-card p-6">
-                <h2 className="mb-6 text-lg font-bold uppercase">
-                  Resumen del Pedido
-                </h2>
-
-                {/* <OrderSummary
-                  subtotal={subtotal}
-                  shipping={shipping}
-                /> */}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
