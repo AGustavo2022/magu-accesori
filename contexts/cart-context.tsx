@@ -1,6 +1,6 @@
 "use client"
 
-import { Product } from "@/lib/definitions"
+import { Product } from "@/lib/types/definitions"
 import type React from "react"
 import { createContext, useContext, useReducer, useEffect } from "react"
 

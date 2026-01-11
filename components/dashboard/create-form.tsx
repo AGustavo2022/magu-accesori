@@ -1,172 +1,464 @@
+// 'use client';
+
+// import Link from 'next/link';
+// import { Button } from '../ui/button';
+// import { createProduct } from '@/lib/actions/actions';
+// import { CreateProductState } from '@/lib/types/product.types';
+// import { Category, Subcategory } from '@/lib/types/definitions';
+// import { useActionState, useEffect, useState } from 'react';
+
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+
+// export default function CreateProductForm({
+//   categories,
+// }: {
+//   categories: Category[];
+// }) {
+//   const initialState: CreateProductState = {
+//     success: false,
+//     message: null,
+//     errors: {},
+//     values: {},
+//   };
+
+//   const [state, formAction] = useActionState(createProduct, initialState);
+//   const errorState = !state.success ? state : null;
+
+//   const [selectedCategory, setSelectedCategory] = useState('');
+//   const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>([]);
+//   const [selectedSubcategory, setSelectedSubcategory] = useState('');
+
+//   useEffect(() => {
+//     if (!state.success && state.values.category) {
+//       setSelectedCategory(state.values.category);
+
+//       const category = categories.find(
+//         (c) => c.category_id === Number(state.values.category)
+//       );
+
+//       setAvailableSubcategories(category?.subcategories ?? []);
+//     }
+
+//     if (!state.success && state.values.subcategory) {
+//       setSelectedSubcategory(state.values.subcategory);
+//     }
+//   }, [state, categories]);
+
+//   const handleCategoryChange = (value: string) => {
+//     setSelectedCategory(value);
+
+//     const category = categories.find(
+//       (c) => c.category_id === Number(value)
+//     );
+
+//     setAvailableSubcategories(category?.subcategories ?? []);
+//     setSelectedSubcategory('');
+//   };
+
+ 
+
+//   return (
+//     <form action={formAction} className="max-w-4xl mx-auto my-8">
+//       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+//         {/* TÍTULO */}
+//         <div className="mb-4">
+//           <label className="mb-2 block text-sm font-medium">Título</label>
+//           <input
+//             name="title"
+//             placeholder="Introduce el título del producto"
+//             defaultValue={!state.success ? state.values.title ?? '' : ''}
+//             className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+//           />
+//           {errorState?.errors.title && (
+//             <p className="text-red-500 text-sm">{errorState?.errors.title[0]}</p>
+//           )}
+//         </div>
+
+//         {/* DESCRIPCIÓN CORTA */}
+//         <div className="mb-4">
+//           <label className="mb-2 block text-sm font-medium">Descripción corta</label>
+//           <textarea
+//             name="shortDescription"
+//             rows={2}
+//             placeholder="Breve descripción del producto"
+//             defaultValue={!state.success ? state.values.shortDescription ?? '' : ''}
+//             className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm resize-none"
+//           />
+//           {errorState?.errors.shortDescription && (
+//             <p className="text-red-500 text-sm">{errorState?.errors.shortDescription[0]}</p>
+//           )}
+//         </div>
+
+//         {/* DESCRIPCIÓN LARGA */}
+//         <div className="mb-4">
+//           <label className="mb-2 block text-sm font-medium">Descripción larga</label>
+//           <textarea
+//             name="longDescription"
+//             rows={4}
+//             placeholder="Descripción detallada del producto"
+//             defaultValue={!state.success ? state.values.longDescription ?? '' : ''}
+//             className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm resize-none"
+//           />
+//           {errorState?.errors.longDescription && (
+//             <p className="text-red-500 text-sm">{errorState?.errors.longDescription[0]}</p>
+//           )}
+//         </div>
+
+//         {/* PRECIO / STOCK / DESCUENTO */}
+//         <div className="flex gap-4">
+
+//           <div className="mb-4 w-1/3">
+//             <label className="mb-2 block text-sm font-medium">Precio</label>
+//             <input
+//               name="price"
+//               type="number"
+//               step="0.01"
+//               placeholder="0.00"
+//               defaultValue={!state.success ? state.values.price ?? '' : ''}
+//               className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+//             />
+//             {errorState?.errors.price && (
+//               <p className="text-red-500 text-sm">{errorState?.errors.price[0]}</p>
+//             )}
+//           </div>
+
+//           <div className="mb-4 w-1/3">
+//             <label className="mb-2 block text-sm font-medium">Stock</label>
+//             <input
+//               name="stock"
+//               type="number"
+//               placeholder="Cantidad en stock"
+//               defaultValue={!state.success ? state.values.stock ?? '' : ''}
+//               className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+//             />
+//             {errorState?.errors.stock && (
+//               <p className="text-red-500 text-sm">{errorState?.errors.stock[0]}</p>
+//             )}
+//           </div>
+
+//           <div className="mb-4 w-1/3">
+//             <label className="mb-2 block text-sm font-medium">Descuento (%)</label>
+//             <input
+//               name="discount"
+//               type="number"
+//               step="1"
+//               placeholder="0"
+//               defaultValue={!state.success ? state.values.discount ?? '' : ''}
+//               className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+//             />
+//             {errorState?.errors.discount && (
+//               <p className="text-red-500 text-sm">{errorState?.errors.discount[0]}</p>
+//             )}
+//           </div>
+
+//         </div>
+
+//         {/* IMAGEN */}
+//         <div className="mb-4">
+//           <label className="mb-2 block text-sm font-medium">URL de la imagen</label>
+//           <input
+//             name="image_url"
+//             type="text"
+//             placeholder="http://..."
+//             defaultValue={!state.success ? state.values.image_url ?? '' : ''}
+//             className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+//           />
+//           {errorState?.errors.image_url && (
+//             <p className="text-red-500 text-sm">{errorState?.errors.image_url[0]}</p>
+//           )}
+//         </div>
+
+//         {/* CATEGORÍA / SUBCATEGORÍA */}
+//         <div className="flex gap-4">
+
+//           <div className="mb-4 w-1/4">
+//             <label className="mb-2 block text-sm font-medium">Categoría</label>
+//             <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+//               <SelectTrigger className="w-[200px]">
+//                 <SelectValue placeholder="Seleccione categoría" />
+//               </SelectTrigger>
+//               <SelectContent>
+//                 {categories.map((cat) => (
+//                   <SelectItem
+//                     key={cat.category_id}
+//                     value={cat.category_id.toString()}
+//                   >
+//                     {cat.category_name}
+//                   </SelectItem>
+//                 ))}
+//               </SelectContent>
+//             </Select>
+//             <input type="hidden" name="category" value={selectedCategory} />
+//             {errorState?.errors.category && (
+//               <p className="text-red-500 text-sm">{errorState?.errors.category[0]}</p>
+//             )}
+//           </div>
+
+//           <div className="mb-4 w-1/4">
+//             <label className="mb-2 block text-sm font-medium">Subcategoría</label>
+//             <Select
+//               value={selectedSubcategory}
+//               onValueChange={setSelectedSubcategory}
+//               disabled={!availableSubcategories.length}
+//             >
+//               <SelectTrigger className="w-[200px]">
+//                 <SelectValue placeholder="Seleccione subcategoría" />
+//               </SelectTrigger>
+//               <SelectContent>
+//                 {availableSubcategories.map((sub) => (
+//                   <SelectItem
+//                     key={sub.subcategory_id}
+//                     value={sub.subcategory_id.toString()}
+//                   >
+//                     {sub.subcategory_name}
+//                   </SelectItem>
+//                 ))}
+//               </SelectContent>
+//             </Select>
+//             <input type="hidden" name="subcategory" value={selectedSubcategory} />
+//             {errorState?.errors.subcategory && (
+//               <p className="text-red-500 text-sm">{errorState?.errors.subcategory[0]}</p>
+//             )}
+//           </div>
+
+//         </div>
+//       </div>
+
+//       <div className="mt-6 flex justify-end gap-4">
+//         <Link
+//           href="/dashboard"
+//           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 hover:bg-gray-200"
+//         >
+//           Cancelar
+//         </Link>
+//         <Button type="submit">Crear producto</Button>
+//       </div>
+//     </form>
+//   );
+// }
+
+
 'use client';
 
 import Link from 'next/link';
+import { useActionState, useEffect, useState } from 'react';
+
 import { Button } from '../ui/button';
-import { createProduct, CreateProductState } from '@/lib/actions';
-import { Category, Subcategory } from '@/lib/definitions';
-import { useActionState, useState } from 'react';
+import { createProduct } from '@/lib/actions/actions';
+import { CreateProductState } from '@/lib/types/product.types';
+import { Category, Subcategory } from '@/lib/types/definitions';
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 
-export default function CreateProductForm({ categories }: { categories: Category[] }) {
+export default function CreateProductForm({
+  categories,
+}: {
+  categories: Category[];
+}) {
+  /* -------------------- STATE -------------------- */
 
-  const initialState: CreateProductState = {success: false,};
+  const initialState: CreateProductState = {
+    success: false,
+    message: null,
+    errors: {},
+    values: {},
+  };
+
   const [state, formAction] = useActionState(createProduct, initialState);
-  
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+
+  /** Narrowing centralizado */
+  const errorState = !state.success ? state : null;
+
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>([]);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
+  /* -------------------- EFFECTS -------------------- */
 
-  const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategory(categoryId);
-    
-    const numericCategoryId = Number(categoryId);
+  useEffect(() => {
+    if (!errorState) return;
 
-    const categoryObject = categories.find(
-      (cat) => cat.category_id === numericCategoryId
+    if (errorState.values.category) {
+      setSelectedCategory(errorState.values.category);
+
+      const category = categories.find(
+        c => c.category_id === Number(errorState.values.category)
+      );
+
+      setAvailableSubcategories(category?.subcategories ?? []);
+    }
+
+    if (errorState.values.subcategory) {
+      setSelectedSubcategory(errorState.values.subcategory);
+    }
+  }, [errorState, categories]);
+
+  /* -------------------- HANDLERS -------------------- */
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+
+    const category = categories.find(
+      c => c.category_id === Number(value)
     );
-    
-    const subArray = categoryObject ? categoryObject.subcategories : [];
 
-    setAvailableSubcategories(subArray);
-    
-    setSelectedSubcategory(''); 
+    setAvailableSubcategories(category?.subcategories ?? []);
+    setSelectedSubcategory('');
   };
-  
-  const handleSubcategoryChange = (subcategoryId: string) => {
-    setSelectedSubcategory(subcategoryId);
-  };
-    
+
+  /* -------------------- RENDER -------------------- */
 
   return (
-    <form action={formAction} className="max-w-4xl mx-auto my-8">
-
+    <form action={formAction} className="mx-auto my-8 max-w-4xl">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
-        {/* 1. Título */}
+        {/* TÍTULO */}
         <div className="mb-4">
-          <label htmlFor="title" className="mb-2 block text-sm font-medium">Título</label>
-          <div className="relative">
-            <input
-              id="title"
-              name="title"
-              type="text"
-              placeholder="Introduce el título del producto"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-            />
-          </div>
-        </div>
-        
-        {/* 2. Descripción Corta */}
-        <div className="mb-4">
-          <label htmlFor="shortDescription" className="mb-2 block text-sm font-medium">Descripción Corta</label>
-          <div className="relative">
-            <textarea
-              id="shortDescription"
-              name="shortDescription"
-              placeholder="Breve descripción del producto"
-              rows={2}
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500 resize-none"
-            />
-          </div>
+          <label className="mb-2 block text-sm font-medium">Título</label>
+          <input
+            name="title"
+            placeholder="Introduce el título del producto"
+            defaultValue={errorState?.values.title ?? ''}
+            className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+          />
+          {errorState?.errors.title && (
+            <p className="text-sm text-red-500">
+              {errorState.errors.title[0]}
+            </p>
+          )}
         </div>
 
-        {/* 3. Descripción Larga */}
+        {/* DESCRIPCIÓN CORTA */}
         <div className="mb-4">
-          <label htmlFor="longDescription" className="mb-2 block text-sm font-medium">Descripción Larga</label>
-          <div className="relative">
-            <textarea
-              id="longDescription"
-              name="longDescription"
-              placeholder="Descripción detallada del producto"
-              rows={4}
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500 resize-none"
-            />
-          </div>
+          <label className="mb-2 block text-sm font-medium">Descripción corta</label>
+          <textarea
+            name="shortDescription"
+            rows={2}
+            placeholder="Breve descripción del producto"
+            defaultValue={errorState?.values.shortDescription ?? ''}
+            className="block w-full resize-none rounded-md border border-gray-200 py-2 pl-3 text-sm"
+          />
+          {errorState?.errors.shortDescription && (
+            <p className="text-sm text-red-500">
+              {errorState.errors.shortDescription[0]}
+            </p>
+          )}
         </div>
 
-        {/* 4. Precio, Stock y Descuento */}
+        {/* DESCRIPCIÓN LARGA */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium">Descripción larga</label>
+          <textarea
+            name="longDescription"
+            rows={4}
+            placeholder="Descripción detallada del producto"
+            defaultValue={errorState?.values.longDescription ?? ''}
+            className="block w-full resize-none rounded-md border border-gray-200 py-2 pl-3 text-sm"
+          />
+          {errorState?.errors.longDescription && (
+            <p className="text-sm text-red-500">
+              {errorState.errors.longDescription[0]}
+            </p>
+          )}
+        </div>
+
+        {/* PRECIO / STOCK / DESCUENTO */}
         <div className="flex gap-4">
+
           <div className="mb-4 w-1/3">
-            <label htmlFor="price" className="mb-2 block text-sm font-medium">Precio</label>
-            <div className="relative mt-2 rounded-md">
-              <div className="relative">
-                <input
-                  id="price"
-                  name="price"
-                  type="number"
-                  step="0.01"
-                  placeholder="0.00"
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-                />
-              </div>
-            </div>
+            <label className="mb-2 block text-sm font-medium">Precio</label>
+            <input
+              name="price"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              defaultValue={errorState?.values.price ?? ''}
+              className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+            />
+            {errorState?.errors.price && (
+              <p className="text-sm text-red-500">
+                {errorState.errors.price[0]}
+              </p>
+            )}
           </div>
+
           <div className="mb-4 w-1/3">
-            <label htmlFor="stock" className="mb-2 block text-sm font-medium">Stock</label>
-            <div className="relative">
-              <input
-                id="stock"
-                name="stock"
-                type="number"
-                placeholder="Cantidad en stock"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-              />
-            </div>
+            <label className="mb-2 block text-sm font-medium">Stock</label>
+            <input
+              name="stock"
+              type="number"
+              placeholder="Cantidad en stock"
+              defaultValue={errorState?.values.stock ?? ''}
+              className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+            />
+            {errorState?.errors.stock && (
+              <p className="text-sm text-red-500">
+                {errorState.errors.stock[0]}
+              </p>
+            )}
           </div>
+
           <div className="mb-4 w-1/3">
-            <label htmlFor="discount" className="mb-2 block text-sm font-medium">Descuento (%)</label>
-            <div className="relative">
-              <input
-                id="discount"
-                name="discount"
-                type="number"
-                step="1"
-                placeholder="0"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-              />
-            </div>
+            <label className="mb-2 block text-sm font-medium">Descuento (%)</label>
+            <input
+              name="discount"
+              type="number"
+              step="1"
+              placeholder="0"
+              defaultValue={errorState?.values.discount ?? ''}
+              className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+            />
+            {errorState?.errors.discount && (
+              <p className="text-sm text-red-500">
+                {errorState.errors.discount[0]}
+              </p>
+            )}
           </div>
+
         </div>
 
-        {/* 5. URL de Imagen */}
+        {/* IMAGEN */}
         <div className="mb-4">
-          <label htmlFor="image_url" className="mb-2 block text-sm font-medium">URL de la Imagen</label>
-          <div className="relative">
-            <input
-              id="image_url"
-              name="image_url"
-              type="text"
-              placeholder="http://..."
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
-            />
-          </div>
+          <label className="mb-2 block text-sm font-medium">URL de la imagen</label>
+          <input
+            name="image_url"
+            placeholder="http://..."
+            defaultValue={errorState?.values.image_url ?? ''}
+            className="block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm"
+          />
+          {errorState?.errors.image_url && (
+            <p className="text-sm text-red-500">
+              {errorState.errors.image_url[0]}
+            </p>
+          )}
         </div>
-        
-        {/* 6. Categoría y Subcategoría */}
+
+        {/* CATEGORÍA / SUBCATEGORÍA */}
         <div className="flex gap-4">
 
           <div className="mb-4 w-1/4">
-            <label htmlFor="category" className="mb-2 block text-sm font-medium">
-              Categoría
-            </label>
-            <Select 
-              onValueChange={handleCategoryChange} 
-              value={selectedCategory}
-            >
-              <SelectTrigger className="w-[200px] ">
-                <SelectValue placeholder="Seleccione Categoría" />
+            <label className="mb-2 block text-sm font-medium">Categoría</label>
+            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Seleccione categoría" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem 
-                    key={cat.category_id} 
+                {categories.map(cat => (
+                  <SelectItem
+                    key={cat.category_id}
                     value={cat.category_id.toString()}
                   >
                     {cat.category_name}
@@ -174,29 +466,28 @@ export default function CreateProductForm({ categories }: { categories: Category
                 ))}
               </SelectContent>
             </Select>
-            <input
-              type="hidden"
-              name="category"
-              value={selectedCategory}
-            />
+            <input type="hidden" name="category" value={selectedCategory} />
+            {errorState?.errors.category && (
+              <p className="text-sm text-red-500">
+                {errorState.errors.category[0]}
+              </p>
+            )}
           </div>
 
           <div className="mb-4 w-1/4">
-            <label htmlFor="subcategory" className="mb-2 block text-sm font-medium">
-              Subcategoría
-            </label>
+            <label className="mb-2 block text-sm font-medium">Subcategoría</label>
             <Select
-              onValueChange={handleSubcategoryChange}
               value={selectedSubcategory}
-              disabled={availableSubcategories.length === 0}
+              onValueChange={setSelectedSubcategory}
+              disabled={!availableSubcategories.length}
             >
               <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Seleccione Subcategoría" />
+                <SelectValue placeholder="Seleccione subcategoría" />
               </SelectTrigger>
               <SelectContent>
-                {availableSubcategories.map((sub) => (
-                  <SelectItem 
-                    key={sub.subcategory_id} 
+                {availableSubcategories.map(sub => (
+                  <SelectItem
+                    key={sub.subcategory_id}
                     value={sub.subcategory_id.toString()}
                   >
                     {sub.subcategory_name}
@@ -204,24 +495,25 @@ export default function CreateProductForm({ categories }: { categories: Category
                 ))}
               </SelectContent>
             </Select>
-            <input
-              type="hidden"
-              name="subcategory"
-              value={selectedSubcategory}
-            />
+            <input type="hidden" name="subcategory" value={selectedSubcategory} />
+            {errorState?.errors.subcategory && (
+              <p className="text-sm text-red-500">
+                {errorState.errors.subcategory[0]}
+              </p>
+            )}
           </div>
-          
+
         </div>
       </div>
 
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard"
-          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 hover:bg-gray-200"
         >
           Cancelar
         </Link>
-        <Button type="submit">Crear Producto</Button>
+        <Button type="submit">Crear producto</Button>
       </div>
     </form>
   );

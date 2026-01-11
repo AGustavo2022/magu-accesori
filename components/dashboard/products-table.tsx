@@ -7,8 +7,9 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input" // Importación necesaria para el buscador
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BookImage, Pencil, Trash, Search } from "lucide-react" // Importé Search
-import { ProductTableProps } from "@/lib/definitions" // Asumimos que ProductsTableProps ahora tiene 'onDelete'
-import { DeleteActionState, deleteProduct } from "@/lib/actions"
+import { ProductTableProps } from "@/lib/types/definitions" // Asumimos que ProductsTableProps ahora tiene 'onDelete'
+import { deleteProduct } from "@/lib/actions/actions"
+import { DeleteActionState } from '@/lib/types/product.types'
 import Link from "next/link"
 
 import {
@@ -21,6 +22,7 @@ import { useFormState } from "react-dom"
 const initialState: DeleteActionState = {
   success: false,
   message: null,
+  errors: {},
 };
 
 

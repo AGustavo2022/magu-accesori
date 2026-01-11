@@ -1,7 +1,7 @@
 
 import Form from "@/components/dashboard/edit-form"
 import { getCategoryAll, getProductById } from "@/lib/data";
-import { Category } from "@/lib/definitions";
+import { Category } from "@/lib/types/definitions";
 
 export default async function EditProductPage(props: { params: Promise<{ id: string }> }) {
 

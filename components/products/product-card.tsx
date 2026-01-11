@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
-import { Product, ProductCardProps } from "@/lib/definitions"
+import { Product, ProductCardProps } from "@/lib/types/definitions"
 import { formatPrice } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { ShoppingCart } from "lucide-react"
@@ -25,8 +25,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const { addItem, items } = useCart();
 
-  console.log(product)
-
   if (!product) {
     return <p>Producto no encontrado</p>
   }
@@ -39,7 +37,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = (product: Product) => {
     addItem(product, selectedQuantity);
-    //console.log("Añadiendo al carrito:", product.title, "Cantidad:", selectedQuantity)
   }
 
   return (

@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import { Subcategory } from "@/lib/definitions";
+import { Subcategory } from "@/lib/types/definitions";
 
 /* 🔹 Componente Link reutilizable */
 function SidebarLink({

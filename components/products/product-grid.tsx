@@ -1,6 +1,6 @@
 
 import ProductCard from "./product-card"
-import { ProductGridProps } from "@/lib/definitions"
+import { ProductGridProps } from "@/lib/types/definitions"
 
 
 export default function ProductGrid({ products }: ProductGridProps) {
