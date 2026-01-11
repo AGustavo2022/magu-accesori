@@ -134,6 +134,9 @@ export async function updateProduct(
     return {
       success: false,
       message: 'Error al actualizar el producto. Intentá nuevamente.',
+      errors: {
+        _form: ["Error al actualizar el producto"],
+      },
       values: rawValues,
     };
   }
@@ -143,14 +146,20 @@ export async function updateProduct(
   redirect('/dashboard');
 }
 
-export async function deleteProduct(prevState: DeleteActionState,formData: FormData): Promise<DeleteActionState> {
+export async function deleteProduct(
+  prevState: DeleteActionState,
+  formData: FormData
+): Promise<DeleteActionState> {
 
-  const id = formData.get('id') as string;
+  const id = formData.get('id') as string | null;
 
   if (!id) {
     return {
       success: false,
-      message: 'ID de producto inválido.',
+      message: null,
+      errors: {
+        id: ['ID de producto inválido.'],
+      },
     };
   }
 
@@ -159,7 +168,7 @@ export async function deleteProduct(prevState: DeleteActionState,formData: FormD
       UPDATE products2
       SET status = false
       WHERE id = ${id};
-      `;
+    `;
 
     revalidatePath('/dashboard');
 
@@ -167,12 +176,16 @@ export async function deleteProduct(prevState: DeleteActionState,formData: FormD
     console.error('Error DB delete:', error);
     return {
       success: false,
-      message: 'Error al eliminar el producto. Intentá nuevamente.',
+      message: null,
+      errors: {
+        _form: ['Error al eliminar el producto. Intentá nuevamente.'],
+      },
     };
   }
 
   redirect('/dashboard');
 }
+
 
 function flattenZodErrors(tree: any, parentKey = ""): Record<string, string[]> {
   let errors: Record<string, string[]> = {}

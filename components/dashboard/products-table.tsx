@@ -22,6 +22,7 @@ import { useFormState } from "react-dom"
 const initialState: DeleteActionState = {
   success: false,
   message: null,
+  errors: {},
 };
 
 
