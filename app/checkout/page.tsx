@@ -115,251 +115,244 @@ export default function CheckoutPage() {
 
   /* -------------------- RENDER -------------------- */
 
-  return (
-    <div className="min-h-screen bg-background">
-      <CheckoutProgress currentStep={currentStep} />
+return (
+  <div className="min-h-screen bg-background">
+    <CheckoutProgress currentStep={currentStep} />
 
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="grid gap-8 lg:grid-cols-3">
+    <div className="mx-auto max-w-7xl px-4 py-8">
+      {/* CONTENIDO CENTRADO */}
+      <div className="mx-auto max-w-3xl space-y-8">
 
-          {/* MAIN */}
-          <div className="lg:col-span-2">
+        {/* STEP 1 */}
+        {currentStep === 1 && (
+          <>
+            <h1 className="mb-6 text-2xl font-bold uppercase text-center">
+              Tu Carrito
+            </h1>
 
-            {/* STEP 1 */}
-            {currentStep === 1 && (
-              <>
-                <h1 className="mb-6 text-2xl font-bold uppercase">
-                  Tu Carrito
-                </h1>
+            <div className="space-y-4">
+              {items.map(item => (
+                <CartItem key={item.product.id} item={item} />
+              ))}
+            </div>
 
-                <div className="space-y-4">
-                  {items.map(item => (
-                    <CartItem key={item.product.id} item={item} />
-                  ))}
+            <Button
+              className="mt-8 w-full"
+              size="lg"
+              onClick={() => setCurrentStep(2)}
+            >
+              Continuar con la Entrega
+            </Button>
+          </>
+        )}
+
+        {/* STEP 2 */}
+        {currentStep === 2 && (
+          <>
+            <h1 className="mb-6 text-2xl font-bold uppercase text-center">
+              Información de Entrega
+            </h1>
+
+            <div className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <Label>Nombre</Label>
+                  <Input
+                    name="firstName"
+                    value={shippingData.firstName}
+                    onChange={handleShippingChange}
+                  />
+                  {(clientErrors["shipping.firstName"] ||
+                    state.errors?.["shipping.firstName"]) && (
+                    <p className="text-sm text-red-500">
+                      {clientErrors["shipping.firstName"]?.[0] ??
+                        state.errors?.["shipping.firstName"]?.[0]}
+                    </p>
+                  )}
                 </div>
+
+                <div>
+                  <Label>Apellido</Label>
+                  <Input
+                    name="lastName"
+                    value={shippingData.lastName}
+                    onChange={handleShippingChange}
+                  />
+                  {(clientErrors["shipping.lastName"] ||
+                    state.errors?.["shipping.lastName"]) && (
+                    <p className="text-sm text-red-500">
+                      {clientErrors["shipping.lastName"]?.[0] ??
+                        state.errors?.["shipping.lastName"]?.[0]}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <Label>Email</Label>
+                <Input
+                  name="email"
+                  value={shippingData.email}
+                  onChange={handleShippingChange}
+                />
+                {(clientErrors["shipping.email"] ||
+                  state.errors?.["shipping.email"]) && (
+                  <p className="text-sm text-red-500">
+                    {clientErrors["shipping.email"]?.[0] ??
+                      state.errors?.["shipping.email"]?.[0]}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label>Teléfono</Label>
+                <Input
+                  name="phone"
+                  value={shippingData.phone}
+                  onChange={handleShippingChange}
+                />
+                {(clientErrors["shipping.phone"] ||
+                  state.errors?.["shipping.phone"]) && (
+                  <p className="text-sm text-red-500">
+                    {clientErrors["shipping.phone"]?.[0] ??
+                      state.errors?.["shipping.phone"]?.[0]}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label>Dirección</Label>
+                <Input
+                  name="address"
+                  value={shippingData.address}
+                  onChange={handleShippingChange}
+                />
+                {(clientErrors["shipping.address"] ||
+                  state.errors?.["shipping.address"]) && (
+                  <p className="text-sm text-red-500">
+                    {clientErrors["shipping.address"]?.[0] ??
+                      state.errors?.["shipping.address"]?.[0]}
+                  </p>
+                )}
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div>
+                  <Label>Ciudad</Label>
+                  <Input value={shippingData.city} disabled />
+                </div>
+
+                <div>
+                  <Label>Provincia</Label>
+                  <Input value={shippingData.province} disabled />
+                </div>
+
+                <div>
+                  <Label>Código Postal</Label>
+                  <Input value={shippingData.postal} disabled />
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setCurrentStep(1)}
+                >
+                  Volver
+                </Button>
 
                 <Button
-                  className="mt-8 w-full"
-                  size="lg"
-                  onClick={() => setCurrentStep(2)}
+                  className="flex-1"
+                  onClick={() => {
+                    const result = shippingSchema.safeParse(shippingData)
+
+                    if (!result.success) {
+                      const errors: Record<string, string[]> = {}
+
+                      result.error.issues.forEach(issue => {
+                        const key = `shipping.${issue.path.join(".")}`
+                        if (!errors[key]) errors[key] = []
+                        errors[key].push(issue.message)
+                      })
+
+                      setClientErrors(errors)
+                      return
+                    }
+
+                    setClientErrors({})
+                    setCurrentStep(3)
+                  }}
                 >
-                  Continuar con la Entrega
+                  Continuar al Pago
                 </Button>
-              </>
-            )}
+              </div>
+            </div>
+          </>
+        )}
 
-            {/* STEP 2 */}
-            {currentStep === 2 && (
-              <>
-                <h1 className="mb-6 text-2xl font-bold uppercase">
-                  Información de Entrega
-                </h1>
+        {/* STEP 3 */}
+        {currentStep === 3 && (
+          <form action={formAction} className="space-y-6">
+            <h1 className="mb-6 text-2xl font-bold uppercase text-center">
+              Método de Pago
+            </h1>
 
-                <div className="space-y-6">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <Label>Nombre</Label>
-                      <Input
-                        name="firstName"
-                        value={shippingData.firstName}
-                        onChange={handleShippingChange}
-                      />
-                      {(clientErrors["shipping.firstName"] ||
-                        state.errors?.["shipping.firstName"]) && (
-                        <p className="text-sm text-red-500">
-                          {clientErrors["shipping.firstName"]?.[0] ??
-                            state.errors?.["shipping.firstName"]?.[0]}
-                        </p>
-                      )}
-                    </div>
+            <PaymentPage
+              selected={paymentMethod}
+              onSelect={setPaymentMethod}
+            />
 
-                    <div>
-                      <Label>Apellido</Label>
-                      <Input
-                        name="lastName"
-                        value={shippingData.lastName}
-                        onChange={handleShippingChange}
-                      />
-                      {(clientErrors["shipping.lastName"] ||
-                        state.errors?.["shipping.lastName"]) && (
-                        <p className="text-sm text-red-500">
-                          {clientErrors["shipping.lastName"]?.[0] ??
-                            state.errors?.["shipping.lastName"]?.[0]}
-                        </p>
-                      )}
-                    </div>
-                  </div>
+            {/* Hidden inputs */}
+            <input
+              type="hidden"
+              name="items"
+              value={JSON.stringify(
+                items.map(i => ({
+                  productId: i.product.id,
+                  quantity: i.quantity,
+                }))
+              )}
+            />
 
-                  <div>
-                    <Label>Email</Label>
-                    <Input
-                      name="email"
-                      value={shippingData.email}
-                      onChange={handleShippingChange}
-                    />
-                    {(clientErrors["shipping.email"] ||
-                      state.errors?.["shipping.email"]) && (
-                      <p className="text-sm text-red-500">
-                        {clientErrors["shipping.email"]?.[0] ??
-                          state.errors?.["shipping.email"]?.[0]}
-                      </p>
-                    )}
-                  </div>
+            <input type="hidden" name="paymentMethod" value={paymentMethod} />
 
-                  <div>
-                    <Label>Teléfono</Label>
-                    <Input
-                      name="phone"
-                      value={shippingData.phone}
-                      onChange={handleShippingChange}
-                    />
-                    {(clientErrors["shipping.phone"] ||
-                      state.errors?.["shipping.phone"]) && (
-                      <p className="text-sm text-red-500">
-                        {clientErrors["shipping.phone"]?.[0] ??
-                          state.errors?.["shipping.phone"]?.[0]}
-                      </p>
-                    )}
-                  </div>
+            <input type="hidden" name="shipping_firstName" value={shippingData.firstName} />
+            <input type="hidden" name="shipping_lastName" value={shippingData.lastName} />
+            <input type="hidden" name="shipping_email" value={shippingData.email} />
+            <input type="hidden" name="shipping_phone" value={shippingData.phone} />
+            <input type="hidden" name="shipping_address" value={shippingData.address} />
+            <input type="hidden" name="shipping_city" value={shippingData.city} />
+            <input type="hidden" name="shipping_province" value={shippingData.province} />
+            <input type="hidden" name="shipping_postal" value={shippingData.postal} />
 
-                  <div>
-                    <Label>Dirección</Label>
-                    <Input
-                      name="address"
-                      value={shippingData.address}
-                      onChange={handleShippingChange}
-                    />
-                    {(clientErrors["shipping.address"] ||
-                      state.errors?.["shipping.address"]) && (
-                      <p className="text-sm text-red-500">
-                        {clientErrors["shipping.address"]?.[0] ??
-                          state.errors?.["shipping.address"]?.[0]}
-                      </p>
-                    )}
-                  </div>
+            <div className="mt-8 flex gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setCurrentStep(2)}
+              >
+                Volver
+              </Button>
 
-                  {/* Datos visibles NO editables */}
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div>
-                      <Label>Ciudad</Label>
-                      <Input value={shippingData.city} disabled />
-                    </div>
+              <Button type="submit" className="flex-1">
+                Crear Pedido
+              </Button>
+            </div>
+          </form>
+        )}
 
-                    <div>
-                      <Label>Provincia</Label>
-                      <Input value={shippingData.province} disabled />
-                    </div>
-
-                    <div>
-                      <Label>Código Postal</Label>
-                      <Input value={shippingData.postal} disabled />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <Button
-                      variant="outline"
-                      className="flex-1"
-                      onClick={() => setCurrentStep(1)}
-                    >
-                      Volver
-                    </Button>
-
-                    <Button
-                      className="flex-1"
-                      onClick={() => {
-                        const result = shippingSchema.safeParse(shippingData)
-
-                        if (!result.success) {
-                          const errors: Record<string, string[]> = {}
-
-                          result.error.issues.forEach(issue => {
-                            const key = `shipping.${issue.path.join(".")}`
-                            if (!errors[key]) errors[key] = []
-                            errors[key].push(issue.message)
-                          })
-
-                          setClientErrors(errors)
-                          return
-                        }
-
-                        setClientErrors({})
-                        setCurrentStep(3)
-                      }}
-                    >
-                      Continuar al Pago
-                    </Button>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* STEP 3 */}
-            {currentStep === 3 && (
-              <form action={formAction} className="space-y-6">
-                <h1 className="mb-6 text-2xl font-bold uppercase">
-                  Método de Pago
-                </h1>
-
-                <PaymentPage
-                  selected={paymentMethod}
-                  onSelect={setPaymentMethod}
-                />
-
-                {/* Hidden inputs */}
-                <input
-                  type="hidden"
-                  name="items"
-                  value={JSON.stringify(
-                    items.map(i => ({
-                      productId: i.product.id,
-                      quantity: i.quantity,
-                    }))
-                  )}
-                />
-
-                <input
-                  type="hidden"
-                  name="paymentMethod"
-                  value={paymentMethod}
-                />
-
-                <input type="hidden" name="shipping_firstName" value={shippingData.firstName} />
-                <input type="hidden" name="shipping_lastName" value={shippingData.lastName} />
-                <input type="hidden" name="shipping_email" value={shippingData.email} />
-                <input type="hidden" name="shipping_phone" value={shippingData.phone} />
-                <input type="hidden" name="shipping_address" value={shippingData.address} />
-                <input type="hidden" name="shipping_city" value={shippingData.city} />
-                <input type="hidden" name="shipping_province" value={shippingData.province} />
-                <input type="hidden" name="shipping_postal" value={shippingData.postal} />
-
-                <div className="mt-8 flex gap-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => setCurrentStep(2)}
-                  >
-                    Volver
-                  </Button>
-
-                  <Button type="submit" className="flex-1">
-                    Crear Pedido
-                  </Button>
-                </div>
-              </form>
-            )}
-
-            {/* STEP 4 */}
-            {currentStep === 4 && createdOrderFrom && (
-              <OrderConfirmation
-                order={createdOrderFrom.order}
-                items={createdOrderFrom.items}
-              />
-            )}
-          </div>
-        </div>
+        {/* STEP 4 */}
+        {currentStep === 4 && createdOrderFrom && (
+          <OrderConfirmation
+            order={createdOrderFrom.order}
+            items={createdOrderFrom.items}
+          />
+        )}
       </div>
     </div>
-  )
+  </div>
+)
+
 }
