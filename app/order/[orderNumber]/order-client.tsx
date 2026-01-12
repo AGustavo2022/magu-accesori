@@ -10,7 +10,7 @@ export default function OrderClient({ order,
 }: OrderConfirmationProps) {
 
     const { clearCart } = useCart()
-    const ran = useRef(false)
+    const ran = useRef(false) //useRef para evitar doble ejecución
 
     useEffect(() => {
         if (ran.current) return
