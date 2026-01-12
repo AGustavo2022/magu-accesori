@@ -1,7 +1,7 @@
 
 import { MetricCard } from "@/components/dashboard/metric-card" 
 import {ProductTableCard } from "@/components/dashboard/products-table-card"
-import { getProductsDashboard } from '@/lib/data'
+import { getProductsDashboard } from '@/lib/data/product.data'
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import {

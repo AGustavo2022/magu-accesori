@@ -1,3 +1,5 @@
+'use server'
+
 import { z } from 'zod';
 import { neon } from "@neondatabase/serverless";
 import { redirect } from "next/navigation";
