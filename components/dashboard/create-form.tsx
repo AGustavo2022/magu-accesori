@@ -251,7 +251,7 @@ import Link from 'next/link';
 import { useActionState, useEffect, useState } from 'react';
 
 import { Button } from '../ui/button';
-import { createProduct } from '@/lib/actions/actions';
+import { createProduct } from '@/lib/actions/product.actions';
 import { CreateProductState } from '@/lib/types/product.types';
 import { Category, Subcategory } from '@/lib/types/definitions';
 

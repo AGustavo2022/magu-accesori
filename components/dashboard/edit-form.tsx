@@ -221,7 +221,7 @@ import { useActionState, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
 
-import { updateProduct } from '@/lib/actions/actions';
+import { updateProduct } from '@/lib/actions/product.actions';
 import { UpdateProductState } from '@/lib/types/product.types';
 import { EditProductFormProps, Subcategory } from '@/lib/types/definitions';
 import { getCategoryIdByName, getSubcategoryIdByName } from '@/lib/utils';
