@@ -4,47 +4,20 @@ import React, { useEffect, useState } from "react"
 import { useFormState } from "react-dom"
 import { CheckoutProgress } from "@/components/checkout/checkout-progress"
 import { CartItem } from "@/components/cart-item"
-import { OrderSummary } from "@/components/checkout/order-summary"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useCart } from "@/contexts/cart-context"
 import PaymentPage from "@/components/checkout/payment-options"
-import OrderConfirmation from "@/components/checkout/order-confirmation"
 import { createOrder } from "@/lib/actions/actions"
 import { shippingSchema } from "@/lib/schemas/order.schema"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
-
-/* -------------------- TYPES -------------------- */
-
-type ShippingData = {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  address: string
-  city: string
-  province: string
-  postal: string
-}
-
-type CreateOrderState = {
-  success: boolean
-  message?: string
-  errors?: Record<string, string[]>
-  order?: any
-  items?: any
-}
-
-/* -------------------- INITIAL STATE -------------------- */
+import { CreateOrderState, ShippingData } from "@/lib/types/order.types"
 
 const initialState: CreateOrderState = {
   success: false,
   errors: {},
 }
-
-/* -------------------- COMPONENT -------------------- */
 
 export default function CheckoutPage() {
 
@@ -53,7 +26,7 @@ export default function CheckoutPage() {
   const [state, formAction] = useFormState(createOrder, initialState)
 
   const router = useRouter()
-  const { items, clearCart } = useCart()
+  const { items } = useCart()
   const [shippingData, setShippingData] = useState<ShippingData>({
     firstName: "",
     lastName: "",
@@ -89,14 +62,6 @@ export default function CheckoutPage() {
     })
   }
 
-  /* -------------------- CALCULATIONS -------------------- */
-
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  )
-
-  const shipping = subtotal > 50000 ? 0 : 599
 
 return (
   <div className="min-h-screen bg-background">
@@ -329,5 +294,4 @@ return (
     </div>
   </div>
 )
-
 }
