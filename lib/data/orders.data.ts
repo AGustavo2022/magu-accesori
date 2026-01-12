@@ -4,10 +4,9 @@ import { Order, OrderItem } from '../types/order.types';
 import { notFound } from 'next/navigation';
 
 
-export async function getOrderByNumber(orderNumber: string): Promise<{
-  order: Order
-  items: OrderItem[]
-}> {
+export async function getOrderByNumber(
+  orderNumber: string
+): Promise<{order: Order, items: OrderItem[]}> {
   /* 1️⃣ ORDEN */
   const orders = await sql`
     SELECT

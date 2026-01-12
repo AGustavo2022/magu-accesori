@@ -1,7 +1,7 @@
 
 import { Product } from '../types/definitions';
-import { ITEMS_PER_PAGE, ITEMS_PER_PAGECAT } from './product.data';
 import { sql } from '../db/db';
+import { ITEMS_PAGINATION_PAGE } from '../constants/pagination.constants';
 
 
 export async function getCategoryAll() {
@@ -50,17 +50,14 @@ export async function getCategoryTotalPages(
   `;
 
   const totalItems = Number(result[0]?.count) || 0;
-  return Math.ceil(totalItems / ITEMS_PER_PAGECAT);
+  return Math.ceil(totalItems / ITEMS_PAGINATION_PAGE);
 }
-
-
-const ITEMS_PER_PAGESUB = 12; // mismo valor que usás arriba
 
 export async function getProductsBySubcategory(
   subcategoryName: string,
   page: number = 1
 ): Promise<Product[]> {
-  const offset = (page - 1) * ITEMS_PER_PAGESUB;
+  const offset = (page - 1) * ITEMS_PAGINATION_PAGE;
 
   try {
     const result = await sql`
@@ -84,7 +81,7 @@ export async function getProductsBySubcategory(
         AND p.status = true
         AND p.stock > 0
       ORDER BY p.id ASC
-      LIMIT ${ITEMS_PER_PAGESUB}
+      LIMIT ${ITEMS_PAGINATION_PAGE}
       OFFSET ${offset};
     `;
 
@@ -109,7 +106,7 @@ export async function getSubcategoryTotalPages(
     `;
 
     const total = Number(count[0].count);
-    return Math.ceil(total / ITEMS_PER_PAGE);
+    return Math.ceil(total / ITEMS_PAGINATION_PAGE);
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch total pages for subcategory.");

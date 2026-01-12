@@ -1,0 +1,1 @@
+export const ITEMS_PAGINATION_PAGE = 12; 

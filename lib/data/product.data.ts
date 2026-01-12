@@ -1,4 +1,5 @@
 
+import { ITEMS_PAGINATION_PAGE } from "../constants/pagination.constants";
 import { sql } from "../db/db";
 import { Product } from "../types/definitions";
 
@@ -62,15 +63,12 @@ export async function getProductsDashboard() {
   }
 }
 
-
-export const ITEMS_PER_PAGECAT = 12; // elegí el número que quieras
-
 export async function getProductsByCategory(
   categoryName: string,
   page: number = 1
 ): Promise<Product[]> {
 
-  const offset = (page - 1) * ITEMS_PER_PAGECAT;
+  const offset = (page - 1) * ITEMS_PAGINATION_PAGE;
 
   const result = await sql`
     SELECT 
@@ -93,7 +91,7 @@ export async function getProductsByCategory(
       AND p.status = true
       AND p.stock > 0
     ORDER BY p.id ASC
-    LIMIT ${ITEMS_PER_PAGECAT}
+    LIMIT ${ITEMS_PAGINATION_PAGE}
     OFFSET ${offset}
   `;
 
@@ -132,13 +130,11 @@ export async function getProductById(product_id: string): Promise<Product[]> {
   }
 }
 
-export const ITEMS_PER_PAGE = 12;
-
 export async function getProductsPages(
   query: string = "",
   page: number = 1
 ) {
-  const offset = (page - 1) * ITEMS_PER_PAGE;
+  const offset = (page - 1) * ITEMS_PAGINATION_PAGE;
   const search = `%${query}%`;
 
   try {
@@ -170,7 +166,7 @@ export async function getProductsPages(
           OR p.price::text ILIKE ${search}
         )
       ORDER BY p.id ASC
-      LIMIT ${ITEMS_PER_PAGE}
+      LIMIT ${ITEMS_PAGINATION_PAGE}
       OFFSET ${offset}
     `;
 
@@ -203,7 +199,7 @@ export async function getProductsTotalPages(query: string = "") {
     `;
 
     const total = Number(count[0].count);
-    return Math.ceil(total / ITEMS_PER_PAGE);
+    return Math.ceil(total / ITEMS_PAGINATION_PAGE);
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch total number of pages.");
