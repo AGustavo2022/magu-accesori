@@ -1,5 +1,6 @@
 import PageWithGrid from "@/components/page-with-grid";
-import { getCategoryTotalPages, getProductsByCategory } from "@/lib/data"
+import { getCategoryTotalPages } from "@/lib/data"
+import { getProductsByCategory } from '@/lib/data/product.data';
 import { unslugify } from "@/lib/utils"
 import { notFound } from "next/navigation";
 

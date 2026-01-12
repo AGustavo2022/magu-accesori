@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { neon } from "@neondatabase/serverless";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { CreateProductSchema, UpdateProductSchema } from "../schemas/product.schema";
 import { CreateProductState, UpdateProductState, DeleteActionState } from "../types/product.types";
+import { revalidatePath } from 'next/cache';
 
 
 export const sql = neon(`${process.env.DATABASE_URL}`);
