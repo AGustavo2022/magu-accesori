@@ -1,15 +1,18 @@
-import OrderConfirmation from "@/components/checkout/order-confirmation"
-import { useCart } from "@/contexts/cart-context"
 import { getOrderByNumber } from "@/lib/data/orders.data"
+import { notFound } from "next/navigation"
 import OrderClient from "./order-client"
 
 
-export default async function OrderPage(props: { params: Promise<{ orderNumber: string }> }) {
-    
-    const { orderNumber } = await props.params
+export default async function OrderPage({
+  params,
+}: {
+  params: { orderNumber: string }
+}) {
+  const { orderNumber } = await params
 
-    const { order, items } = await getOrderByNumber(orderNumber)
+  const { order, items } = await getOrderByNumber(orderNumber)
 
+  if (!order) notFound()
 
   return <OrderClient order={order} items={items} />
 }
