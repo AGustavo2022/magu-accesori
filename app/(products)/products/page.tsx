@@ -1,6 +1,5 @@
 import { getProductsPages, getProductsTotalPages } from "@/lib/data";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import PageWithGrid from "@/components/page-with-grid";
 import SearchNew from "@/components/search";
 
@@ -28,14 +27,12 @@ export default async function ProductItemPage({
   }
 
   return (
-    <Suspense fallback={<p className="text-center py-10">Cargando productos...</p>}>
-      {/* <SearchNew placeholder={'Busqueda de Producto '} /> */}
-      <PageWithGrid
-        products={products}
-        pageNumber={currentPage}
-        totalPages={totalPages}
-        children={<SearchNew placeholder={'Busqueda de Producto '} />}
-      />
-    </Suspense>
+    <PageWithGrid
+      products={products}
+      pageNumber={currentPage}
+      totalPages={totalPages}
+    >
+      <SearchNew placeholder="Busqueda de Producto" />
+    </PageWithGrid>
   );
 }
