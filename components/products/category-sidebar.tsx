@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCategoryAll } from "@/lib/data";
+import { getCategoryAll } from "@/lib/data/categories.data";
 import { createSlug } from "@/lib/utils";
 
 import {

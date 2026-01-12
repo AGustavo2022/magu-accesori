@@ -1,12 +1,7 @@
-// app/actions.ts
-"use server";
-import { neon } from '@neondatabase/serverless';
-import { Product } from './types/definitions';
-import { ITEMS_PER_PAGE, ITEMS_PER_PAGECAT } from './data/product.data';
 
-const sqlDb = `${process.env.DATABASE_URL}`
-
-export const sql = neon(sqlDb);
+import { Product } from '../types/definitions';
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGECAT } from './product.data';
+import { sql } from '../db/db';
 
 
 export async function getCategoryAll() {

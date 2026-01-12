@@ -1,6 +1,6 @@
 
 import Form from "@/components/dashboard/edit-form"
-import { getCategoryAll } from "@/lib/data";
+import { getCategoryAll } from "@/lib/data/categories.data";
 import { getProductById } from '@/lib/data/product.data';
 import { Category } from "@/lib/types/definitions";
 

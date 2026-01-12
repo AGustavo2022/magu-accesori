@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
-import { getCategoryAll } from "@/lib/data"
+import { getCategoryAll } from "@/lib/data/categories.data"
 import { Category } from "@/lib/types/definitions"
 
 export default async function AddProductPage() {

@@ -1,12 +1,7 @@
-"use server";
-import { neon } from '@neondatabase/serverless';
+
+import { sql } from '../db/db';
 import { Order, OrderItem } from '../types/order.types';
 import { notFound } from 'next/navigation';
-
-
-const sqlDb = `${process.env.DATABASE_URL}`
-
-const sql = neon(sqlDb);
 
 
 export async function getOrderByNumber(orderNumber: string): Promise<{

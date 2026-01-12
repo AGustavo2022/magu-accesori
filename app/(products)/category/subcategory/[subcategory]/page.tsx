@@ -1,7 +1,7 @@
 import {
   getProductsBySubcategory,
   getSubcategoryTotalPages
-} from "@/lib/data";
+} from "@/lib/data/categories.data";
 import { notFound } from "next/navigation";
 import { unslugify } from "@/lib/utils";
 import PageWithGrid from "@/components/page-with-grid";

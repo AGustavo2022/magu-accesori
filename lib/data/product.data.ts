@@ -1,4 +1,5 @@
-import { sql } from "../data";
+
+import { sql } from "../db/db";
 import { Product } from "../types/definitions";
 
 
