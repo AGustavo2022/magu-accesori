@@ -1,0 +1,59 @@
+"use server";
+import { neon } from '@neondatabase/serverless';
+import { Order, OrderItem } from '../types/order.types';
+import { notFound } from 'next/navigation';
+
+
+const sqlDb = `${process.env.DATABASE_URL}`
+
+const sql = neon(sqlDb);
+
+
+export async function getOrderByNumber(orderNumber: string): Promise<{
+  order: Order
+  items: OrderItem[]
+}> {
+  /* 1️⃣ ORDEN */
+  const orders = await sql`
+    SELECT
+      id,
+      order_number,
+      total,
+      payment_method,
+      created_at,
+      shipping_data
+    FROM orders
+    WHERE order_number = ${orderNumber}
+    LIMIT 1
+  `
+
+  if (orders.length === 0) {
+    notFound()
+  }
+
+  const order = orders[0] as Order & { id: string }
+
+  /* 2️⃣ ITEMS */
+  const items = await sql`
+    SELECT
+      oi.id,
+      p.title,
+      oi.quantity,
+      oi.price
+    FROM order_items oi
+    JOIN products2 p ON p.id = oi.product_id
+    WHERE oi.order_id = ${order.id}
+    ORDER BY oi.id
+  `
+
+  return {
+    order: {
+      order_number: order.order_number,
+      total: order.total,
+      payment_method: order.payment_method,
+      created_at: order.created_at,
+      shipping_data: order.shipping_data,
+    },
+    items: items as OrderItem[],
+  }
+}

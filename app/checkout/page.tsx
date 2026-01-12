@@ -13,6 +13,8 @@ import PaymentPage from "@/components/checkout/payment-options"
 import OrderConfirmation from "@/components/checkout/order-confirmation"
 import { createOrder } from "@/lib/actions/actions"
 import { shippingSchema } from "@/lib/schemas/order.schema"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 /* -------------------- TYPES -------------------- */
 
@@ -45,15 +47,13 @@ const initialState: CreateOrderState = {
 /* -------------------- COMPONENT -------------------- */
 
 export default function CheckoutPage() {
+
   const [currentStep, setCurrentStep] = useState(1)
   const [paymentMethod, setPaymentMethod] = useState("Transferencia")
-  const [createdOrderFrom, setCreatedOrder] = useState<{
-    order: any
-    items: any[]
-  } | null>(null)
+  const [state, formAction] = useFormState(createOrder, initialState)
 
+  const router = useRouter()
   const { items, clearCart } = useCart()
-
   const [shippingData, setShippingData] = useState<ShippingData>({
     firstName: "",
     lastName: "",
@@ -64,28 +64,14 @@ export default function CheckoutPage() {
     province: "Tierra del Fuego",
     postal: "9420",
   })
-
-  const [clientErrors, setClientErrors] = useState<
-    Record<string, string[]>
-  >({})
-
-  const [state, formAction] = useFormState(createOrder, initialState)
-
-  /* -------------------- EFFECTS -------------------- */
+  const [clientErrors, setClientErrors] = useState<Record<string, string[]>>({})
 
   useEffect(() => {
     if (state.success && state.order) {
-      setCreatedOrder({
-        order: state.order,
-        items: state.items,
-      })
-      setCurrentStep(4)
-      clearCart()
+      router.replace(`/order/${state.order.order_number}`)
     }
-  }, [state, clearCart])
-
-  /* -------------------- HANDLERS -------------------- */
-
+  }, [state.success, state.order, router])
+  
   const handleShippingChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -96,7 +82,6 @@ export default function CheckoutPage() {
       [name]: value,
     }))
 
-    // 🔥 limpiar error al escribir
     setClientErrors(prev => {
       const copy = { ...prev }
       delete copy[`shipping.${name}`]
@@ -112,8 +97,6 @@ export default function CheckoutPage() {
   )
 
   const shipping = subtotal > 50000 ? 0 : 599
-
-  /* -------------------- RENDER -------------------- */
 
 return (
   <div className="min-h-screen bg-background">
@@ -341,14 +324,6 @@ return (
               </Button>
             </div>
           </form>
-        )}
-
-        {/* STEP 4 */}
-        {currentStep === 4 && createdOrderFrom && (
-          <OrderConfirmation
-            order={createdOrderFrom.order}
-            items={createdOrderFrom.items}
-          />
         )}
       </div>
     </div>
