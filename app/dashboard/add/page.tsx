@@ -1,21 +1,13 @@
-//import { fetchProducts } from "@/lib/data"
 import Form from "@/components/dashboard/create-form"
 import { FileChartColumn } from "lucide-react"
 import Link from "next/link"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { getCategoryAll } from "@/lib/data/categories.data"
 import { Category } from "@/lib/types/definitions"
 
 export default async function AddProductPage() {
-  //const produts = await fetchProducts()
 
     const category = await getCategoryAll()
-    console.log(category)
 
   return (
     <>
@@ -25,24 +17,22 @@ export default async function AddProductPage() {
           <p className="text-muted-foreground">Formulario para el ingreso de nuevos productos</p>
         </div>
         <div>
-          <Tooltip>
-            <TooltipTrigger>
-              <Button
-                asChild
-                variant="outline"
-                className="w-16 h-16 p-3 rounded-full">
-                <Link
-                  href={'/dashboard'}
-                  className=" hover:bg-gray-100"
-                >
-                  <FileChartColumn size={24} />
-                </Link>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Ir Producto</p>
-            </TooltipContent>
-          </Tooltip>
+          <Button
+            asChild
+            variant="outline"
+            className="w-24 h-24 rounded-xl hover:bg-gray-100"
+          >
+            <Link
+              href="/dashboard"
+              className="flex flex-col items-center justify-center gap-1 text-center"
+              aria-label="Ir a dashboard"
+            >
+              <FileChartColumn size={24} />
+              <span className="text-xs leading-tight">
+                Ir a<br />dashboard
+              </span>
+            </Link>
+          </Button>
         </div>
       </div>
       <Form categories={category as Category[]}/>
