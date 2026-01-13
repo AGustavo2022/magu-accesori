@@ -15,6 +15,26 @@ interface CartState {
   itemCount: number
 }
 
+function calculateTotal(items: CartItem[]): number {
+  const total = items.reduce((sum, item) => {
+    const price = item.product.price
+    const discount = item.product.discount ?? 0
+    const discountedPrice = price * (1 - discount / 100)
+    return sum + discountedPrice * item.quantity
+  }, 0)
+
+  return Math.round(total * 100) / 100
+}
+
+
+function calculateCartState(items: CartItem[]) {
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
+  const total = calculateTotal(items)
+
+  return { items, itemCount, total }
+}
+
+
 // 1. MODIFICACIÓN: La acción ADD_ITEM ahora acepta la cantidad seleccionada.
 type CartAction =
   | { type: "ADD_ITEM"; payload: { product: Product; quantity: number } } // <-- CAMBIO
@@ -55,18 +75,19 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         newItems = [...state.items, { product: product, quantity: Math.min(quantity, product.stock) }]
       }
 
-      const total = newItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+      // const total = newItems.reduce((sum, item) => sum + (item.product.price - item.product.price * (item.product.discount/100) ) * item.quantity, 0)
+      const total = calculateTotal(newItems)
       const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0)
 
-      return { items: newItems, total, itemCount }
+      return calculateCartState(newItems)
     }
 
     case "REMOVE_ITEM": {
-      const newItems = state.items.filter((item) => item.product.id !== action.payload)
-      const total = newItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
-      const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0)
+      const newItems = state.items.filter(
+        (item) => item.product.id !== action.payload
+      )
 
-      return { items: newItems, total, itemCount }
+      return calculateCartState(newItems)
     }
 
     case "UPDATE_QUANTITY": {
@@ -74,23 +95,22 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         .map((item) =>
           item.product.id === action.payload.id
             ? { ...item, quantity: Math.max(0, Math.min(action.payload.quantity, item.product.stock)) }
-            : item,
+            : item
         )
         .filter((item) => item.quantity > 0)
 
-      const total = newItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
-      const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0)
-
-      return { items: newItems, total, itemCount }
+      return calculateCartState(newItems)
     }
 
     case "CLEAR_CART":
       return { items: [], total: 0, itemCount: 0 }
 
     case "LOAD_CART": {
-      const total = action.payload.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
-      const itemCount = action.payload.reduce((sum, item) => sum + item.quantity, 0)
-      return { items: action.payload, total, itemCount }
+      const safeItems = action.payload.filter(
+        (item) => item.quantity > 0 && item.product?.id
+      )
+
+      return calculateCartState(safeItems)
     }
 
     default:

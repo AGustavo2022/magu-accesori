@@ -15,7 +15,6 @@ export interface CartItemData {
 
 interface CartItemProps {
     item: CartItemData;
-    // NUEVA PROP: Indica si el carrito está en modo de revisión/pago
     isCheckoutMode?: boolean;
 }
 
@@ -26,7 +25,15 @@ export function CartItem({ item, isCheckoutMode = false }: CartItemProps) {
     const { updateQuantity, removeItem } = useCart()
 
     const { product, quantity } = item;
-    const { id, title, price, image_url, stock } = product;
+    const { id, title, price, image_url, stock, discount} = product;
+
+    const hasDiscount = discount && discount > 0;
+
+    const discountedPrice = hasDiscount
+        ? price - price * (discount / 100)
+        : price;
+
+    const lineTotal = discountedPrice * quantity;
 
     return (
         <div className="flex gap-4 border-b py-6 items-center">
@@ -46,11 +53,11 @@ export function CartItem({ item, isCheckoutMode = false }: CartItemProps) {
                     <div className="flex justify-between items-start">
                         {/* Título y Precio Total de la Línea */}
                         <h3 className="text-base font-bold line-clamp-2">{title}</h3>
-                        <span className="text-base font-bold ml-4">{formatPrice(price * quantity)}</span>
+                        <span className="text-base font-bold ml-4">{formatPrice(lineTotal)}</span>
                     </div>
 
                     <p className="mt-1 text-xs text-muted-foreground">
-                        Precio unitario: {formatPrice(price)}
+                        Precio unitario: {formatPrice(discountedPrice)}
                     </p>
                     {/* Muestra opciones solo si existen */}
 
