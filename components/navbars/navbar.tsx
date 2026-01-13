@@ -7,12 +7,6 @@ import { MenuList } from "./menu-list"
 import { CartDrawer } from "./cart-drawer"
 import Link from "next/link"
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-
 export default function Navbar() {
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -40,29 +34,13 @@ export default function Navbar() {
           <div className="flex items-center space-x-4">
 
             {/* User */}
-            <Tooltip>
-              <TooltipTrigger>
                 <Button asChild variant="ghost" size="sm">
                   <Link href="/#">
                     <User />
                   </Link>
                 </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Usuario</p>
-              </TooltipContent>
-            </Tooltip>
-
             {/* Cart */}
-            <Tooltip>
-              <TooltipTrigger>
                 <CartDrawer />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Carrito de Compras</p>
-              </TooltipContent>
-            </Tooltip>
-
           </div>
         </div>
       </div>
