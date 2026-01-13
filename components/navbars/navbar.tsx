@@ -35,7 +35,7 @@ export default function Navbar() {
 
             {/* User */}
                 <Button asChild variant="ghost" size="sm">
-                  <Link href="/#">
+                  <Link href="/dashboard">
                     <User />
                   </Link>
                 </Button>

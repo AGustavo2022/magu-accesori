@@ -29,11 +29,11 @@ const listMenu = [
     name: 'Contacto',
     href:'/contact'
   },
-  {
-    id: 5,
-    name: 'Dashboard',
-    href:'/dashboard'
-  }
+  // {
+  //   id: 5,
+  //   name: 'Dashboard',
+  //   href:'/dashboard'
+  // }
 ]
 
 export function MenuList() {
