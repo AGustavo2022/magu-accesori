@@ -113,6 +113,7 @@ return (
                     name="firstName"
                     value={shippingData.firstName}
                     onChange={handleShippingChange}
+                    placeholder="Ingresá tu nombre"
                   />
                   {(clientErrors["shipping.firstName"] ||
                     state.errors?.["shipping.firstName"]) && (
@@ -129,6 +130,7 @@ return (
                     name="lastName"
                     value={shippingData.lastName}
                     onChange={handleShippingChange}
+                    placeholder="Ingresá tu apellido"
                   />
                   {(clientErrors["shipping.lastName"] ||
                     state.errors?.["shipping.lastName"]) && (
@@ -146,6 +148,7 @@ return (
                   name="email"
                   value={shippingData.email}
                   onChange={handleShippingChange}
+                  placeholder="Ingresá tu correo electrónico"
                 />
                 {(clientErrors["shipping.email"] ||
                   state.errors?.["shipping.email"]) && (
@@ -162,6 +165,7 @@ return (
                   name="phone"
                   value={shippingData.phone}
                   onChange={handleShippingChange}
+                  placeholder="Ingresá tu teléfono (ej: 11 2345 6789)"
                 />
                 {(clientErrors["shipping.phone"] ||
                   state.errors?.["shipping.phone"]) && (
@@ -178,6 +182,7 @@ return (
                   name="address"
                   value={shippingData.address}
                   onChange={handleShippingChange}
+                  placeholder="Ingresá tu dirección (calle y número)"
                 />
                 {(clientErrors["shipping.address"] ||
                   state.errors?.["shipping.address"]) && (
