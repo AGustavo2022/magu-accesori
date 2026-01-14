@@ -22,9 +22,11 @@ export default async function ProductItemPage({
   const products = await getProductsPages(query, currentPage);
   const totalPages = await getProductsTotalPages(query);
 
-  if (!products || products.length === 0) {
-    notFound();
-  }
+  console.log(products)
+  
+  // if (!products || products.totalPages === 0) {
+  //   notFound();
+  // }
 
   return (
     <PageWithGrid
