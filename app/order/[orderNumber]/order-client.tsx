@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { useCart } from "@/contexts/cart-context"
+
 import OrderConfirmation from "@/components/checkout/order-confirmation"
 import { OrderConfirmationProps } from "@/lib/types/order.types"
+import { useCart } from "@/contexts/cart.context"
 
 export default function OrderClient({ order,
     items,

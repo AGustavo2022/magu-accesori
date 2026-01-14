@@ -3,16 +3,18 @@
 import React, { useEffect, useState } from "react"
 import { useFormState } from "react-dom"
 import { CheckoutProgress } from "@/components/checkout/checkout-progress"
-import { CartItem } from "@/components/cart-item"
+import { CartItem } from "@/components/cart/cart-item"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useCart } from "@/contexts/cart-context"
+
 import PaymentPage from "@/components/checkout/payment-options"
 import { createOrder } from "@/lib/actions/order.actions"
 import { shippingSchema } from "@/lib/schemas/order.schema"
 import { useRouter } from "next/navigation"
 import { CreateOrderState, ShippingData } from "@/lib/types/order.types"
+import { useCart } from "@/contexts/cart.context"
+import { resolveCart } from "@/contexts/cart.selectors"
 
 const initialState: CreateOrderState = {
   success: false,
@@ -27,6 +29,8 @@ export default function CheckoutPage() {
 
   const router = useRouter()
   const { items } = useCart()
+  const { items: resolvedItems, total } = resolveCart(items)
+
   const [shippingData, setShippingData] = useState<ShippingData>({
     firstName: "",
     lastName: "",
@@ -79,8 +83,8 @@ return (
             </h1>
 
             <div className="space-y-4">
-              {items.map(item => (
-                <CartItem key={item.product.id} item={item} />
+              {resolvedItems.map(item => (
+                <CartItem key={item.productId} item={item} />
               ))}
             </div>
 
@@ -257,7 +261,7 @@ return (
               name="items"
               value={JSON.stringify(
                 items.map(i => ({
-                  productId: i.product.id,
+                  productId: i.productId,
                   quantity: i.quantity,
                 }))
               )}

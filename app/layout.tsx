@@ -3,7 +3,8 @@ import { geistSans, geistMono } from '../ui/fonts';
 
 import "./globals.css";
 import Navbar from "@/components/navbars/navbar";
-import { CartProvider } from "@/contexts/cart-context";
+import { CartProvider } from "@/contexts/cart.context";
+
 
 export const metadata: Metadata = {
   title: "SHOP-Rio Grande",

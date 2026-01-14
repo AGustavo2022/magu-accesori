@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Category } from "./types/definitions";
+import { Category, Product } from "./types/definitions";
+import { CartItem } from "./types/cart.types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -82,4 +83,21 @@ export function getSubcategoryIdByName(
   }
 
   return subcategoryId;
+}
+
+
+
+export function productToCartItem(
+  product: Product,
+  quantity: number
+): CartItem {
+  return {
+    productId: product.id,
+    title: product.title,
+    image_url: product.image_url,
+    stock: product.stock,
+    price: product.price,
+    discount: product.discount,
+    quantity,
+  }
 }

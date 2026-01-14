@@ -1,5 +1,6 @@
 
-import CategorySidebar from "@/components/products/category-sidebar";
+
+import CategorySidebar from "@/components/category-sidebar";
 import { SkeletonProductsGrid } from "@/components/skeletons";
 import {
   ResizablePanel,
