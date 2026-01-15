@@ -24,8 +24,10 @@ const initialState: CreateOrderState = {
 export default function CheckoutPage() {
 
   const [currentStep, setCurrentStep] = useState(1)
-  const [paymentMethod, setPaymentMethod] = useState("Transferencia")
+  const [paymentMethod, setpaymentMethod] = useState({id: "Transferencia",title: "Transferencia Bancaria (CBU/Alias)",})
   const [state, formAction] = useFormState(createOrder, initialState)
+
+  console.log(paymentMethod)
 
   const router = useRouter()
   const { items } = useCart()
@@ -256,8 +258,10 @@ return (
             </h1>
 
             <PaymentPage
-              selected={paymentMethod}
-              onSelect={setPaymentMethod}
+              selectedId={paymentMethod.id}
+              onSelect={(paymentSelected) => {
+                setpaymentMethod(paymentSelected)
+              }}
             />
 
             {/* Hidden inputs */}
@@ -272,7 +276,7 @@ return (
               )}
             />
 
-            <input type="hidden" name="paymentMethod" value={paymentMethod} />
+            <input type="hidden" name="paymentMethod" value={paymentMethod.title} />
 
             <input type="hidden" name="shipping_firstName" value={shippingData.firstName} />
             <input type="hidden" name="shipping_lastName" value={shippingData.lastName} />
