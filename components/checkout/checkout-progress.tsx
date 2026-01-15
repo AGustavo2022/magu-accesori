@@ -46,7 +46,7 @@ export function CheckoutProgress({ currentStep }: CheckoutProgressProps) {
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    "mx-4 h-[2px] flex-1 transition-colors",
+                    "mx-4 h-0.5 flex-1 transition-colors",
                     currentStep > step.id ? "bg-foreground" : "bg-muted",
                   )}
                 />
