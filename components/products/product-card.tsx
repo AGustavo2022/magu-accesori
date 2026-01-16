@@ -37,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = () => {addItem(productToCartItem(product, 1))}
 
   return (
-    <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-[380px] p-0">
+    <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-95 p-0">
       {/* Imagen */}
       <div className="relative">
         <Link href={`/product/${product.id}`}>
