@@ -56,6 +56,11 @@ export function CartItem({
           <p className="text-xs text-muted-foreground">
             Precio unitario: {formatPrice(unitPrice)}
           </p>
+          {isCheckoutMode && 
+          <p className="text-xs text-muted-foreground">
+            Stock: {stock} 
+          </p>
+          }
         </div>
 
         <div className="flex items-center justify-between mt-3">
