@@ -15,11 +15,29 @@ export async function createProduct(
   formData: FormData
 ): Promise<CreateProductState> {
 
-  const rawValues = Object.fromEntries(
-    Array.from(formData.entries()).map(([k, v]) => [k, String(v)])
-  );
+  const rawValues: Record<string, string> = {};
 
-  const validatedFields = CreateProductSchema.safeParse(rawValues);
+  formData.forEach((value, key) => {
+    rawValues[key] = value.toString();
+  });
+
+  let specifications = [];
+  try {
+    specifications = rawValues.specifications
+      ? JSON.parse(rawValues.specifications)
+      : [];
+  } catch {
+    specifications = [];
+  }
+
+  const normalizedValues = {
+    ...rawValues,
+    discount:
+      rawValues.discount === '' ? 0 : Number(rawValues.discount),
+    specifications,
+  };
+
+  const validatedFields = CreateProductSchema.safeParse(normalizedValues);
 
   if (!validatedFields.success) {
     const tree = z.treeifyError(validatedFields.error);
@@ -31,6 +49,7 @@ export async function createProduct(
       ])
     );
 
+    
     return {
       success: false,
       message: "Error al crear el producto",
@@ -39,8 +58,11 @@ export async function createProduct(
     };
   }
 
+  console.log(validatedFields.data)
+
   const status = 'true';
   const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
+
 
   await sql`
             INSERT INTO products2 (
@@ -48,7 +70,8 @@ export async function createProduct(
                 short_description, 
                 long_description, 
                 price, 
-                stock, 
+                stock,
+                specifications, 
                 image_url, 
                 category, 
                 subcategory, 
@@ -61,7 +84,8 @@ export async function createProduct(
                 ${validatedFields.data.shortDescription}, 
                 ${validatedFields.data.longDescription}, 
                 ${validatedFields.data.price}, 
-                ${validatedFields.data.stock}, 
+                ${validatedFields.data.stock},
+                ${JSON.stringify(validatedFields.data.specifications)}, 
                 ${validatedFields.data.image_url},                
                 ${validatedFields.data.category}, 
                 ${validatedFields.data.subcategory}, 

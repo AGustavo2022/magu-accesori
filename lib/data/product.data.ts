@@ -108,6 +108,7 @@ export async function getProductById(product_id: string): Promise<Product[]> {
                 p.long_Description,
                 p.price,
                 p.stock,
+                p.specifications,
                 p.image_url,
                 c.name AS category,       
                 sc.name AS subcategory,   

@@ -1,6 +1,11 @@
 
 import { z } from 'zod';
 
+const SpecificationSchema = z.object({
+  label: z.string().transform(v => v.trim()),
+  value: z.string().transform(v => v.trim()),
+})
+
 export const ProductFormSchema = z.object({
   title: z
     .string()
@@ -13,6 +18,20 @@ export const ProductFormSchema = z.object({
   longDescription: z
     .string()
     .min(20, { message: "La descripción larga debe tener al menos 20 caracteres" }),
+
+  specifications: z
+    .array(SpecificationSchema)
+    .optional()
+    .default([])
+    .refine(
+      specs => {
+        const labels = specs.map(s =>
+          s.label.toLowerCase().trim()
+        );
+        return new Set(labels).size === labels.length;
+      },
+      { message: "No se permiten especificaciones duplicadas" }
+    ),
 
   price: z
     .coerce
@@ -42,7 +61,7 @@ export const ProductFormSchema = z.object({
     .number()
     .min(0, { message: "El descuento no puede ser menor a 0" })
     .max(100, { message: "El descuento no puede ser mayor a 100" })
-    .optional(),
+    .default(0),
 });
 
 

@@ -1,3 +1,8 @@
+export type ProductSpecification = {
+  label: string;
+  value: string;
+};
+
 
 export type Product = {
   id: string;
@@ -5,6 +10,7 @@ export type Product = {
   short_description: string;
   long_description: string;
   price: number;
+  specifications: ProductSpecification[];
   stock: number;
   image_url: string;
   category: string;

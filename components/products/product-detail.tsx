@@ -32,19 +32,8 @@ interface ProductDetailProps {
 
 export function ProductDetail({ product }: ProductDetailProps) {
 
-  const specifications = [
-    {},
-  { label: "Marca", value: "Genérica" },
-  { label: "Modelo", value: "2026" },
-  { label: "Material", value: "Cuero sintético" },
-  { label: "Color", value: "Negro" },
-  { label: "Dimensiones", value: "15 x 10 x 2 cm" },
-  { label: "Peso", value: "120 g" },
-  { label: "Origen", value: "Argentina" },
-  { label: "Garantía", value: "6 meses" },
-]
 
-  //console.log(product)
+  console.log(product)
 
   const [selectedQuantity, setSelectedQuantity] = useState(1)
 
@@ -80,9 +69,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
     setSelectedQuantity(quantity)
   }
 
-  const validSpecifications = specifications.filter(
-    (spec) => spec.value && spec.value.toString().trim() !== ""
-  )
+const validSpecifications = (product.specifications ?? []).filter(
+  (spec) => spec.value && spec.value.toString().trim() !== ""
+);
 
   return (
     <div className="max-w-6xl mx-auto p-8">
