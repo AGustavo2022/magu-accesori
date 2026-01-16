@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation"
 import { CreateOrderState, ShippingData } from "@/lib/types/order.types"
 import { useCart } from "@/contexts/cart.context"
 import { resolveCart } from "@/contexts/cart.selectors"
+import { formatPrice } from "@/lib/utils"
 
 const initialState: CreateOrderState = {
   success: false,
@@ -26,8 +27,6 @@ export default function CheckoutPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [paymentMethod, setpaymentMethod] = useState({id: "Transferencia",title: "Transferencia Bancaria (CBU/Alias)",})
   const [state, formAction] = useFormState(createOrder, initialState)
-
-  console.log(paymentMethod)
 
   const router = useRouter()
   const { items } = useCart()
@@ -88,6 +87,13 @@ return (
               {resolvedItems.map(item => (
                 <CartItem key={item.productId} item={item} />
               ))}
+            </div>
+
+            <div className="mt-6 flex justify-between items-center pt-4 text-lg">
+              <span className="font-medium">Subtotal</span>
+              <span className="font-bold">
+                {formatPrice(total)}
+              </span>
             </div>
 
             <Button
