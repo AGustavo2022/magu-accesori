@@ -84,6 +84,7 @@ export async function createOrder(
   const productMap = new Map(products.map(p => [p.id, p]));
 
   let subtotal = 0;
+
   for (const item of items) {
     const product = productMap.get(item.productId);
     if (!product) {
@@ -92,7 +93,8 @@ export async function createOrder(
     subtotal += product.final_price * item.quantity;
   }
 
-  const total = subtotal;
+  const shippingCost = shipping.address === "Retiro del local" ? 0 : 5000
+  const total = subtotal + shippingCost
   const status = "pending";
   const created_at = new Date().toISOString();
 
@@ -130,6 +132,8 @@ export async function createOrder(
       INSERT INTO orders (
         shipping_data,
         payment_method,
+        subtotal,
+        shipping_cost,
         total,
         status,
         created_at,
@@ -138,6 +142,8 @@ export async function createOrder(
       VALUES (
         ${JSON.stringify(shippingData)}::jsonb,
         ${paymentMethod},
+        ${subtotal},
+        ${shippingCost},
         ${total},
         ${status},
         ${created_at},

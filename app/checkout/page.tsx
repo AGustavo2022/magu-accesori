@@ -19,17 +19,22 @@ import { formatPrice } from "@/lib/utils"
 import { CheckCircle, MapPin, Package } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Card } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+// import { Label } from "@/components/ui/label"
 
 const initialState: CreateOrderState = {
   success: false,
   errors: {},
 }
 
+type DeliveryMethod = "pickup" | "delivery"
+
 export default function CheckoutPage() {
 
   const [currentStep, setCurrentStep] = useState(1)
   const [paymentMethod, setpaymentMethod] = useState({ id: "Transferencia", title: "Transferencia Bancaria (CBU/Alias)", })
   const [state, formAction] = useFormState(createOrder, initialState)
+  const [deliveryMethod, setDeliveryMethod] =useState<DeliveryMethod>("delivery")
 
   const router = useRouter()
   const { items } = useCart()
@@ -46,6 +51,23 @@ export default function CheckoutPage() {
     postal: "9420",
   })
   const [clientErrors, setClientErrors] = useState<Record<string, string[]>>({})
+
+  useEffect(() => {
+    setShippingData(prev => {
+      if (deliveryMethod === "pickup") {
+        return {
+          ...prev,
+          address: "Retiro del local",
+        }
+      }
+
+      // cuando vuelve a ENVÍO → limpiar dirección
+      return {
+        ...prev,
+        address: "",
+      }
+    })
+  }, [deliveryMethod])
 
   useEffect(() => {
     if (state.success && state.order) {
@@ -92,6 +114,7 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
+              <Separator/>
               <div className="mt-6 flex justify-between items-center pt-4 text-lg">
                 <span className="font-medium">Subtotal</span>
                 <span className="font-bold">
@@ -115,6 +138,38 @@ export default function CheckoutPage() {
               <h1 className="mb-6 text-2xl font-bold uppercase text-center">
                 Información de Entrega
               </h1>
+
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMethod("delivery")}
+                  className={`rounded-lg border p-4 text-left transition
+                      ${deliveryMethod === "delivery"
+                      ? "border-primary bg-primary/5"
+                      : "border-muted"}
+                        `}
+                >
+                  <p className="font-medium">Envío</p>
+                  <p className="text-sm text-muted-foreground">
+                    Llega a tu domicilio
+                  </p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMethod("pickup")}
+                  className={`rounded-lg border p-4 text-left transition
+                      ${deliveryMethod === "pickup"
+                      ? "border-primary bg-primary/5"
+                      : "border-muted"}
+                    `}
+                >
+                  <p className="font-medium">Retiro</p>
+                  <p className="text-sm text-muted-foreground">
+                    Retirá por el local
+                  </p>
+                </button>
+              </div>
 
               <div className="space-y-6">
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -187,39 +242,43 @@ export default function CheckoutPage() {
                     )}
                 </div>
 
-                <div>
-                  <Label>Dirección</Label>
-                  <Input
-                    name="address"
-                    value={shippingData.address}
-                    onChange={handleShippingChange}
-                    placeholder="Ingresá tu dirección (calle y número)"
-                  />
-                  {(clientErrors["shipping.address"] ||
-                    state.errors?.["shipping.address"]) && (
-                      <p className="text-sm text-red-500">
-                        {clientErrors["shipping.address"]?.[0] ??
-                          state.errors?.["shipping.address"]?.[0]}
-                      </p>
-                    )}
-                </div>
+                {deliveryMethod === "delivery" && (
+                  <>
+                    <div>
+                      <Label>Dirección</Label>
+                      <Input
+                        name="address"
+                        value={shippingData.address}
+                        onChange={handleShippingChange}
+                        placeholder="Ingresá tu dirección (calle y número)"
+                      />
+                      {(clientErrors["shipping.address"] ||
+                        state.errors?.["shipping.address"]) && (
+                          <p className="text-sm text-red-500">
+                            {clientErrors["shipping.address"]?.[0] ??
+                              state.errors?.["shipping.address"]?.[0]}
+                          </p>
+                        )}
+                    </div>
 
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <Label>Ciudad</Label>
-                    <Input value={shippingData.city} disabled />
-                  </div>
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <div>
+                        <Label>Ciudad</Label>
+                        <Input value={shippingData.city} disabled />
+                      </div>
 
-                  <div>
-                    <Label>Provincia</Label>
-                    <Input value={shippingData.province} disabled />
-                  </div>
+                      <div>
+                        <Label>Provincia</Label>
+                        <Input value={shippingData.province} disabled />
+                      </div>
 
-                  <div>
-                    <Label>Código Postal</Label>
-                    <Input value={shippingData.postal} disabled />
-                  </div>
-                </div>
+                      <div>
+                        <Label>Código Postal</Label>
+                        <Input value={shippingData.postal} disabled />
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <div className="flex gap-4">
                   <Button
@@ -389,7 +448,7 @@ export default function CheckoutPage() {
                     type="button"
                     variant="outline"
                     className="flex-1"
-                    onClick={() => setCurrentStep(2)}
+                    onClick={() => setCurrentStep(3)}
                   >
                     Volver
                   </Button>
