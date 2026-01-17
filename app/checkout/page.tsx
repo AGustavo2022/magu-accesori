@@ -20,6 +20,10 @@ import { CheckCircle, MapPin, Package } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Card } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { StepCart } from "@/components/checkout/steps/step-cart"
+import { StepShipping } from "@/components/checkout/steps/step-shipping"
+import { StepPayment } from "@/components/checkout/steps/step-payment"
+import { StepSummary } from "@/components/checkout/steps/step-summary"
 // import { Label } from "@/components/ui/label"
 
 const initialState: CreateOrderState = {
@@ -60,8 +64,6 @@ export default function CheckoutPage() {
           address: "Retiro del local",
         }
       }
-
-      // cuando vuelve a ENVÍO → limpiar dirección
       return {
         ...prev,
         address: "",
@@ -106,6 +108,25 @@ export default function CheckoutPage() {
   const shipping_cost = calculateShippingCost(deliveryMethod)
   const total_cost = totalProductsCart + shipping_cost
 
+  const validateShippingAndContinue = () => {
+    const result = shippingSchema.safeParse(shippingData)
+
+    if (!result.success) {
+      const errors: Record<string, string[]> = {}
+
+      result.error.issues.forEach(issue => {
+        const key = `shipping.${issue.path.join(".")}`
+        if (!errors[key]) errors[key] = []
+        errors[key].push(issue.message)
+      })
+
+      setClientErrors(errors)
+      return
+    }
+
+    setClientErrors({})
+    setCurrentStep(3)
+  }
   return (
     <div className="min-h-screen bg-background">
       <CheckoutProgress currentStep={currentStep} />
@@ -115,39 +136,21 @@ export default function CheckoutPage() {
         <div className="mx-auto max-w-3xl space-y-8">
 
           {/* STEP 1 */}
+
           {currentStep === 1 && (
-            <>
-              <h1 className="mb-6 text-2xl font-bold uppercase text-center">
-                Tu Carrito
-              </h1>
-
-              <div className="space-y-4">
-                {resolvedItems.map(item => (
-                  <CartItem key={item.productId} item={item} />
-                ))}
-              </div>
-
-              <Separator/>
-              <div className="mt-6 flex justify-between items-center pt-4 text-lg">
-                <span className="font-medium">Subtotal</span>
-                <span className="font-bold">
-                  {formatPrice(totalProductsCart)}
-                </span>
-              </div>
-
-              <Button
-                className="mt-8 w-full"
-                size="lg"
-                onClick={() => setCurrentStep(2)}
-              >
-                Continuar con la Entrega
-              </Button>
-            </>
+            <StepCart
+              items={resolvedItems}
+              total={totalProductsCart}
+              onNext={() => setCurrentStep(2)}
+            />
           )}
 
           {/* STEP 2 */}
+
           {currentStep === 2 && (
             <>
+
+          
               <h1 className="mb-6 text-2xl font-bold uppercase text-center">
                 Información de Entrega
               </h1>
@@ -327,109 +330,31 @@ export default function CheckoutPage() {
                     Continuar al Pago
                   </Button>
                 </div>
-              </div>
+              </div> 
             </>
           )}
           {/* STEP 3 */}
           {currentStep === 3 && (
-            <>
-              <h1 className="mb-6 text-2xl font-bold uppercase text-center">
-                Método de Pago
-              </h1>
-
-              <PaymentPage
-                selectedId={paymentMethod.id}
-                onSelect={(paymentSelected) => {
-                  setpaymentMethod(paymentSelected)
-                }}
+              <StepPayment
+                paymentMethod={paymentMethod}
+                onSelect={setpaymentMethod}
+                onBack={() => setCurrentStep(2)}
+                onNext={() => setCurrentStep(4)}
               />
-              <div className="flex gap-4">
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setCurrentStep(2)}
-                >
-                  Volver
-                </Button>
-
-                <Button
-                  className="flex-1"
-                  onClick={() => {
-
-                    setCurrentStep(4)
-                  }}
-                >
-                  Resumen
-                </Button>
-              </div>
-            </>
           )}
           {/* STEP 4 · RESUMEN */}
           {currentStep === 4 && (
             <>
-              <div className="mb-8 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success-light">
-                  <CheckCircle className="h-8 w-8 text-success" />
-                </div>
-                <h1 className="mb-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                  ¡Resumen de la compra!
-                </h1>
-              </div>
-
-              <Card className="mb-6 overflow-hidden border-border bg-card">
-                {/* Order Items */}
-                <div className="px-6 py-4">
-                  <h2 className="mb-4 flex items-center gap-2 font-medium text-foreground">
-                    <Package className="h-4 w-4" />
-                    Productos ({itemCount})
-                  </h2>
-                  <div className="space-y-4">
-                    {resolvedItems.map((item) => (
-                      <CartItem key={item.productId} item={item} />
-                    ))}
-                  </div>
-                </div>
-                <Separator />
-                {/* Shipping & Payment */}
-                <div className="grid gap-6 px-6 py-4 sm:grid-cols-2">
-                  {/* Shipping Address */}
-                  <div>
-                    <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
-                      <MapPin className="h-4 w-4" />
-                      Dirección de envío
-                    </h3>
-                    <div className="text-sm text-muted-foreground">
-                      <p className="font-medium text-foreground">{shippingData.firstName} {shippingData.lastName}</p>
-                      <p>{shippingData.address}</p>
-                      <p>{shippingData.phone}</p>
-                      <p>{shippingData.city}</p>
-                      <p>{shippingData.province}</p>
-                    </div>
-                  </div>
-
-                  {/* Payment Summary */}
-                  <div>
-                    <h3 className="mb-3 text-sm font-medium text-foreground">Resumen de pago</h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Subtotal</span>
-                        <span className="text-foreground">{formatPrice(totalProductsCart)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Envío</span>
-                        <span className="text-success">{formatPrice(shipping_cost)}</span>
-                      </div>
-                      <Separator className="my-2" />
-                      <div className="flex justify-between font-medium">
-                        <span className="text-foreground">Total</span>
-                        <span className="text-foreground">{formatPrice(total_cost)}</span>
-                      </div>
-                      <p className="mt-2 text-xs text-muted-foreground">Pagado con {paymentMethod.title}</p>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
+              <StepSummary
+                items={resolvedItems}
+                itemCount={itemCount}
+                shippingData={shippingData}
+                paymentMethod={paymentMethod}
+                subtotal={totalProductsCart}
+                shippingCost={shipping_cost}
+                total={total_cost}
+                onBack={() => setCurrentStep(3)}
+              />
 
               <form action={formAction} className="space-y-6">
 
