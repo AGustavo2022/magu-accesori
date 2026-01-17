@@ -7,7 +7,7 @@ const steps = [
   { id: 1, name: "CARRITO" },
   { id: 2, name: "ENTREGA" },
   { id: 3, name: "PAGO" },
-  { id: 4, name: "PEDIDO COMPLETO" },
+  { id: 4, name: "RESUMEN" },
 ]
 
 interface CheckoutProgressProps {

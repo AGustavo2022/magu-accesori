@@ -32,7 +32,7 @@ export function CartItem({
       : price
 
   return (
-    <div className="flex gap-4 border-b py-6 items-center">
+    <div className="flex gap-4 py-3 items-center">
       {/* Imagen */}
       <div className="h-24 w-24 overflow-hidden rounded-md bg-muted">
         <Image
