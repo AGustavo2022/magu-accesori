@@ -27,6 +27,8 @@ export type ShippingData = {
 export type Order = {
   order_number: string
   total: string
+  subtotal : number
+  shipping_cost: string
   payment_method: string
   created_at: string
   shipping_data: ShippingData

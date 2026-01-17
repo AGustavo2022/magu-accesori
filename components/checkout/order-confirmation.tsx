@@ -21,6 +21,8 @@ console.log(order, items)
   const {
     order_number,
     total,
+    subtotal,
+    shipping_cost,
     payment_method,
     created_at,
     shipping_data,
@@ -39,7 +41,7 @@ console.log(order, items)
     minute: "2-digit",
   })
 
-  const subtotal = Number(order.total + 3500)
+  // const subtotal = Number(order.total + 3500)
 
 
   return (
@@ -174,7 +176,7 @@ console.log(order, items)
 
               <div className="flex justify-between text-sm">
                 <span>Envío</span>
-                <span className="text-muted-foreground">A calcular</span>
+                <span className="text-muted-foreground">{formatPrice(Number(shipping_cost))}</span>
               </div>
 
               <div className="border-t pt-4 flex justify-between text-lg font-semibold">

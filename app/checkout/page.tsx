@@ -92,6 +92,19 @@ export default function CheckoutPage() {
     })
   }
 
+  const SHIPPING_PRICE = 5000
+  const PICKUP_PRICE = 0 // o el precio que quieras
+
+  function calculateShippingCost(
+    deliveryMethod: DeliveryMethod
+  ): number {
+    return deliveryMethod === "delivery"
+      ? SHIPPING_PRICE
+      : PICKUP_PRICE
+  }
+
+  const shipping_cost = calculateShippingCost(deliveryMethod)
+  const total_cost = totalProductsCart + shipping_cost
 
   return (
     <div className="min-h-screen bg-background">
@@ -404,12 +417,12 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Envío</span>
-                        <span className="text-success font-medium">Gratis</span>
+                        <span className="text-success">{formatPrice(shipping_cost)}</span>
                       </div>
                       <Separator className="my-2" />
                       <div className="flex justify-between font-medium">
                         <span className="text-foreground">Total</span>
-                        <span className="text-foreground">${totalProductsCart.toFixed(2)}</span>
+                        <span className="text-foreground">{formatPrice(total_cost)}</span>
                       </div>
                       <p className="mt-2 text-xs text-muted-foreground">Pagado con {paymentMethod.title}</p>
                     </div>
