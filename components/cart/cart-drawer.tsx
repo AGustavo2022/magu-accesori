@@ -30,9 +30,7 @@ export function CartDrawer() {
 
   const { items: cartItems, updateQuantity, removeItem, clearCart } = useCart()
 
-  const { items, total, itemCount } = resolveCart(cartItems)
-
-  console.log(items, total, itemCount)
+  const { items, totalProductsCart, itemCount } = resolveCart(cartItems)
 
 
   const handleCheckout = () => {
@@ -100,7 +98,7 @@ export function CartDrawer() {
               </div>
 
               <CartSummary
-                total={total}
+                total={totalProductsCart}
                 onCheckout={handleCheckout}
                 onClear={clearCart}
               />

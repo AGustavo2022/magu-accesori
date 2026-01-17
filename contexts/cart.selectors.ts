@@ -20,7 +20,7 @@ export function resolveCart(cartItems: CartItem[]) {
     }
   })
 
-  const total = items.reduce(
+  const totalProductsCart = items.reduce(
     (sum, item) => sum + item.subtotal,
     0
   )
@@ -32,7 +32,7 @@ export function resolveCart(cartItems: CartItem[]) {
 
   return {
     items,
-    total,
+    totalProductsCart,
     itemCount,
   }
 }

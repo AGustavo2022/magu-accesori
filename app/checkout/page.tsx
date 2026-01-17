@@ -33,7 +33,7 @@ export default function CheckoutPage() {
 
   const router = useRouter()
   const { items } = useCart()
-  const { items: resolvedItems, total, itemCount } = resolveCart(items)
+  const { items: resolvedItems, totalProductsCart, itemCount } = resolveCart(items)
 
   const [shippingData, setShippingData] = useState<ShippingData>({
     firstName: "",
@@ -95,7 +95,7 @@ export default function CheckoutPage() {
               <div className="mt-6 flex justify-between items-center pt-4 text-lg">
                 <span className="font-medium">Subtotal</span>
                 <span className="font-bold">
-                  {formatPrice(total)}
+                  {formatPrice(totalProductsCart)}
                 </span>
               </div>
 
@@ -292,8 +292,8 @@ export default function CheckoutPage() {
               </div>
             </>
           )}
-              {/* STEP 4 · RESUMEN */}
-              {currentStep === 4 && (
+          {/* STEP 4 · RESUMEN */}
+          {currentStep === 4 && (
             <>
               <div className="mb-8 text-center">
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success-light">
@@ -334,14 +334,14 @@ export default function CheckoutPage() {
                       <p>{shippingData.province}</p>
                     </div>
                   </div>
-                    
+
                   {/* Payment Summary */}
                   <div>
                     <h3 className="mb-3 text-sm font-medium text-foreground">Resumen de pago</h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Subtotal</span>
-                        <span className="text-foreground">$</span>
+                        <span className="text-foreground">{formatPrice(totalProductsCart)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Envío</span>
@@ -350,15 +350,13 @@ export default function CheckoutPage() {
                       <Separator className="my-2" />
                       <div className="flex justify-between font-medium">
                         <span className="text-foreground">Total</span>
-                        <span className="text-foreground">${total.toFixed(2)}</span>
+                        <span className="text-foreground">${totalProductsCart.toFixed(2)}</span>
                       </div>
                       <p className="mt-2 text-xs text-muted-foreground">Pagado con {paymentMethod.title}</p>
                     </div>
                   </div>
                 </div>
               </Card>
-            </>
-          )}
 
 
               <form action={formAction} className="space-y-6">
@@ -401,6 +399,8 @@ export default function CheckoutPage() {
                   </Button>
                 </div>
               </form>
+            </>
+          )}
         </div>
       </div>
     </div>
