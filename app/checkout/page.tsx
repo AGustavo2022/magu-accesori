@@ -3,28 +3,18 @@
 import React, { useEffect, useState } from "react"
 import { useFormState } from "react-dom"
 import { CheckoutProgress } from "@/components/checkout/checkout-progress"
-import { CartItem } from "@/components/cart/cart-item"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
-import PaymentPage from "@/components/checkout/payment-options"
 import { createOrder } from "@/lib/actions/order.actions"
 import { shippingSchema } from "@/lib/schemas/order.schema"
 import { useRouter } from "next/navigation"
 import { CreateOrderState, ShippingData } from "@/lib/types/order.types"
 import { useCart } from "@/contexts/cart.context"
 import { resolveCart } from "@/contexts/cart.selectors"
-import { formatPrice } from "@/lib/utils"
-import { CheckCircle, MapPin, Package } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
-import { Card } from "@/components/ui/card"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { StepCart } from "@/components/checkout/steps/step-cart"
-import { StepShipping } from "@/components/checkout/steps/step-shipping"
 import { StepPayment } from "@/components/checkout/steps/step-payment"
 import { StepSummary } from "@/components/checkout/steps/step-summary"
-// import { Label } from "@/components/ui/label"
 
 const initialState: CreateOrderState = {
   success: false,
@@ -33,17 +23,27 @@ const initialState: CreateOrderState = {
 
 type DeliveryMethod = "pickup" | "delivery"
 
+const SHIPPING_PRICE = 5000
+const PICKUP_PRICE = 0 // o el precio que quieras
+
+function calculateShippingCost(
+  deliveryMethod: DeliveryMethod
+): number {
+  return deliveryMethod === "delivery"
+    ? SHIPPING_PRICE
+    : PICKUP_PRICE
+}
+
 export default function CheckoutPage() {
-
-  const [currentStep, setCurrentStep] = useState(1)
-  const [paymentMethod, setpaymentMethod] = useState({ id: "Transferencia", title: "Transferencia Bancaria (CBU/Alias)", })
-  const [state, formAction] = useFormState(createOrder, initialState)
-  const [deliveryMethod, setDeliveryMethod] =useState<DeliveryMethod>("delivery")
-
+  
   const router = useRouter()
   const { items } = useCart()
   const { items: resolvedItems, totalProductsCart, itemCount } = resolveCart(items)
 
+  const [currentStep, setCurrentStep] = useState(1)
+  const [deliveryMethod, setDeliveryMethod] =useState<DeliveryMethod>("delivery")
+
+  const [paymentMethod, setpaymentMethod] = useState({ id: "Transferencia", title: "Transferencia Bancaria (CBU/Alias)", })
   const [shippingData, setShippingData] = useState<ShippingData>({
     firstName: "",
     lastName: "",
@@ -54,6 +54,8 @@ export default function CheckoutPage() {
     province: "Tierra del Fuego",
     postal: "9420",
   })
+
+  const [state, formAction] = useFormState(createOrder, initialState)
   const [clientErrors, setClientErrors] = useState<Record<string, string[]>>({})
 
   useEffect(() => {
@@ -77,6 +79,7 @@ export default function CheckoutPage() {
     }
   }, [state.success, state.order, router])
 
+
   const handleShippingChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -94,39 +97,29 @@ export default function CheckoutPage() {
     })
   }
 
-  const SHIPPING_PRICE = 5000
-  const PICKUP_PRICE = 0 // o el precio que quieras
-
-  function calculateShippingCost(
-    deliveryMethod: DeliveryMethod
-  ): number {
-    return deliveryMethod === "delivery"
-      ? SHIPPING_PRICE
-      : PICKUP_PRICE
-  }
-
   const shipping_cost = calculateShippingCost(deliveryMethod)
   const total_cost = totalProductsCart + shipping_cost
 
-  const validateShippingAndContinue = () => {
-    const result = shippingSchema.safeParse(shippingData)
+  // const validateShippingAndContinue = () => {
+  //   const result = shippingSchema.safeParse(shippingData)
 
-    if (!result.success) {
-      const errors: Record<string, string[]> = {}
+  //   if (!result.success) {
+  //     const errors: Record<string, string[]> = {}
 
-      result.error.issues.forEach(issue => {
-        const key = `shipping.${issue.path.join(".")}`
-        if (!errors[key]) errors[key] = []
-        errors[key].push(issue.message)
-      })
+  //     result.error.issues.forEach(issue => {
+  //       const key = `shipping.${issue.path.join(".")}`
+  //       if (!errors[key]) errors[key] = []
+  //       errors[key].push(issue.message)
+  //     })
 
-      setClientErrors(errors)
-      return
-    }
+  //     setClientErrors(errors)
+  //     return
+  //   }
 
-    setClientErrors({})
-    setCurrentStep(3)
-  }
+  //   setClientErrors({})
+  //   setCurrentStep(3)
+  // }
+
   return (
     <div className="min-h-screen bg-background">
       <CheckoutProgress currentStep={currentStep} />
