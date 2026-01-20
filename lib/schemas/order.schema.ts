@@ -10,6 +10,8 @@ export const CreateOrderSchema = z.object({
 
   paymentMethod: z.string().min(1),
 
+  shippingMethod: z.enum(["delivery", "pickup"]),
+
   shipping: z.object({
     firstName: z.string().min(1),
     lastName: z.string().min(1),

@@ -39,6 +39,7 @@ export async function createOrder(
   const rawValues = {
     items: JSON.parse(String(formData.get("items"))),
     paymentMethod: String(formData.get("paymentMethod")),
+    shippingMethod: String(formData.get("shipping_method")),
     shipping: {
       firstName: String(formData.get("shipping_firstName")),
       lastName: String(formData.get("shipping_lastName")),
@@ -93,7 +94,24 @@ export async function createOrder(
     subtotal += product.final_price * item.quantity;
   }
 
-  const shippingCost = shipping.address === "Retiro del local" ? 0 : 5000
+  const [shippingRow] = await sql`
+  SELECT price
+  FROM shipping_methods
+  WHERE code = ${validated.data.shippingMethod}
+    AND active = true
+  LIMIT 1
+`
+
+  if (!shippingRow) {
+    return {
+      success: false,
+      message: "Método de envío inválido",
+    }
+  }
+
+  const shippingCost = Number(shippingRow.price)
+
+  // const shippingCost = shipping.address === "Retiro del local" ? 0 : 5000
   const total = subtotal + shippingCost
   const status = "pending";
   const created_at = new Date().toISOString();
