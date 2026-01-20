@@ -6,10 +6,10 @@ import OrderClient from "./order-client"
 export default async function OrderPage({
   params,
 }: {
-  params: { orderNumber: string }
+  params: Promise<{ orderNumber: string }>
 }) {
-  const { orderNumber } = await params
 
+  const { orderNumber } = await params
   const { order, items } = await getOrderByNumber(orderNumber)
 
   if (!order) notFound()

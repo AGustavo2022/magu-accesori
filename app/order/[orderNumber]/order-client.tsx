@@ -11,13 +11,10 @@ export default function OrderClient({ order,
 }: OrderConfirmationProps) {
 
     const { clearCart } = useCart()
-    const ran = useRef(false) //useRef para evitar doble ejecución
 
     useEffect(() => {
-        if (ran.current) return
-        ran.current = true
         clearCart()
-    }, [clearCart])
+    }, [])
 
     return <OrderConfirmation order={order} items={items} />
 }

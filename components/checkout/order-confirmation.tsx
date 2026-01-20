@@ -1,8 +1,13 @@
 "use client"
 
-import { CheckCircle2, MapPin, CreditCard } from "lucide-react"
+import {
+  CheckCircle,
+  Package,
+  MapPinPlus,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 import { useRouter } from "next/navigation"
 import { OrderConfirmationProps } from "@/lib/types/order.types"
 import { formatPrice } from "@/lib/utils"
@@ -13,8 +18,6 @@ export default function OrderConfirmation({
   order,
   items,
 }: OrderConfirmationProps) {
-
-console.log(order, items)
 
   const router = useRouter()
 
@@ -41,168 +44,144 @@ console.log(order, items)
     minute: "2-digit",
   })
 
-  // const subtotal = Number(order.total + 3500)
-
+  const itemCount = items.length
 
   return (
     <div className="min-h-screen bg-background">
-      {/* HEADER */}
-      <div className="border-b">
-        <div className="container mx-auto px-4 py-12 md:py-16">
-          <div className="max-w-2xl mx-auto text-center space-y-4">
-            <CheckCircle2 className="h-16 w-16 text-primary mx-auto" />
-            <h1 className="text-4xl md:text-5xl font-semibold">
-              Pedido confirmado
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Hemos recibido tu pedido y lo procesaremos pronto
-            </p>
+      {/* ⬇️ CONTENEDOR IGUAL AL CHECKOUT */}
+      <div className="mx-auto max-w-3xl px-4 py-10">
+
+        {/* HEADER */}
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success-light">
+            <CheckCircle className="h-8 w-8 text-success" />
           </div>
+          <h1 className="mb-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+            Pedido confirmado
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Hemos recibido tu pedido y lo procesaremos pronto
+          </p>
         </div>
-      </div>
 
-      {/* CONTENT */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto space-y-10">
-
-          {/* ORDER INFO */}
-          <div className="grid sm:grid-cols-2 gap-6">
-            <Card className="p-6 text-center">
-              <p className="text-xs uppercase text-muted-foreground mb-1">
+        {/* ORDER CARD */}
+        <Card className="mb-6 overflow-hidden border-border bg-card">
+          {/* Order Meta */}
+          <div className="grid gap-6 bg-muted/30 p-6 text-center sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs uppercase text-muted-foreground">
                 Número de pedido
               </p>
               <p className="text-lg font-medium">{order_number}</p>
-            </Card>
+            </div>
 
-            <Card className="p-6 text-center">
-              <p className="text-xs uppercase text-muted-foreground mb-1">
+            <div>
+              <p className="mb-1 text-xs uppercase text-muted-foreground">
                 Fecha del pedido
               </p>
-
               <p className="text-lg font-medium">{fecha}</p>
               <p className="text-sm text-muted-foreground">{hora}</p>
-            </Card>
+            </div>
           </div>
 
-          {/* ITEMS */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">
-              Productos
+          <Separator />
+
+          {/* Products */}
+          <div className="px-6 py-4">
+            <h2 className="mb-4 flex items-center gap-2 font-medium text-foreground">
+              <Package className="h-4 w-4" />
+              Productos ({itemCount})
             </h2>
 
-            <Card className="p-6">
-              <div className="space-y-4">
-                {items.map(item => {
-                  const { id, title, quantity, price } = item
+            <div className="space-y-4">
+              {items.map(item => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between border-b py-3 last:border-none"
+                >
+                  <div>
+                    <p className="font-medium">{item.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Cantidad: {item.quantity}
+                    </p>
+                  </div>
 
-                  return (
-                    <div
-                      key={id}
-                      className="flex items-center justify-between border-b last:border-none py-3"
-                    >
-                      <div>
-                        <p className="font-medium">{title}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Cantidad: {quantity}
-                        </p>
-                      </div>
-
-                      <p className="font-semibold">
-                        ${(Number(price) * quantity).toFixed(2)}
-                      </p>
-                    </div>
-                  )
-                })}
-              </div>
-            </Card>
-          </div>
-
-          {/* SHIPPING */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">
-              Detalle de la Entrega
-            </h2>
-
-            <Card className="p-6">
-              <div className="flex gap-3">
-                <MapPin className="h-5 w-5 text-muted-foreground mt-1" />
-                <div className="space-y-1">
-                  <p className="font-medium">
-                    {shipping_data.firstName} {shipping_data.lastName}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {shipping_data.address}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {shipping_data.city}, {shipping_data.province}{" "}
-                    {shipping_data.postal}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Tel: {shipping_data.phone}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Email: {shipping_data.email}
+                  <p className="font-semibold">
+                    {formatPrice(Number(item.price) * item.quantity)}
                   </p>
                 </div>
-              </div>
-            </Card>
+              ))}
+            </div>
           </div>
 
-          {/* PAYMENT */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">
-              Detalle del Pago
-            </h2>
+          <Separator />
 
-            <Card className="p-6">
-              <div className="flex gap-3 items-center">
-                <CreditCard className="h-5 w-5 text-muted-foreground" />
-                <p className="font-medium">{payment_method}</p>
+          {/* Shipping & Payment */}
+          <div className="grid gap-6 px-6 py-4 sm:grid-cols-2">
+            {/* Shipping */}
+            <div>
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
+                <MapPinPlus className="h-4 w-4" />
+                Dirección de envío
+              </h3>
+              <div className="text-sm text-muted-foreground">
+                <p className="font-medium text-foreground">
+                  {shipping_data.firstName} {shipping_data.lastName}
+                </p>
+                <p>{shipping_data.address}</p>
+                <p>{shipping_data.phone}</p>
+                <p>{shipping_data.city}</p>
+                <p>{shipping_data.province}</p>
               </div>
-            </Card>
-          </div>
+            </div>
 
-          {/* SUMMARY */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">
-              Resumen del Pedido
-            </h2>
+            {/* Payment */}
+            <div>
+              <h3 className="mb-3 text-sm font-medium text-foreground">
+                Resumen de pago
+              </h3>
 
-            <Card className="p-6 space-y-3">
-              <div className="flex justify-between text-sm">
-                <span>Subtotal</span>
-                <span>{formatPrice(subtotal)}</span>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span>{formatPrice(subtotal)}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Envío</span>
+                  <span className="text-success">
+                    {formatPrice(Number(shipping_cost))}
+                  </span>
+                </div>
+
+                <Separator className="my-2" />
+
+                <div className="flex justify-between font-medium">
+                  <span>Total</span>
+                  <span>{formatPrice(Number(total))}</span>
+                </div>
+
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Pagado con {payment_method}
+                </p>
               </div>
-
-              <div className="flex justify-between text-sm">
-                <span>Envío</span>
-                <span className="text-muted-foreground">{formatPrice(Number(shipping_cost))}</span>
-              </div>
-
-              <div className="border-t pt-4 flex justify-between text-lg font-semibold">
-                <span>Total</span>
-                <span>{formatPrice(Number(total))}</span>
-              </div>
-            </Card>
+            </div>
           </div>
+        </Card>
 
+        {/* CTA */}
+        <div className="text-center">
+          <Button size="lg" onClick={() => router.push("/products")}>
+            Seguir comprando
+          </Button>
+        </div>
 
-          {/* CTA */}
-          <div className="text-center">
-            <Button size="lg" onClick={() => router.push("/products")}>
-              Seguir comprando
-            </Button>
-          </div>
-          {/* FOOTER INFO */}
-          <div className="p-4 bg-muted rounded-lg text-center text-sm text-muted-foreground">
-            Recibirás un correo electrónico con los detalles de tu pedido
-          </div>
+        {/* Footer */}
+        <div className="mt-6 rounded-lg bg-muted p-4 text-center text-sm text-muted-foreground">
+          Recibirás un correo electrónico con los detalles de tu pedido
         </div>
 
       </div>
-
     </div>
   )
-
-
 }
