@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
-import { useFormState } from "react-dom"
+import React, { useEffect, useState, useTransition } from "react"
+import { useFormState, useFormStatus } from "react-dom"
 import { CheckoutProgress } from "@/components/checkout/checkout-progress"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +15,9 @@ import { resolveCart } from "@/contexts/cart.selectors"
 import { StepCart } from "@/components/checkout/steps/step-cart"
 import { StepPayment } from "@/components/checkout/steps/step-payment"
 import { StepSummary } from "@/components/checkout/steps/step-summary"
+import { Loader2 } from "lucide-react"
+
+
 
 const initialState: CreateOrderState = {
   success: false,
@@ -44,6 +47,17 @@ function calculateShippingCost(
   shippingPrices: ShippingPrices
 ): number {
   return shippingPrices[deliveryMethod] ?? 0
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus()
+
+  return (
+    <Button type="submit" className="flex-1" disabled={pending}>
+      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {pending ? "Creando..." : "Crear Pedido"}
+    </Button>
+  )
 }
 
 export default function CheckoutClient({ shippingPrices }: CheckoutClientProps) {
@@ -390,9 +404,10 @@ export default function CheckoutClient({ shippingPrices }: CheckoutClientProps) 
                     Volver
                   </Button>
 
-                  <Button type="submit" className="flex-1">
+                  {/* <Button type="submit" className="flex-1">
                     Crear Pedido
-                  </Button>
+                  </Button> */}
+                    <SubmitButton />
                 </div>
               </form>
             </>

@@ -30,14 +30,17 @@ export function StepSummary({
 }: StepSummaryProps) {
     return (
         <>
-            <div className="mb-8 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success-light">
-                    <CheckCircle className="h-8 w-8 text-success" />
+            <Card className="mb-6 overflow-hidden border-border bg-muted/60">
+                <div className="mb-8 text-center">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success-light">
+                        <CheckCircle className="h-8 w-8 text-success" />
+                    </div>
+                    <h1 className="mb-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                        ¡Resumen de la compra!
+                    </h1>
                 </div>
-                <h1 className="mb-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                    ¡Resumen de la compra!
-                </h1>
-            </div>
+            </Card>
+
 
             <Card className="mb-6 overflow-hidden border-border bg-card">
                 {/* Order Items */}

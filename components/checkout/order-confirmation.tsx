@@ -52,18 +52,20 @@ export default function OrderConfirmation({
       <div className="mx-auto max-w-3xl px-4 py-10">
 
         {/* HEADER */}
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success-light">
-            <CheckCircle className="h-8 w-8 text-success" />
-          </div>
-          <h1 className="mb-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-            Pedido confirmado
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Hemos recibido tu pedido y lo procesaremos pronto
-          </p>
-        </div>
 
+        <Card className="mb-6 overflow-hidden border-border bg-emerald-50/70">
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success-light">
+              <CheckCircle className="h-8 w-8 text-success" />
+            </div>
+            <h1 className="mb-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+              Pedido confirmado
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Hemos recibido tu pedido y lo procesaremos pronto
+            </p>
+          </div>
+        </Card>
         {/* ORDER CARD */}
         <Card className="mb-6 overflow-hidden border-border bg-card">
           {/* Order Meta */}
