@@ -11,7 +11,6 @@ export default function SearchNew({ placeholder }: { placeholder: string }) {
   const { replace } = useRouter();
 
   const handleSearch = useDebouncedCallback((term) => {
-    console.log(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams);
     params.set('page', '1');
     if (term) {
@@ -23,12 +22,12 @@ export default function SearchNew({ placeholder }: { placeholder: string }) {
   }, 300);
 
   return (
-    <div className="relative flex flex-1 flex-shrink-0 px-8 py-5">
+    <div className="relative flex flex-1 shrink-0 px-8 py-5">
       <label htmlFor="search" className="sr-only">
         Search
       </label>
       <input
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+        className="peer block w-full rounded-md border border-gray-200 py-2.25 pl-10 text-sm outline-2 placeholder:text-gray-500"
         placeholder={placeholder}
         onChange={(e) => {
           handleSearch(e.target.value);

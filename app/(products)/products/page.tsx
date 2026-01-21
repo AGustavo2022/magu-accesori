@@ -22,10 +22,8 @@ export default async function ProductItemPage({
   const products = await getProductsPages(query, currentPage);
   const totalPages = await getProductsTotalPages(query);
 
-  
-  if (!products || products.length === 0) {
-    notFound();
-  }
+  const isEmpty = !products || products.length === 0
+
 
   return (
     <PageWithGrid
@@ -34,6 +32,13 @@ export default async function ProductItemPage({
       totalPages={totalPages}
     >
       <SearchNew placeholder="Busqueda de Producto" />
+
+      {isEmpty && (
+        <div className="mt-10 text-center text-muted-foreground">
+          No se encontraron productos para tu búsqueda
+        </div>
+      )}
+      
     </PageWithGrid>
   );
 }
