@@ -48,15 +48,12 @@ export default function OrderConfirmation({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* ⬇️ CONTENEDOR IGUAL AL CHECKOUT */}
+
       <div className="mx-auto max-w-3xl px-4 py-10">
 
-        {/* HEADER */}
-
-        <Card className="mb-6 overflow-hidden border-border bg-emerald-50/70">
           <div className="mb-8 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success-light">
-              <CheckCircle className="h-8 w-8 text-success" />
+              <CheckCircle size={88} color="#22c55e" strokeWidth={2.8} />
             </div>
             <h1 className="mb-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               Pedido confirmado
@@ -65,10 +62,9 @@ export default function OrderConfirmation({
               Hemos recibido tu pedido y lo procesaremos pronto
             </p>
           </div>
-        </Card>
-        {/* ORDER CARD */}
+
         <Card className="mb-6 overflow-hidden border-border bg-card">
-          {/* Order Meta */}
+
           <div className="grid gap-6 bg-muted/30 p-6 text-center sm:grid-cols-2">
             <div>
               <p className="mb-1 text-xs uppercase text-muted-foreground">
@@ -88,7 +84,6 @@ export default function OrderConfirmation({
 
           <Separator />
 
-          {/* Products */}
           <div className="px-6 py-4">
             <h2 className="mb-4 flex items-center gap-2 font-medium text-foreground">
               <Package className="h-4 w-4" />
@@ -118,9 +113,7 @@ export default function OrderConfirmation({
 
           <Separator />
 
-          {/* Shipping & Payment */}
           <div className="grid gap-6 px-6 py-4 sm:grid-cols-2">
-            {/* Shipping */}
             <div>
               <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
                 <MapPinPlus className="h-4 w-4" />
@@ -137,7 +130,6 @@ export default function OrderConfirmation({
               </div>
             </div>
 
-            {/* Payment */}
             <div>
               <h3 className="mb-3 text-sm font-medium text-foreground">
                 Resumen de pago
@@ -171,14 +163,12 @@ export default function OrderConfirmation({
           </div>
         </Card>
 
-        {/* CTA */}
         <div className="text-center">
           <Button size="lg" onClick={() => router.push("/products")}>
             Seguir comprando
           </Button>
         </div>
 
-        {/* Footer */}
         <div className="mt-6 rounded-lg bg-muted p-4 text-center text-sm text-muted-foreground">
           Recibirás un correo electrónico con los detalles de tu pedido
         </div>
