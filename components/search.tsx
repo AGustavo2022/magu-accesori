@@ -1,40 +1,63 @@
 'use client';
 
-// import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { Search, X } from 'lucide-react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
+import { useState } from 'react';
 
 export default function SearchNew({ placeholder }: { placeholder: string }) {
-
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleSearch = useDebouncedCallback((term) => {
+  const initialValue = searchParams.get('query') ?? '';
+  const [value, setValue] = useState(initialValue);
+
+  const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', '1');
+
     if (term) {
       params.set('query', term);
     } else {
       params.delete('query');
     }
+
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 
+  const clearSearch = () => {
+    setValue('');
+    const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
+    params.delete('query');
+    replace(`${pathname}?${params.toString()}`);
+  };
+
   return (
-    <div className="relative flex flex-1 shrink-0 px-8 py-5">
-      <label htmlFor="search" className="sr-only">
-        Search
-      </label>
+    <div className="relative w-full px-8 py-5">
+
+      <Search className="pointer-events-none absolute left-11 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+
       <input
-        className="peer block w-full rounded-md border border-gray-200 py-2.25 pl-10 text-sm outline-2 placeholder:text-gray-500"
+        className="block w-full rounded-md border border-gray-200 py-2 pl-10 pr-10 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
         placeholder={placeholder}
+        value={value}
         onChange={(e) => {
+          setValue(e.target.value);
           handleSearch(e.target.value);
         }}
-        defaultValue={searchParams.get('query')?.toString()}
       />
-      {/* <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
+
+      {value && (
+        <button
+          type="button"
+          onClick={clearSearch}
+          className="absolute right-11 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      )}
     </div>
   );
 }
