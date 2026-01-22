@@ -32,35 +32,23 @@ interface ProductDetailProps {
 
 export function ProductDetail({ product }: ProductDetailProps) {
 
-
-  console.log(product)
-
   const [selectedQuantity, setSelectedQuantity] = useState(1)
 
   const { addItem, items } = useCart()
 
-  /* 🧠 Estado del producto */
   const isOutOfStock = product.stock === 0
   const isInactive = !product.status
   const isLowStock = product.stock > 0 && product.stock <= 5
   const isDiscount = product.discount > 0
 
-  // const isOutOfStock = product.stock === 0
-  // const isInactive = !product.status
-  // const isLowStock = product.stock > 0 && product.stock <= 5
-  // const isDiscount = product.discount > 0
-  // const priceDiscount = product.price * (1 - product.discount / 100)
-  // const isInCart = items.some((item) => item.productId === product.id)
 
   const priceDiscount =
     product.price * (1 - product.discount / 100)
 
-  /* ✅ Nuevo carrito: se compara por productId */
   const isProductInCart = items.some(
     (item) => item.productId === product.id
   )
 
-  /* ➕ Agregar al carrito (solo ID + cantidad) */
   const handleAddToCart = () => {
     addItem(productToCartItem(product, selectedQuantity))
   }
@@ -77,7 +65,6 @@ const validSpecifications = (product.specifications ?? []).filter(
     <div className="max-w-6xl mx-auto p-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        {/* 🖼 Imagen */}
         <div className="relative">
           <div className="sticky top-8">
             <div className="relative aspect-square overflow-hidden rounded-xl border bg-muted/20">
@@ -97,7 +84,6 @@ const validSpecifications = (product.specifications ?? []).filter(
               )}
 
               <div className="absolute top-2 right-4 flex flex-col gap-2">
-                {/* Últimas unidades */}
                 {isLowStock && !isOutOfStock && !isInactive && (
                   <Badge
                     variant="outline"
@@ -107,8 +93,6 @@ const validSpecifications = (product.specifications ?? []).filter(
                     Últimas unidades
                   </Badge>
                 )}
-
-                {/* Producto inactivo */}
                 {isInactive && (
                   <Badge
                     variant="outline"
@@ -118,8 +102,6 @@ const validSpecifications = (product.specifications ?? []).filter(
                     Producto inactivo
                   </Badge>
                 )}
-
-                {/* Agotado */}
                 {isOutOfStock && !isInactive && (
                   <Badge
                     variant="outline"
@@ -135,8 +117,6 @@ const validSpecifications = (product.specifications ?? []).filter(
           </div>
         </div>
 
-
-        {/* 📄 Info */}
         <div className="flex flex-col space-y-6">
 
           <Breadcrumbs
@@ -204,20 +184,25 @@ const validSpecifications = (product.specifications ?? []).filter(
               <AccordionItem value="details">
                 <AccordionTrigger>Especificaciones</AccordionTrigger>
                 <AccordionContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                  <ul className="space-y-2 text-sm">
                     {validSpecifications.map((spec) => (
-                      <div key={spec.label} className="rounded-lg border p-3">
-                        <p className="text-xs text-muted-foreground mb-1">
+                      <li
+                        key={spec.label}
+                        className="flex justify-between border-b pb-2 last:border-b-0"
+                      >
+                        <span className="text-muted-foreground">
                           {spec.label}
-                        </p>
-                        <p className="font-medium">{spec.value}</p>
-                      </div>
+                        </span>
+                        <span className="font-medium text-right">
+                          {spec.value}
+                        </span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </AccordionContent>
               </AccordionItem>
             )}
-
+            
             <AccordionItem value="payment">
               <AccordionTrigger>Métodos de pago</AccordionTrigger>
               <AccordionContent>
@@ -241,7 +226,7 @@ const validSpecifications = (product.specifications ?? []).filter(
             </AccordionItem>
 
           </Accordion>
-          {/* 🛒 Acciones */}
+
           <div className="flex gap-4 items-end mt-auto">
             <span className="mb-2 block text-sm font-medium">Cantidad</span>
             <QuantitySelector
