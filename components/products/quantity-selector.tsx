@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button'; // Ajusta el path si es necesario
 import { Input } from '@/components/ui/input'; // Ajusta el path si es necesario

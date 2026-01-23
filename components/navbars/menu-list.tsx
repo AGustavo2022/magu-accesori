@@ -37,21 +37,18 @@ const listMenu = [
 ]
 
 export function MenuList() {
-
   return (
     <NavigationMenu>
       <NavigationMenuList>
         {listMenu.map((item) => (
           <NavigationMenuItem key={item.id}>
-            <Link
-              href={item.href}>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+              <Link href={item.href}>
                 {item.name}
-              </NavigationMenuLink>
-            </Link>
+              </Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
-          )
-        )}
+        ))}
       </NavigationMenuList>
     </NavigationMenu>
   );

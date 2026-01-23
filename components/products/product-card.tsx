@@ -13,6 +13,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  TooltipProvider
 } from "@/components/ui/tooltip"
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -95,30 +96,32 @@ export default function ProductCard({ product }: ProductCardProps) {
               </span>
             )}
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="rounded-full"
-                  onClick={handleAddToCart}
-                  disabled={
-                    isOutOfStock ||
-                    isInactive ||
-                    isProductInCart
-                  }
-                >
-                  <ShoppingCart />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>
-                  {isProductInCart
-                    ? "Ya está en el carrito"
-                    : "Agregar al carrito"}
-                </p>
-              </TooltipContent>
-            </Tooltip>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="rounded-full"
+                    onClick={handleAddToCart}
+                    disabled={
+                      isOutOfStock ||
+                      isInactive ||
+                      isProductInCart
+                    }
+                  >
+                    <ShoppingCart />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {isProductInCart
+                      ? "Ya está en el carrito"
+                      : "Agregar al carrito"}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </CardContent>
