@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 
 import { Subcategory } from "@/lib/types/definitions";
+import { Grid2X2 } from "lucide-react";
 
 /* 🔹 Componente Link reutilizable */
 function SidebarLink({
@@ -33,6 +34,7 @@ function SidebarLink({
 
 
 export default async function CategorySidebar() {
+  
   const categories = await getCategoryAll();
 
   if (!categories?.length) return null;
@@ -40,7 +42,7 @@ export default async function CategorySidebar() {
   return (
     <>
       <div className="pt-8 pb-4">
-        <h2 className="text-2xl font-semibold pb-4">Categorias</h2>
+        {/* <h2 className="text-2xl font-semibold pb-4">Categorias</h2> */}
         <SidebarLink
           label="Ver todos los Productos"
           href={`/products`}
