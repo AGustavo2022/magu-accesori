@@ -9,14 +9,14 @@ export default function Layout({
   children: React.ReactNode
 }) {
   return (
-    <ProductsPanelClient
-      sidebar={
-        <LocalSidebar>
-          <CategorySidebar />
-        </LocalSidebar>
-      }
-    >
-      {children}
-    </ProductsPanelClient>
+      <ProductsPanelClient
+        sidebar={
+          <LocalSidebar>
+            <CategorySidebar />
+          </LocalSidebar>
+        }
+      >
+        {children}
+      </ProductsPanelClient>
   )
 }

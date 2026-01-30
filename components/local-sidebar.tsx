@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
 import { ChevronRight, ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import clsx from "clsx"
+import { useSidebar } from "@/contexts/sidebar-context"
 
 
 function CategoriesButton({
@@ -30,16 +30,15 @@ export default function LocalSidebar({
 }: {
   children: React.ReactNode
 }) {
-  const [open, setOpen] = useState(false)
+  const { isOpen, open, close } = useSidebar()
 
   return (
     <>
-
-      {!open && (
+      {!isOpen && (
         <div className="px-4 py-3">
           <CategoriesButton
             icon={<ChevronRight className="h-5 w-5" />}
-            onClick={() => setOpen(true)}
+            onClick={open}
           />
         </div>
       )}
@@ -47,17 +46,15 @@ export default function LocalSidebar({
       <div
         className={clsx(
           "absolute inset-0 z-20 bg-background transition-transform duration-300",
-          open ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-
         <div className="px-4 py-3">
           <CategoriesButton
             icon={<ChevronLeft className="h-5 w-5" />}
-            onClick={() => setOpen(false)}
+            onClick={close}
           />
         </div>
-
 
         <div className="p-4 overflow-y-auto">
           {children}

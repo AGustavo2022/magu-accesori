@@ -4,6 +4,7 @@ import { geistSans, geistMono } from '../ui/fonts';
 import "./globals.css";
 import Navbar from "@/components/navbars/navbar";
 import { CartProvider } from "@/contexts/cart.context";
+import { SidebarProvider } from "@/contexts/sidebar-context";
 
 
 export const metadata: Metadata = {
@@ -22,7 +23,9 @@ export default function RootLayout({
         <CartProvider>
           <Navbar />
           <main className="w-full max-w-screen-xl mx-auto">
+          <SidebarProvider>
             {children}
+          </SidebarProvider>
           </main>
         </CartProvider>
       </body>
