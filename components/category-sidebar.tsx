@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/accordion";
 
 import { Subcategory } from "@/lib/types/definitions";
-import { Grid2X2 } from "lucide-react";
 
 /* 🔹 Componente Link reutilizable */
 function SidebarLink({

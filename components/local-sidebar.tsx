@@ -1,16 +1,19 @@
 "use client"
 
-import { ChevronRight, ChevronLeft } from "lucide-react"
+import { ChevronRight, ChevronLeft, Boxes, FolderInput, Folders, ListCollapse, LayoutPanelTop} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import clsx from "clsx"
 import { useSidebar } from "@/contexts/sidebar-context"
 
-
 function CategoriesButton({
-  icon,
+  label,
+  leftIcon,
+  rightIcon,
   onClick,
 }: {
-  icon: React.ReactNode
+  label?: string
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
   onClick: () => void
 }) {
   return (
@@ -19,11 +22,16 @@ function CategoriesButton({
       className="w-full flex items-center justify-between font-bold uppercase text-sm"
       onClick={onClick}
     >
-      <span>Categorías</span>
-      {icon}
+      <div className="flex items-center gap-2">
+        {leftIcon}
+        {label && <span>{label}</span>}
+      </div>
+
+      {rightIcon}
     </Button>
   )
 }
+
 
 export default function LocalSidebar({
   children,
@@ -34,15 +42,18 @@ export default function LocalSidebar({
 
   return (
     <>
+      {/* BOTÓN CERRADO */}
       {!isOpen && (
         <div className="px-4 py-3">
           <CategoriesButton
-            icon={<ChevronRight className="h-5 w-5" />}
+            leftIcon={<LayoutPanelTop className="h-5 w-5" />}
+            rightIcon={<ChevronRight className="h-5 w-5" />}
             onClick={open}
           />
         </div>
       )}
 
+      {/* SIDEBAR */}
       <div
         className={clsx(
           "absolute inset-0 z-20 bg-background transition-transform duration-300",
@@ -51,7 +62,8 @@ export default function LocalSidebar({
       >
         <div className="px-4 py-3">
           <CategoriesButton
-            icon={<ChevronLeft className="h-5 w-5" />}
+            label="Categorías"
+            rightIcon={<ChevronLeft className="h-5 w-5" />}
             onClick={close}
           />
         </div>
