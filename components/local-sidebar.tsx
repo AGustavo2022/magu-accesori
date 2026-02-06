@@ -4,6 +4,7 @@ import { ChevronRight, ChevronLeft, Boxes, FolderInput, Folders, ListCollapse, L
 import { Button } from "@/components/ui/button"
 import clsx from "clsx"
 import { useSidebar } from "@/contexts/sidebar-context"
+import { LayoutGrid } from "lucide-react"
 
 function CategoriesButton({
   label,
@@ -19,7 +20,7 @@ function CategoriesButton({
   return (
     <Button
       variant="ghost"
-      className="w-full flex items-center justify-between font-bold uppercase text-sm"
+      className="w-full h-16 flex items-center justify-start text-base"
       onClick={onClick}
     >
       <div className="flex items-center gap-2">
@@ -46,8 +47,8 @@ export default function LocalSidebar({
       {!isOpen && (
         <div className="px-4 py-3">
           <CategoriesButton
-            leftIcon={<LayoutPanelTop className="h-5 w-5" />}
-            rightIcon={<ChevronRight className="h-5 w-5" />}
+            leftIcon={<LayoutGrid size={32} />}
+            rightIcon={<ChevronRight size={32} />}
             onClick={open}
           />
         </div>
