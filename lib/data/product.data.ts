@@ -36,34 +36,6 @@ export async function getProductsAll() {
   }
 }
 
-export async function getProductsDashboard() {
-  try {
-    const response = await sql`
-      SELECT 
-        p.id, -- Puedes usar p.id para mayor claridad, aunque no es estrictamente necesario aquí
-        p.title,
-        p.short_description,
-        p.long_description,
-        p.price,
-        p.stock,
-        p.image_url,
-        c.name AS category, 
-        sc.name AS subcategory, 
-        p.status,
-        p.discount,
-        p.created_at
-      FROM products2 p
-      INNER JOIN categories c ON p.category = c.id
-      INNER JOIN subcategories sc ON p.subcategory = sc.id
-      ORDER BY p.id ASC
-    `;
-    return response as Product[];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch revenue data.');
-  }
-}
-
 export async function getProductsByCategory(
   categoryName: string,
   page: number = 1
@@ -98,6 +70,7 @@ export async function getProductsByCategory(
 
   return result as Product[];
 }
+
 export async function getProductById(product_id: string): Promise<Product[]> {
 
   try {
@@ -208,3 +181,97 @@ export async function getProductsTotalPages(query: string = "") {
   }
 }
 
+
+export async function getProductsDashboard() {
+  try {
+    const response = await sql`
+      SELECT 
+        p.id, -- Puedes usar p.id para mayor claridad, aunque no es estrictamente necesario aquí
+        p.title,
+        p.short_description,
+        p.long_description,
+        p.price,
+        p.stock,
+        p.image_url,
+        c.name AS category, 
+        sc.name AS subcategory, 
+        p.status,
+        p.discount,
+        p.created_at
+      FROM products2 p
+      INNER JOIN categories c ON p.category = c.id
+      INNER JOIN subcategories sc ON p.subcategory = sc.id
+      ORDER BY p.id ASC
+    `;
+    return response as Product[];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch revenue data.');
+  }
+}
+
+
+export async function getProductsDashboardPages(
+  query: string,
+  page: number,
+  status?: boolean,
+  categoryName?: string
+): Promise<Product[]> {
+
+  const offset = (page - 1) * ITEMS_PAGINATION_PAGE
+
+  const products = await sql`
+    SELECT 
+      p.id,
+      p.title,
+      p.price::numeric AS price,
+      p.stock,
+      p.status,
+      c.name AS category,
+      sc.name AS subcategory
+    FROM products2 p
+    INNER JOIN categories c ON p.category = c.id
+    INNER JOIN subcategories sc ON p.subcategory = sc.id
+    WHERE 1=1
+      ${query
+        ? sql`AND (
+            p.title ILIKE ${'%' + query + '%'} OR
+            p.short_description ILIKE ${'%' + query + '%'}
+          )`
+        : sql``}
+      ${status !== undefined ? sql`AND p.status = ${status}` : sql``}
+      ${categoryName
+        ? sql`AND c.name = ${categoryName}`
+        : sql``}
+    ORDER BY p.created_at DESC
+    LIMIT ${ITEMS_PAGINATION_PAGE}
+    OFFSET ${offset}
+  `
+
+  return products as Product[]
+}
+
+export async function getProductsDashboardTotalPages(
+  query: string,
+  status?: boolean,
+  categoryName?: string
+) {
+  const count = await sql`
+    SELECT COUNT(*)
+    FROM products2 p
+    INNER JOIN categories c ON p.category = c.id
+    WHERE 1=1
+      ${query
+        ? sql`AND (
+            p.title ILIKE ${'%' + query + '%'} OR
+            p.short_description ILIKE ${'%' + query + '%'}
+          )`
+        : sql``}
+      ${status !== undefined ? sql`AND p.status = ${status}` : sql``}
+      ${categoryName
+        ? sql`AND c.name = ${categoryName}`
+        : sql``}
+  `
+
+  return Math.ceil(Number(count[0].count) / ITEMS_PAGINATION_PAGE)
+}
