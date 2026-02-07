@@ -1,27 +1,34 @@
-"use client";
+"use client"
 
+import { useSearchParams } from "next/navigation"
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/components/ui/pagination"
 
 interface Props {
-  currentPage: number;
-  totalPages: number;
+  currentPage: number
+  totalPages: number
 }
 
 export default function PaginationProducts({
   currentPage,
   totalPages,
 }: Props) {
-  const prevPage = currentPage > 1 ? currentPage - 1 : 1;
-  const nextPage =
-    currentPage < totalPages ? currentPage + 1 : totalPages;
+  const searchParams = useSearchParams()
+
+  const buildHref = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("page", String(page))
+    return `?${params.toString()}`
+  }
+
+  const prevPage = Math.max(currentPage - 1, 1)
+  const nextPage = Math.min(currentPage + 1, totalPages)
 
   return (
     <Pagination>
@@ -30,7 +37,7 @@ export default function PaginationProducts({
         {/* PREVIOUS */}
         <PaginationItem>
           <PaginationPrevious
-            href={`?page=${prevPage}`}
+            href={buildHref(prevPage)}
             className={
               currentPage === 1
                 ? "pointer-events-none opacity-50"
@@ -39,73 +46,43 @@ export default function PaginationProducts({
           />
         </PaginationItem>
 
-        {/* PAGE NUMBERS */}
+        {/* PAGE NUMBERS (máx 5) */}
         {(() => {
-          const pages: (number | string)[] = [];
+          const MAX_VISIBLE = 5
+          const pages: number[] = []
 
-          // Siempre mostrar 1
-          if (currentPage !== 1) {
-            pages.push(1);
+          let start = Math.max(
+            currentPage - Math.floor(MAX_VISIBLE / 2),
+            1
+          )
+
+          let end = start + MAX_VISIBLE - 1
+
+          if (end > totalPages) {
+            end = totalPages
+            start = Math.max(end - MAX_VISIBLE + 1, 1)
           }
 
-          // Ventana dinámica
-          let start = Math.max(currentPage - 1, 2);
-          let end = Math.min(currentPage + 1, totalPages - 1);
-
-          // Cercano al inicio
-          if (currentPage <= 3) {
-            start = 2;
-            end = Math.min(4, totalPages - 1);
-          }
-
-          // Cercano al final
-          if (currentPage >= totalPages - 2) {
-            start = Math.max(totalPages - 3, 2);
-            end = totalPages - 1;
-          }
-
-          // Ellipsis inicial
-          if (start > 2) {
-            pages.push("ellipsis-start");
-          }
-
-          // Números del medio
           for (let i = start; i <= end; i++) {
-            pages.push(i);
+            pages.push(i)
           }
 
-          // Ellipsis final
-          if (end < totalPages - 1) {
-            pages.push("ellipsis-end");
-          }
-
-          // Siempre mostrar última página
-          if (totalPages !== 1) {
-            pages.push(totalPages);
-          }
-
-          return pages.map((p, index) =>
-            typeof p === "string" ? (
-              <PaginationItem key={index}>
-                <PaginationEllipsis />
-              </PaginationItem>
-            ) : (
-              <PaginationItem key={p}>
-                <PaginationLink
-                  href={`?page=${p}`}
-                  isActive={p === currentPage}
-                >
-                  {p}
-                </PaginationLink>
-              </PaginationItem>
-            )
-          );
+          return pages.map((page) => (
+            <PaginationItem key={page}>
+              <PaginationLink
+                href={buildHref(page)}
+                isActive={page === currentPage}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          ))
         })()}
 
         {/* NEXT */}
         <PaginationItem>
           <PaginationNext
-            href={`?page=${nextPage}`}
+            href={buildHref(nextPage)}
             className={
               currentPage === totalPages
                 ? "pointer-events-none opacity-50"
@@ -116,5 +93,5 @@ export default function PaginationProducts({
 
       </PaginationContent>
     </Pagination>
-  );
+  )
 }

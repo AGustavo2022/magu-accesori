@@ -89,8 +89,8 @@ function PaginationPrevious({
       className={cn("gap-1 px-2.5 sm:pl-2.5", className)}
       {...props}
     >
-      <ChevronLeftIcon className="size-4" />
-      <span className="hidden sm:block">Anterior</span>
+      <ChevronLeftIcon className="size-6" />
+      {/* <span className="hidden sm:block">Anterior</span> */}
     </PaginationLink>
   );
 }
@@ -107,8 +107,8 @@ function PaginationNext({
       className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
       {...props}
     >
-      <span className="hidden sm:block">Siguiente</span>
-      <ChevronRightIcon className="size-4" />
+      {/* <span className="hidden sm:block">Siguiente</span> */}
+      <ChevronRightIcon className="size-6" />
     </PaginationLink>
   );
 }
