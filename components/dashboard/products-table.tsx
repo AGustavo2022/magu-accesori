@@ -12,11 +12,6 @@ import { deleteProduct } from '@/lib/actions/product.actions'
 import { DeleteActionState } from '@/lib/types/product.types'
 import Link from "next/link"
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { useFormState } from "react-dom"
 
 const initialState: DeleteActionState = {
@@ -33,7 +28,7 @@ export function ProductsTable({ products }: ProductTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
 
-  //console.log(products)
+  console.log(products)
 
   const categories = Array.from(new Set(products.map((p) => p.category)))
 
@@ -57,8 +52,9 @@ export function ProductsTable({ products }: ProductTableProps) {
   }
 
   return (
+
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-4">
+      {/* <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Input
             type="text"
@@ -81,7 +77,7 @@ export function ProductsTable({ products }: ProductTableProps) {
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
 
       <div className="text-sm text-muted-foreground">
         Mostrando {filteredProducts.length} de {products.length} productos
@@ -92,9 +88,9 @@ export function ProductsTable({ products }: ProductTableProps) {
           <TableHeader>
             {/* ... Encabezados de tabla ... */}
             <TableRow >
-              <TableHead className="text-center w-24">Imagen</TableHead>
+              <TableHead className="text-center">Imagen</TableHead>
               <TableHead className="text-center">Producto</TableHead>
-              <TableHead className="text-center">Categoría</TableHead>
+              {/* <TableHead className="text-center">Categoría</TableHead> */}
               <TableHead className="text-center">Precio</TableHead>
               <TableHead className="text-center">Stock</TableHead>
               <TableHead className="text-center">Estado</TableHead>
@@ -116,35 +112,52 @@ export function ProductsTable({ products }: ProductTableProps) {
               filteredProducts.map((product) => (
                 <TableRow key={product.id}>
                   {/* ... Celdas de datos ... */}
+
                   <TableCell>
                     <Image
                       src={product.image_url || "/backpack.png"}
-                      width={40}
-                      height={40}
-                      className="w-30 h-15 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
+                      width={32}
+                      height={32}
+                      className="w-25 h-15 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
                       alt={product.title}
                     />
                   </TableCell>
+
                   <TableCell>
-                    <div>
-                      <div className="font-medium">{product.title}</div>
-                      <div className="text-sm text-muted-foreground line-clamp-1">{product.short_description}</div>
+                    <div className="space-y-2 w-120">
+                      {/* TÍTULO */}
+                      <div className="text-base font-semibold text-foreground">
+                        {product.title}
+                      </div>
+
+                      {/* BLOQUE SECUNDARIO */}
+                      <div className="space-y-0.5">
+                        <div className="text-sm text-muted-foreground line-clamp-1">
+                          {product.short_description}
+                        </div>
+
+                        <div className="text-xs text-muted-foreground line-clamp-1">
+                          {product.category} / {product.subcategory}
+                        </div>
+                      </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-center">
-                    <Badge variant="outline">{product.category}</Badge>
-                  </TableCell>
+
                   <TableCell className="font-medium">${Number(product.price).toFixed(2)}</TableCell>
+
                   <TableCell>{product.stock}</TableCell>
+
                   <TableCell>{getStockBadge(product.stock)}</TableCell>
+
                   {/* Si el formato de fecha falla, usa toLocaleDateString() con comprobación para evitar el error de toLocaleDateString en undefined/null */}
+
                   <TableCell className="text-sm text-muted-foreground">
                     {product.created_at ? new Date(product.created_at).toLocaleDateString() : 'N/A'}
                   </TableCell>
+
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Tooltip>
-                        <TooltipTrigger>
+
                           <Button
                             asChild
                             variant="outline"
@@ -156,14 +169,7 @@ export function ProductsTable({ products }: ProductTableProps) {
                               <Pencil size={16} />
                             </Link>
                           </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Editar Producto</p>
-                        </TooltipContent>
-                      </Tooltip>
 
-                      <Tooltip>
-                        <TooltipTrigger>
                           <form action={formAction}>
                             <input type="hidden" name="id" value={product.id} />
 
@@ -176,13 +182,9 @@ export function ProductsTable({ products }: ProductTableProps) {
                               <Trash size={16} />
                             </Button>
                           </form>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Eliminar Producto</p>
-                        </TooltipContent>
-                      </Tooltip>
                     </div>
                   </TableCell>
+
                 </TableRow>
               ))
             )}

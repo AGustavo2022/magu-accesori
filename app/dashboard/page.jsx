@@ -1,6 +1,6 @@
 
 import { MetricCard } from "@/components/dashboard/metric-card"
-import { ProductTableCard } from "@/components/dashboard/products-table-card"
+import { ProductsTable } from "@/components/dashboard/products-table"
 import { getProductsDashboard } from '@/lib/data/product.data'
 
 
@@ -33,7 +33,7 @@ export default async function DashboardPage() {
           unitSigla="$"
         />
       </div>
-      <ProductTableCard products={products} />
+      <ProductsTable products={products} />
     </div>
   )
 }
