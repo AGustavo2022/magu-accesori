@@ -1,96 +1,115 @@
 "use client"
 
-import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useFormState } from "react-dom"
 import Image from "next/image"
+import Link from "next/link"
+import React from "react"
+
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input" // Importación necesaria para el buscador
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { BookImage, Pencil, Trash, Search } from "lucide-react" // Importé Search
-import { ProductTableProps } from "@/lib/types/definitions" // Asumimos que ProductsTableProps ahora tiene 'onDelete'
-import { deleteProduct } from '@/lib/actions/product.actions'
-import { DeleteActionState } from '@/lib/types/product.types'
-import Link from "next/link"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
-import { useFormState } from "react-dom"
+import {
+  CheckCircle2,
+  ArchiveX,
+  Ban,
+  Pencil,
+  Trash,
+} from "lucide-react"
+
+import { ProductTableProps } from "@/lib/types/definitions"
+import { deleteProduct } from "@/lib/actions/product.actions"
+import { DeleteActionState } from "@/lib/types/product.types"
+
+
+import {
+  FilterOptionCard,
+  filterOptions,
+} from "@/components/dashboard/filter-option-card"
+
 
 const initialState: DeleteActionState = {
   success: false,
   message: null,
   errors: {},
-};
-
+}
 
 
 export function ProductsTable({ products }: ProductTableProps) {
 
-  const [state, formAction] = useFormState(deleteProduct, initialState);
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [state, formAction] = useFormState(deleteProduct, initialState)
 
-  console.log(products)
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-  const categories = Array.from(new Set(products.map((p) => p.category)))
+  const statusParam = searchParams.get("status") ?? "true"
+  const outOfStockParam = searchParams.get("outOfStock") === "true"
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.short_description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "all" || product.category === selectedCategory
+  const currentFilter: "active" | "out-of-stock" | "inactive" =
+    outOfStockParam
+      ? "out-of-stock"
+      : statusParam === "false"
+        ? "inactive"
+        : "active"
 
-    return matchesSearch && matchesCategory
-  })
 
   const getStockBadge = (stock: number) => {
-    if (stock === 0) {
-      return <Badge variant="destructive">Agotado</Badge>
-    } else if (stock <= 5) {
-      return <Badge variant="secondary">Bajo Stock</Badge>
-    } else {
-      return <Badge variant="default">En Stock</Badge>
-    }
+    if (stock === 0) return <Badge variant="destructive">Agotado</Badge>
+    if (stock <= 5) return <Badge variant="secondary">Bajo stock</Badge>
+    return <Badge variant="default">En stock</Badge>
   }
 
+
   return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+  {filterOptions.map((option) => (
+    <FilterOptionCard
+      key={option.id}
+      item={option}
+      selected={currentFilter === option.id}
+      onSelect={() => {
+        const params = new URLSearchParams(searchParams.toString())
 
-    <div className="space-y-4">
-      {/* <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Input
-            type="text"
-            placeholder="Buscar por Producto o Descripción..."
-            className="pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        </div>
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-3 py-2 border border-input bg-background rounded-md text-sm"
-        >
-          <option value="all">Todas las categorías</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div> */}
+        if (option.id === "active") {
+          params.set("status", "true")
+          params.delete("outOfStock")
+        }
 
-      <div className="text-sm text-muted-foreground">
-        Mostrando {filteredProducts.length} de {products.length} productos
-      </div>
+        if (option.id === "out-of-stock") {
+          params.set("page", "1")
+          params.set("status", "true")
+          params.set("outOfStock", "true")
+        }
 
-      <div className="border rounded-lg overflow-hidden">
+        if (option.id === "inactive") {
+          params.set("page", "1")
+          params.set("status", "false")
+          params.delete("outOfStock")
+        }
+
+        router.push(`?${params.toString()}`)
+
+      }}
+    />
+  ))}
+</div>
+
+
+      <div className="mt-6 border rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
-            {/* ... Encabezados de tabla ... */}
-            <TableRow >
+            <TableRow>
               <TableHead className="text-center">Imagen</TableHead>
-              <TableHead className="text-center">Producto</TableHead>
-              {/* <TableHead className="text-center">Categoría</TableHead> */}
+              <TableHead>Producto</TableHead>
               <TableHead className="text-center">Precio</TableHead>
               <TableHead className="text-center">Stock</TableHead>
               <TableHead className="text-center">Estado</TableHead>
@@ -98,99 +117,94 @@ export function ProductsTable({ products }: ProductTableProps) {
               <TableHead className="text-center">Acciones</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
 
-            {filteredProducts.length === 0 ? (
+          <TableBody>
+            {products.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                  {searchTerm || selectedCategory !== "all"
-                    ? "No se encontraron productos con los filtros aplicados"
-                    : "No hay productos registrados"}
+                <TableCell
+                  colSpan={7}
+                  className="text-center py-8 text-muted-foreground"
+                >
+                  No hay productos para este filtro
                 </TableCell>
               </TableRow>
             ) : (
-              filteredProducts.map((product) => (
+              products.map((product) => (
                 <TableRow key={product.id}>
-                  {/* ... Celdas de datos ... */}
-
-                  <TableCell>
+                  <TableCell className="text-center">
                     <Image
                       src={product.image_url || "/backpack.png"}
-                      width={32}
-                      height={32}
-                      className="w-25 h-15 object-cover group-hover:scale-105 transition-transform duration-300 rounded-none"
+                      width={64}
+                      height={64}
                       alt={product.title}
+                      className="mx-auto rounded-md object-cover"
                     />
                   </TableCell>
 
                   <TableCell>
-                    <div className="space-y-2 w-120">
-                      {/* TÍTULO */}
-                      <div className="text-base font-semibold text-foreground">
+                    <div className="space-y-1 max-w-105">
+                      <p className="font-semibold text-base leading-tight">
                         {product.title}
-                      </div>
+                      </p>
 
-                      {/* BLOQUE SECUNDARIO */}
-                      <div className="space-y-0.5">
-                        <div className="text-sm text-muted-foreground line-clamp-1">
+                      {product.short_description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
                           {product.short_description}
-                        </div>
+                        </p>
+                      )}
 
-                        <div className="text-xs text-muted-foreground line-clamp-1">
-                          {product.category} / {product.subcategory}
-                        </div>
-                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {product.category} / {product.subcategory}
+                      </p>
                     </div>
                   </TableCell>
 
-                  <TableCell className="font-medium">${Number(product.price).toFixed(2)}</TableCell>
+                  <TableCell className="text-center font-medium">
+                    ${Number(product.price).toFixed(2)}
+                  </TableCell>
 
-                  <TableCell>{product.stock}</TableCell>
+                  <TableCell className="text-center">
+                    {product.stock}
+                  </TableCell>
 
-                  <TableCell>{getStockBadge(product.stock)}</TableCell>
+                  <TableCell className="text-center">
+                    {getStockBadge(product.stock)}
+                  </TableCell>
 
-                  {/* Si el formato de fecha falla, usa toLocaleDateString() con comprobación para evitar el error de toLocaleDateString en undefined/null */}
-
-                  <TableCell className="text-sm text-muted-foreground">
-                    {product.created_at ? new Date(product.created_at).toLocaleDateString() : 'N/A'}
+                  <TableCell className="text-center text-sm text-muted-foreground">
+                    {product.created_at
+                      ? new Date(product.created_at).toLocaleDateString()
+                      : "N/A"}
                   </TableCell>
 
                   <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
+                    <div className="flex justify-end gap-2">
+                      <Button asChild variant="outline" size="sm">
+                        <Link href={`/dashboard/${product.id}/edit`}>
+                          <Pencil size={16} />
+                        </Link>
+                      </Button>
 
-                          <Button
-                            asChild
-                            variant="outline"
-                            size="sm">
-                            <Link
-                              href={`/dashboard/${product.id}/edit`}
-                              className=" hover:bg-gray-100"
-                            >
-                              <Pencil size={16} />
-                            </Link>
-                          </Button>
-
-                          <form action={formAction}>
-                            <input type="hidden" name="id" value={product.id} />
-
-                            <Button
-                              type="submit"
-                              variant="outline"
-                              size="sm"
-                              className="text-destructive hover:bg-destructive/10"
-                            >
-                              <Trash size={16} />
-                            </Button>
-                          </form>
+                      <form action={formAction}>
+                        <input type="hidden" name="id" value={product.id} />
+                        <Button
+                          type="submit"
+                          variant="outline"
+                          size="sm"
+                          className="text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash size={16} />
+                        </Button>
+                      </form>
                     </div>
                   </TableCell>
-
                 </TableRow>
               ))
             )}
           </TableBody>
+
         </Table>
       </div>
-    </div>
+    </>
   )
 }

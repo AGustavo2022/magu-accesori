@@ -215,7 +215,8 @@ export async function getProductsDashboardPages(
   query: string,
   page: number,
   status?: boolean,
-  categoryName?: string
+  categoryName?: string,
+  onlyOutOfStock?: boolean
 ): Promise<Product[]> {
 
   const offset = (page - 1) * ITEMS_PAGINATION_PAGE
@@ -224,25 +225,49 @@ export async function getProductsDashboardPages(
     SELECT 
       p.id,
       p.title,
+      p.short_description,
+      p.long_description,
       p.price::numeric AS price,
+      p.specifications,
       p.stock,
-      p.status,
+      p.image_url,
       c.name AS category,
-      sc.name AS subcategory
+      sc.name AS subcategory,
+      p.status,
+      p.discount,
+      p.created_at
     FROM products2 p
     INNER JOIN categories c ON p.category = c.id
     INNER JOIN subcategories sc ON p.subcategory = sc.id
     WHERE 1=1
+
       ${query
         ? sql`AND (
             p.title ILIKE ${'%' + query + '%'} OR
             p.short_description ILIKE ${'%' + query + '%'}
           )`
         : sql``}
-      ${status !== undefined ? sql`AND p.status = ${status}` : sql``}
+
+      ${status !== undefined
+        ? sql`AND p.status = ${status}`
+        : sql``}
+
+      ${
+        status === true && onlyOutOfStock === true
+          ? sql`AND p.stock = 0`
+          : sql``
+      }
+
+      ${
+        status === true && onlyOutOfStock !== true
+          ? sql`AND p.stock > 0`
+          : sql``
+      }
+
       ${categoryName
         ? sql`AND c.name = ${categoryName}`
         : sql``}
+
     ORDER BY p.created_at DESC
     LIMIT ${ITEMS_PAGINATION_PAGE}
     OFFSET ${offset}
@@ -250,6 +275,8 @@ export async function getProductsDashboardPages(
 
   return products as Product[]
 }
+
+
 
 export async function getProductsDashboardTotalPages(
   query: string,

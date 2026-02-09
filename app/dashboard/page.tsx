@@ -1,5 +1,6 @@
 import { MetricCard } from "@/components/dashboard/metric-card"
 import { ProductsTable } from "@/components/dashboard/products-table"
+import PageWithGridDashboard from "@/components/dashboard/products-table-pagination"
 import {
   getProductsDashboardPages,
   getProductsDashboardTotalPages,
@@ -17,6 +18,7 @@ export default async function DashboardPage({
     query?: string
     status?: "true" | "false"
     category?: string
+    outOfStock?: string
   }>
 }) {
 
@@ -24,27 +26,27 @@ export default async function DashboardPage({
   const currentPage = Number(params?.page || 1)
   const query = params?.query || ""
 
-  const status: boolean | undefined =
-    params?.status === "true"
-      ? true
-      : params?.status === "false"
-        ? false
-        : undefined
+  const status: boolean =
+    params?.status === "false" ? false : true
 
   const categoryName = params?.category ?? undefined
+
+  const onlyOutOfStock = params?.outOfStock === "true"
+ 
 
   const products = await getProductsDashboardPages(
     query,
     currentPage,
     status,
-    categoryName
+    categoryName,
+    onlyOutOfStock
   )
 
-//   const totalPages = await getProductsDashboardTotalPages(
-//   query,
-//   status,
-//   categoryName
-// )
+  const totalPages = await getProductsDashboardTotalPages(
+  query,
+  status,
+  categoryName
+)
 
   const isEmpty = products.length === 0
 
@@ -78,9 +80,12 @@ export default async function DashboardPage({
     //     />
     //   </div>
 
-      <ProductsTable
-        products={products}
-      />
+    <PageWithGridDashboard
+      products={products}
+      pageNumber={currentPage}
+      totalPages={totalPages}
+    />
+
 
     //   {isEmpty && (
     //     <div className="text-center text-muted-foreground mt-10">
