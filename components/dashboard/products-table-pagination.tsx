@@ -2,11 +2,13 @@
 
 import PaginationProducts from "@/components/pagination-products";
 import { ProductsTable } from "./products-table";
+import SearchNew from "../search";
 
 interface Props {
   products: any[];
   pageNumber: number;
   totalPages: number;
+  totalProducts: number;
   children?: React.ReactNode;        // opcional, por si querés agregar algo arriba
   footer?: React.ReactNode;          // opcional, por si querés agregar algo abajo
 }
@@ -15,6 +17,7 @@ export default function PageWithGridDashboard({
   products,
   pageNumber,
   totalPages,
+  totalProducts,
   children,
   footer,
 }: Props) {
@@ -25,9 +28,11 @@ export default function PageWithGridDashboard({
       <div className=" h-16">
       {children}
       </div>
-
       <div className="flex-1">
-        <ProductsTable products={products} />
+        <ProductsTable 
+          products={products}
+          totalProducts={totalProducts} 
+          />
       </div>
 
       <div className="mt-8">

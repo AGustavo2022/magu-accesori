@@ -1,8 +1,5 @@
 
-
-import { Plus } from "lucide-react"
 import { NavLink } from "../navLink"
-import { FileChartColumn } from "lucide-react"
 import { signOut } from "@/auth"
 import { Button } from "../ui/button"
 import { PowerIcon } from "lucide-react"
@@ -20,7 +17,7 @@ export function DashboardHeader() {
 
           <NavLink 
               href="/dashboard" 
-              label="Ir a Dashboard" 
+              label="Ir a Productos" 
               icon="dashboard"
             />
 

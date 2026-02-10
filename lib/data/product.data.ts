@@ -276,6 +276,48 @@ export async function getProductsDashboardPages(
   return products as Product[]
 }
 
+export async function getProductsDashboardTotalCount(
+  query: string,
+  status?: boolean,
+  categoryName?: string,
+  onlyOutOfStock?: boolean
+): Promise<number> {
+  const result = await sql`
+    SELECT COUNT(*) AS total
+    FROM products2 p
+    INNER JOIN categories c ON p.category = c.id
+    WHERE 1=1
+
+      ${query
+        ? sql`AND (
+            p.title ILIKE ${'%' + query + '%'} OR
+            p.short_description ILIKE ${'%' + query + '%'}
+          )`
+        : sql``}
+
+      ${status !== undefined
+        ? sql`AND p.status = ${status}`
+        : sql``}
+
+      ${
+        status === true && onlyOutOfStock === true
+          ? sql`AND p.stock = 0`
+          : sql``
+      }
+
+      ${
+        status === true && onlyOutOfStock !== true
+          ? sql`AND p.stock > 0`
+          : sql``
+      }
+
+      ${categoryName
+        ? sql`AND c.name = ${categoryName}`
+        : sql``}
+  `
+
+  return Number(result[0].total)
+}
 
 
 export async function getProductsDashboardTotalPages(

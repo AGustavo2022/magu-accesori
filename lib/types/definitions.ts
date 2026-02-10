@@ -43,6 +43,7 @@ export type ProductArrayProps = {
 
 export type ProductTableProps = {
   products: Product[];
+  totalProducts: number
 }
 
 export type ProductItemProps = {

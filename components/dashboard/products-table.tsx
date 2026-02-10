@@ -34,6 +34,7 @@ import {
   FilterOptionCard,
   filterOptions,
 } from "@/components/dashboard/filter-option-card"
+import SearchNew from "../search"
 
 
 const initialState: DeleteActionState = {
@@ -43,7 +44,7 @@ const initialState: DeleteActionState = {
 }
 
 
-export function ProductsTable({ products }: ProductTableProps) {
+export function ProductsTable({ products, totalProducts }: ProductTableProps) {
 
   const [state, formAction] = useFormState(deleteProduct, initialState)
 
@@ -70,41 +71,52 @@ export function ProductsTable({ products }: ProductTableProps) {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-  {filterOptions.map((option) => (
-    <FilterOptionCard
-      key={option.id}
-      item={option}
-      selected={currentFilter === option.id}
-      onSelect={() => {
-        const params = new URLSearchParams(searchParams.toString())
+    
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+      {filterOptions.map((option) => (
+        <FilterOptionCard
+          key={option.id}
+          item={option}
+          selected={currentFilter === option.id}
+          onSelect={() => {
+            const params = new URLSearchParams(searchParams.toString())
 
-        if (option.id === "active") {
-          params.set("status", "true")
-          params.delete("outOfStock")
-        }
+            if (option.id === "active") {
+              params.set("status", "true")
+              params.delete("outOfStock")
+            }
 
-        if (option.id === "out-of-stock") {
-          params.set("page", "1")
-          params.set("status", "true")
-          params.set("outOfStock", "true")
-        }
+            if (option.id === "out-of-stock") {
+              params.set("page", "1")
+              params.set("status", "true")
+              params.set("outOfStock", "true")
+            }
 
-        if (option.id === "inactive") {
-          params.set("page", "1")
-          params.set("status", "false")
-          params.delete("outOfStock")
-        }
+            if (option.id === "inactive") {
+              params.set("page", "1")
+              params.set("status", "false")
+              params.delete("outOfStock")
+            }
 
-        router.push(`?${params.toString()}`)
+            router.push(`?${params.toString()}`)
 
-      }}
-    />
-  ))}
-</div>
+          }}
+        />
+      ))}
+      </div>
 
+        <SearchNew placeholder="Buscar producto..." />
+
+
+
+      <p className="text-sm text-muted-foreground pt-3">
+        Mostrando {products.length} de {totalProducts} productos
+      </p>
 
       <div className="mt-6 border rounded-lg overflow-hidden">
+
+
         <Table>
           <TableHeader>
             <TableRow>
