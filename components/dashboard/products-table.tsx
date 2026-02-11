@@ -192,7 +192,7 @@ export function ProductsTable({ products, totalProducts }: ProductTableProps) {
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button asChild variant="outline" size="sm">
-                        <Link href={`/dashboard/${product.id}/edit`}>
+                        <Link href={`/dashboard/products/${product.id}/edit`}>
                           <Pencil size={16} />
                         </Link>
                       </Button>
