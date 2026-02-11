@@ -50,3 +50,13 @@ export type OrdersTableProps = {
   orders: Order[];
   totalOrder: number
 }
+
+export type OrderPreview = {
+  order_number: string
+  total: number
+  subtotal: number
+  shipping_cost: number
+  payment_method: string
+  created_at: string
+  shipping_data: any
+}
