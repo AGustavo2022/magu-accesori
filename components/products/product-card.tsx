@@ -27,10 +27,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isInactive = !product.status
   const hasDiscount = product.discount > 0
 
-  const discountedPrice = hasDiscount
-    ? product.price * (1 - product.discount / 100)
-    : product.price
-
   const isProductInCart = items.some(
     (item) => item.productId === product.id
   )
@@ -87,7 +83,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   {formatPrice(product.price)}
                 </span>
                 <span className="text-xl font-bold text-red-600">
-                  {formatPrice(discountedPrice)}
+                  {formatPrice(product.final_price)}
                 </span>
               </div>
             ) : (

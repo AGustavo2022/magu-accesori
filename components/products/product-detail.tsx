@@ -41,10 +41,6 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const isLowStock = product.stock > 0 && product.stock <= 5
   const isDiscount = product.discount > 0
 
-
-  const priceDiscount =
-    product.price * (1 - product.discount / 100)
-
   const isProductInCart = items.some(
     (item) => item.productId === product.id
   )
@@ -148,7 +144,7 @@ const validSpecifications = (product.specifications ?? []).filter(
                   {formatPrice(product.price)}
                 </span>
                 <span className="text-3xl font-bold text-red-600 mr-3">
-                  {formatPrice(priceDiscount)}
+                  {formatPrice(product.final_price)}
                 </span>
                 <Badge
                   variant="destructive"

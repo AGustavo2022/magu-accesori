@@ -88,6 +88,7 @@ export async function getProductById(product_id: string): Promise<Product[]> {
                 sc.name AS subcategory,   
                 p.status,
                 p.discount,
+                (p.price - (p.price * p.discount / 100))::numeric AS final_price,
                 p.created_at
             FROM products2 p
             
@@ -126,6 +127,7 @@ export async function getProductsPages(
         sc.name AS subcategory, 
         p.status,
         p.discount,
+        (p.price - (p.price * p.discount / 100))::numeric AS final_price,
         p.created_at
       FROM products2 p
       INNER JOIN categories c ON p.category = c.id
@@ -228,7 +230,7 @@ export async function getProductsDashboardPages(
       p.short_description,
       p.long_description,
       p.price::numeric AS price,
-      (p.price - COALESCE(p.discount, 0))::numeric AS final_price,
+      (p.price - (p.price * p.discount / 100))::numeric AS final_price,
       p.specifications,
       p.stock,
       p.image_url,
