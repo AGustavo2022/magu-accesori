@@ -24,19 +24,29 @@ export type ShippingData = {
   postal: string
 }
 
-export type Order = {
-  order_number: string
-  total: string
-  subtotal : number
-  shipping_cost: string
-  payment_method: string
-  created_at: string
-  shipping_data: ShippingData
-}
+export type OrderStatus = "pending" | "confirmed" | "cancelled"
 
+export type Order = {
+  id: string
+  order_number: string
+  user_id: string
+  status: OrderStatus
+  payment_method: string
+  subtotal: number
+  shipping_cost: number
+  total: number
+  shipping_data: any
+  created_at: string
+  updated_at: string
+}
 export type OrderItem = {
   id: string
   title: string
   quantity: number
   price: string
+}
+
+export type OrdersTableProps = {
+  orders: Order[];
+  totalOrder: number
 }

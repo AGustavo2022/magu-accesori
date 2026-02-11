@@ -21,6 +21,8 @@ export type Product = {
   created_at: Date
 };
 
+
+
 export type Subcategory = {
   subcategory_id: number;
   subcategory_name: string;
