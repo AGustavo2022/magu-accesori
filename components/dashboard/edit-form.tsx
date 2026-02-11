@@ -444,7 +444,7 @@ const initialState: UpdateProductState = {
 
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard"
+          href="/dashboard/products"
           className="rounded-md bg-gray-200 px-4 py-2 text-sm"
         >
           Cancelar

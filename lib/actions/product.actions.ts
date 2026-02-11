@@ -163,9 +163,9 @@ export async function updateProduct(
     };
   }
 
-  revalidatePath('/dashboard');
-  revalidatePath(`/dashboard/${id}/edit`);
-  redirect('/dashboard');
+  revalidatePath('/dashboard/products');
+  revalidatePath(`/dashboard//products/${id}/edit`);
+  redirect('/dashboard/products');
 }
 
 export async function deleteProduct(
