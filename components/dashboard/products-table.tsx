@@ -126,7 +126,7 @@ export function ProductsTable({ products, totalProducts }: ProductTableProps) {
               <TableHead className="text-center">Stock</TableHead>
               <TableHead className="text-center">Descuento</TableHead>
               <TableHead className="text-center">Fecha</TableHead>
-              <TableHead className="text-center">Acciones</TableHead>
+              <TableHead className="text-center"></TableHead>
             </TableRow>
           </TableHeader>
 
