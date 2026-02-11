@@ -388,7 +388,7 @@ const initialState: UpdateProductState = {
         <div className="mt-4 flex gap-4 items-center">
 
           <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-50">
               <SelectValue placeholder="Categoría" />
             </SelectTrigger>
             <SelectContent>
@@ -410,7 +410,7 @@ const initialState: UpdateProductState = {
             onValueChange={setSelectedSubcategory}
             disabled={!availableSubcategories.length}
           >
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-50">
               <SelectValue placeholder="Subcategoría" />
             </SelectTrigger>
             <SelectContent>

@@ -11,12 +11,12 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen flex-col">
       {/* HEADER */}
-      <header className=" bg-background px-2 py-2 border-b">
+      <header className=" bg-background  py-2 border-b">
         <DashboardHeader />
       </header>
 
       {/* CONTENIDO */}
-      <main className="flex-1 p-4 md:p-6">
+      <main className="flex-1">
         {children}
       </main>
     </div>

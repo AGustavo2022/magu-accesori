@@ -7,9 +7,12 @@ import {
   FileChartColumn,
   Plus,
   LayoutGrid,
+  Package,
+  ListOrdered
 } from "lucide-react"
 
-type IconName = "dashboard" | "add" | "categories"
+
+type IconName = "dashboard" | "products" | "orders" | "add"
 
 interface NavLinkProps {
   href: string
@@ -21,6 +24,8 @@ const ICONS = {
   dashboard: FileChartColumn,
   add: Plus,
   categories: LayoutGrid,
+  products: Package,
+  orders: ListOrdered  
 }
 
 export function NavLink({ href, label, icon }: NavLinkProps) {
