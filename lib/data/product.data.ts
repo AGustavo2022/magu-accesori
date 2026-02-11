@@ -228,6 +228,7 @@ export async function getProductsDashboardPages(
       p.short_description,
       p.long_description,
       p.price::numeric AS price,
+      (p.price - COALESCE(p.discount, 0))::numeric AS final_price,
       p.specifications,
       p.stock,
       p.image_url,

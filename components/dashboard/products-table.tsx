@@ -124,7 +124,7 @@ export function ProductsTable({ products, totalProducts }: ProductTableProps) {
               <TableHead>Producto</TableHead>
               <TableHead className="text-center">Precio</TableHead>
               <TableHead className="text-center">Stock</TableHead>
-              <TableHead className="text-center">Estado</TableHead>
+              <TableHead className="text-center">Descuento</TableHead>
               <TableHead className="text-center">Fecha</TableHead>
               <TableHead className="text-center">Acciones</TableHead>
             </TableRow>
@@ -172,7 +172,7 @@ export function ProductsTable({ products, totalProducts }: ProductTableProps) {
                   </TableCell>
 
                   <TableCell className="text-center font-medium">
-                    ${Number(product.price).toFixed(2)}
+                    ${Number(product.final_price).toFixed(2)}
                   </TableCell>
 
                   <TableCell className="text-center">
@@ -180,7 +180,7 @@ export function ProductsTable({ products, totalProducts }: ProductTableProps) {
                   </TableCell>
 
                   <TableCell className="text-center">
-                    {getStockBadge(product.stock)}
+                    {product.discount} %
                   </TableCell>
 
                   <TableCell className="text-center text-sm text-muted-foreground">

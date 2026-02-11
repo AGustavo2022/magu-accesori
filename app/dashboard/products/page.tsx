@@ -58,6 +58,7 @@ export default async function DashboardPage({
   categoryName
 )
 
+console.log(products)
 
   return (
     <PageWithGridDashboard
