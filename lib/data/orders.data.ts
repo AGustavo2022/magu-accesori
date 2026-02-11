@@ -8,7 +8,8 @@ import { notFound } from 'next/navigation';
 
 export async function getOrdersPages(
   query: string = "",
-  page: number = 1
+  page: number = 1,
+  status?: string
 ) {
   const offset = (page - 1) * ITEMS_PAGINATION_PAGE
   const search = `%${query}%`
@@ -35,6 +36,7 @@ export async function getOrdersPages(
           OR o.shipping_data->>'firstName' ILIKE ${search}
           OR o.shipping_data->>'lastName' ILIKE ${search}
         )
+        ${status ? sql`AND o.status = ${status}` : sql``}
       ORDER BY o.created_at DESC
       LIMIT ${ITEMS_PAGINATION_PAGE}
       OFFSET ${offset}
@@ -47,20 +49,27 @@ export async function getOrdersPages(
   }
 }
 
-export async function getOrdersTotalPages(query: string = "") {
+export async function getOrdersTotalPages(
+  query: string = "",
+  status?: "pending" | "confirmed" | "cancelled"
+) {
   const search = `%${query}%`
 
   try {
     const count = await sql`
       SELECT COUNT(*)
       FROM orders o
-      WHERE
-        (
-          o.order_number ILIKE ${search}
-          OR o.status::text ILIKE ${search}
-          OR o.payment_method ILIKE ${search}
-          OR o.total::text ILIKE ${search}
-        )
+      WHERE 1 = 1
+        ${query
+          ? sql`
+              AND (
+                o.order_number ILIKE ${search}
+                OR o.payment_method ILIKE ${search}
+                OR o.total::text ILIKE ${search}
+              )
+            `
+          : sql``}
+        ${status ? sql`AND o.status = ${status}` : sql``}
     `
 
     const total = Number(count[0].count)
@@ -70,6 +79,7 @@ export async function getOrdersTotalPages(query: string = "") {
     throw new Error("Failed to fetch total number of order pages.")
   }
 }
+
 
 export async function getOrdersDashboardTotalCount(
   query?: string,

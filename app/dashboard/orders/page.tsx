@@ -1,6 +1,7 @@
 import { OrdersTable } from "@/components/dashboard/orders-table"
 import PaginationProducts from "@/components/pagination-products"
 import { getOrdersDashboardTotalCount, getOrdersPages, getOrdersTotalPages } from "@/lib/data/orders.data"
+import { OrderStatus } from "@/lib/types/order.types"
 
 
 export default async function OrdersPage({
@@ -9,26 +10,30 @@ export default async function OrdersPage({
   searchParams?: Promise<{
     page?: string
     query?: string
+    status?: OrderStatus
   }>
 }) {
 
   const params = await searchParams;
   const currentPage = Number(params?.page || 1)
   const query = params?.query || ""
+ 
+const status = params?.status
 
 
-  const orders = await getOrdersPages(query, currentPage)
+  const orders = await getOrdersPages(query, currentPage, status)
 
   const totalOrders = await getOrdersDashboardTotalCount(query)
   
-  const totalPage = await getOrdersTotalPages(query)
+  const totalPage = await getOrdersTotalPages(query, status)
+
+  console.log(totalPage)
 
   return (
-    <>
+     <div className="container mx-auto flex flex-col min-h-screen">
       <OrdersTable
         orders={orders}
         totalOrder={totalOrders} />
-
       <div className="mt-8">
         {totalPage > 1 && (
           <PaginationProducts
@@ -37,6 +42,7 @@ export default async function OrdersPage({
           />
         )}
       </div>
-    </>
+    </div>
+
   )
 }

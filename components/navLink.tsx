@@ -10,9 +10,12 @@ import {
   Package,
   ListOrdered
 } from "lucide-react"
+import { Clock } from "lucide-react"
+import { CheckCircle } from "lucide-react"
+import { XCircle } from "lucide-react"
 
 
-type IconName = "dashboard" | "products" | "orders" | "add"
+type IconName = "dashboard" | "products" | "orders" | "add" | "pending" | "confirmed" | "cancelled" 
 
 interface NavLinkProps {
   href: string
@@ -25,7 +28,10 @@ const ICONS = {
   add: Plus,
   categories: LayoutGrid,
   products: Package,
-  orders: ListOrdered  
+  orders: ListOrdered,
+  pending: Clock,
+  confirmed: CheckCircle,
+  cancelled: XCircle,
 }
 
 export function NavLink({ href, label, icon }: NavLinkProps) {

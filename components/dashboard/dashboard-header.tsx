@@ -1,9 +1,6 @@
 "use client"
 
 import { NavLink } from "../navLink"
-import { signOut } from "@/auth"
-import { Button } from "../ui/button"
-import { PowerIcon, PlusIcon } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { SignOutButton } from "../auth/sign-out-button"
 
@@ -11,24 +8,30 @@ export function DashboardHeader() {
   const pathname = usePathname()
 
   const isProductsPage = pathname === "/dashboard/products"
+  const isOrdersPage = pathname === "/dashboard/orders"
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
 
-        {/* LINKS */}
         <div className="flex items-start gap-3">
           <NavLink href="/dashboard" label="Dashboard" icon="dashboard" />
           <NavLink href="/dashboard/products" label="Productos" icon="products" />
           <NavLink href="/dashboard/orders" label="Ordenes" icon="orders" />
         </div>
 
-        {/* ACCIONES DERECHA */}
         <div className="flex items-center gap-4">
 
-          {/* SOLO EN PRODUCTOS */}
           {isProductsPage && (
             <NavLink href="/dashboard/products/add" label="Agregar Productos" icon="add" />
+          )}
+
+          {isOrdersPage && (
+            <>
+            <NavLink href="/dashboard/orders?page=1&status=pending" label="Pendientes" icon="pending" />
+            <NavLink href="/dashboard/orders?page=1&status=confirmed" label="Confirmadas" icon="confirmed" />
+            <NavLink href="/dashboard/orders?page=1&status=cancelled" label="Canceladas" icon="cancelled" />
+            </>
           )}
 
           <SignOutButton />
