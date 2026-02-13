@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { CreateOrderSchema } from '../schemas/order.schema';
 import { CreateOrderState } from '../types/order.types';
 import { sql } from './product.actions';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 function flattenZodErrors(tree: any, parentKey = ""): Record<string, string[]> {
   let errors: Record<string, string[]> = {}
@@ -206,8 +208,6 @@ export async function createOrder(
 
     await sql`COMMIT`;
 
-    console.log(order, itemsArray)
-
     return {
       success: true,
       message: "Orden creada correctamente",
@@ -223,4 +223,98 @@ export async function createOrder(
       message: error.message ?? "Error al crear la orden",
     };
   }
+}
+
+
+
+export type UpdateOrderStatusState = {
+  success: boolean
+  message: string
+}
+
+export async function updateOrderStatus(
+  orderId: string,
+  status: "confirmed" | "cancelled"
+): Promise<UpdateOrderStatusState> {
+
+  const allowedStatuses = ["confirmed", "cancelled"]
+
+  /* 1️⃣ Validar estado permitido */
+  if (!allowedStatuses.includes(status)) {
+    return {
+      success: false,
+      message: "Estado inválido",
+    }
+  }
+
+  try {
+    await sql`BEGIN`
+
+    /* 2️⃣ Verificar que exista la orden */
+    const [order] = await sql`
+      SELECT id, status
+      FROM orders
+      WHERE id = ${orderId}
+      LIMIT 1
+    `
+
+    if (!order) {
+      await sql`ROLLBACK`
+      return {
+        success: false,
+        message: "Orden no encontrada",
+      }
+    }
+
+    /* 3️⃣ Solo permitir modificar órdenes pendientes */
+    if (order.status !== "pending") {
+      await sql`ROLLBACK`
+      return {
+        success: false,
+        message: "La orden ya fue procesada",
+      }
+    }
+
+    /* 4️⃣ Si se cancela, devolver stock */
+    if (status === "cancelled") {
+
+      const items = await sql`
+        SELECT product_id, quantity
+        FROM order_items
+        WHERE order_id = ${orderId}
+      `
+
+      for (const item of items) {
+        await sql`
+          UPDATE products2
+          SET stock = stock + ${item.quantity}
+          WHERE id = ${item.product_id}
+        `
+      }
+    }
+
+    /* 5️⃣ Actualizar estado */
+    await sql`
+      UPDATE orders
+      SET status = ${status}
+      WHERE id = ${orderId}
+    `
+
+    await sql`COMMIT`
+
+
+    revalidatePath('/dashboard/orders');
+    redirect('/dashboard/orders');
+
+  } catch (error: any) {
+
+    await sql`ROLLBACK`
+
+    return {
+      success: false,
+      message: error.message ?? "Error al actualizar la orden",
+    }
+  }
+
+    
 }

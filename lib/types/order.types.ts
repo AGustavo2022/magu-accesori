@@ -9,7 +9,7 @@ export type CreateOrderState = {
 };
 
 export type OrderConfirmationProps = {
-  order: Order
+  order: OrderPreview
   items: OrderItem[]
 }
 
@@ -59,4 +59,12 @@ export type OrderPreview = {
   payment_method: string
   created_at: string
   shipping_data: any
+}
+
+export interface OrderItemDrawer {
+  id: string
+  product_id: string
+  title: string
+  price: number
+  quantity: number
 }

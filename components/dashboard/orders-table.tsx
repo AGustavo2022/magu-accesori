@@ -20,6 +20,7 @@ import { Truck } from "lucide-react"
 import { PackageCheck } from "lucide-react"
 import { Ban } from "lucide-react"
 import { Eye } from "lucide-react"
+import { OrderDrawer } from "./order-drawer"
 
 type OrderStatus =
   | "pending"
@@ -90,6 +91,7 @@ const FILTER_OPTIONS: { key: FilterKey; label: string; icon: typeof Clock }[] = 
 
 
 export function OrdersTable({ orders, totalOrder }: OrdersTableProps) {
+
   return (
     <>
       {/* BUSCADOR */}
@@ -170,9 +172,7 @@ export function OrdersTable({ orders, totalOrder }: OrdersTableProps) {
 
                   {/* ACCIONES */}
                   <TableCell className="text-center">
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="w-5 h-5" />
-                    </Button>
+                    <OrderDrawer order={order} />
                   </TableCell>
 
                 </TableRow>
