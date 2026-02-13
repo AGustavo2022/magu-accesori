@@ -10,14 +10,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ShoppingCart } from "lucide-react"
-import { useCart } from "@/contexts/cart.context"
-import { resolveCart } from "@/contexts/cart.selectors"
+import { resolveCart } from "@/contexts/cart/cart.selectors"
 import { useState } from "react"
 import { CartItem } from "./cart-item"
 import { CartSummary } from "./cart-summary"
 import { CartEmpty } from "./cart-empty"
 import { useRouter } from "next/navigation"
 import { Product } from "@/lib/types/definitions"
+import { useCart } from "@/contexts/cart/cart.context"
 
 interface CartDrawerProps {
   products: Product[]

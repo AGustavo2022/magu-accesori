@@ -15,8 +15,9 @@ import { createOrder } from "@/lib/actions/order.actions"
 import { shippingSchema } from "@/lib/schemas/order.schema"
 import { CreateOrderState, ShippingData } from "@/lib/types/order.types"
 
-import { useCart } from "@/contexts/cart.context"
-import { resolveCart } from "@/contexts/cart.selectors"
+
+import { resolveCart } from "@/contexts/cart/cart.selectors"
+import { useCart } from "@/contexts/cart/cart.context"
 
 /* ---------------- TYPES ---------------- */
 

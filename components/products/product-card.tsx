@@ -8,13 +8,14 @@ import { ProductCardProps } from "@/lib/types/definitions"
 import { formatPrice, productToCartItem } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { ShoppingCart } from "lucide-react"
-import { useCart } from "@/contexts/cart.context"
+
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider
 } from "@/components/ui/tooltip"
+import { useCart } from "@/contexts/cart/cart.context"
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem, items } = useCart()

@@ -15,7 +15,7 @@ import { useState } from "react"
 import Breadcrumbs from "../breadcrumbs"
 import { createSlug, formatPrice, productToCartItem } from "@/lib/utils"
 import { QuantitySelector } from "./quantity-selector"
-import { useCart } from "@/contexts/cart.context"
+
 import { Product } from "@/lib/types/definitions"
 
 import {
@@ -24,6 +24,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { useCart } from "@/contexts/cart/cart.context"
 
 
 interface ProductDetailProps {
