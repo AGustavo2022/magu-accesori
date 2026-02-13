@@ -1,8 +1,9 @@
 "use client"
 
 import React, { createContext, useContext, useEffect, useReducer } from "react"
-import { cartReducer, initialCartState } from "./cart.reducer"
+
 import { AddItemPayload, CartItem, CartState } from "@/lib/types/cart.types"
+import { cartReducer, initialCartState } from "./cart.reducer"
 
 interface CartContextType extends CartState {
   addItem: (item: AddItemPayload) => void
