@@ -1,6 +1,7 @@
 
 
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { OrdersProvider } from "@/contexts/orders/orders-context"
 import React from "react"
 
 export default function DashboardLayout({
@@ -9,16 +10,20 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
+    <OrdersProvider>
     <div className="flex min-h-screen flex-col">
       {/* HEADER */}
-      <header className=" bg-background  py-2 border-b">
-        <DashboardHeader />
-      </header>
+      
+        <header className=" bg-background  py-2 border-b">
+          <DashboardHeader />
+        </header>
+      
 
       {/* CONTENIDO */}
       <main className="flex-1">
         {children}
       </main>
     </div>
+    </OrdersProvider>
   )
 }

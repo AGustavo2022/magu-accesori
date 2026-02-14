@@ -318,3 +318,13 @@ export async function updateOrderStatus(
 
     
 }
+
+export async function getPendingOrdersCount() {
+  const [result] = await sql`
+    SELECT COUNT(*)::int AS count
+    FROM orders
+    WHERE status = 'pending'
+  `
+
+  return result?.count ?? 0
+}
