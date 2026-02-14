@@ -347,3 +347,63 @@ export async function getProductsDashboardTotalPages(
 
   return Math.ceil(Number(count[0].count) / ITEMS_PAGINATION_PAGE)
 }
+
+
+export async function getTopFiveOutOfStockProducts(): Promise<Product[]> {
+  const products = await sql`
+    SELECT 
+      p.id,
+      p.title,
+      p.short_description,
+      p.long_description,
+      p.price::numeric AS price,
+      (p.price - (p.price * p.discount / 100))::numeric AS final_price,
+      p.specifications,
+      p.stock,
+      p.image_url,
+      c.name AS category,
+      sc.name AS subcategory,
+      p.status,
+      p.discount,
+      p.created_at
+    FROM products2 p
+    INNER JOIN categories c ON p.category = c.id
+    INNER JOIN subcategories sc ON p.subcategory = sc.id
+    WHERE p.stock = 0
+      AND p.status = true
+    ORDER BY p.created_at DESC
+    LIMIT 5
+  `
+
+  return products as Product[]
+}
+
+
+export async function getTopFiveOldestProducts(): Promise<Product[]> {
+  const products = await sql`
+    SELECT 
+      p.id,
+      p.title,
+      p.short_description,
+      p.long_description,
+      p.price::numeric AS price,
+      (p.price - (p.price * p.discount / 100))::numeric AS final_price,
+      p.specifications,
+      p.stock,
+      p.image_url,
+      c.name AS category,
+      sc.name AS subcategory,
+      p.status,
+      p.discount,
+      p.created_at
+    FROM products2 p
+    INNER JOIN categories c ON p.category = c.id
+    INNER JOIN subcategories sc ON p.subcategory = sc.id
+    WHERE p.status = true
+    ORDER BY p.created_at ASC
+    LIMIT 5
+  `
+
+  return products as Product[]
+}
+

@@ -20,7 +20,7 @@ export default async function OrdersPage({
   const currentPage = Number(params?.page || 1)
   const query = params?.query || ""
  
-const status = params?.status || "pending"
+const status = params?.status
 
 
   const orders = await getOrdersPages(query, currentPage, status)
@@ -30,8 +30,6 @@ const status = params?.status || "pending"
   const totalPage = await getOrdersTotalPages(query, status)
 
   const pendingCount = await getPendingOrdersCount()
-
-  console.log(pendingCount)
 
   return (
      <div className="container mx-auto flex flex-col min-h-screen">

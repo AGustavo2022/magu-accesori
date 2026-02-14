@@ -1,8 +1,5 @@
-import { MetricCard } from "@/components/dashboard/metric-card"
-import { ProductsTable } from "@/components/dashboard/products-table"
+
 import PageWithGridDashboard from "@/components/dashboard/products-table-pagination"
-import { NavLink } from "@/components/navLink"
-import SearchNew from "@/components/search"
 import {
   getProductsDashboardPages,
   getProductsDashboardTotalCount,
@@ -58,18 +55,8 @@ export default async function DashboardPage({
   categoryName
 )
 
-console.log(products)
-
   return (
     <PageWithGridDashboard
-
-    //   children={    
-    //       <NavLink
-    //         href="/dashboard/add"
-    //         label="Agregar Producto"
-    //         icon="add"
-    //       /> 
-    // }  
       products={products}
       pageNumber={currentPage}
       totalProducts={totalProducts}
