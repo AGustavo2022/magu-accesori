@@ -46,7 +46,7 @@ export type ProductArrayProps = {
 
 export type ProductTableProps = {
   products: Product[];
-  totalProducts: number
+  totalProducts?: number
 }
 
 export type ProductItemProps = {

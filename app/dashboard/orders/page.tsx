@@ -1,6 +1,7 @@
 import { OrdersInitializer } from "@/components/dashboard/orders-initializer"
 import { OrdersTable } from "@/components/dashboard/orders-table"
 import PaginationProducts from "@/components/pagination-products"
+import SearchNew from "@/components/search"
 import { getPendingOrdersCount } from "@/lib/actions/order.actions"
 import { getOrdersDashboardTotalCount, getOrdersPages, getOrdersTotalPages } from "@/lib/data/orders.data"
 import { OrderStatus } from "@/lib/types/order.types"
@@ -32,11 +33,26 @@ const status = params?.status
   const pendingCount = await getPendingOrdersCount()
 
   return (
-     <div className="container mx-auto flex flex-col min-h-screen">
+    <div className="container mx-auto flex flex-col min-h-screen">
       <OrdersInitializer count={pendingCount} />
+      <SearchNew placeholder="Buscar orden..." />
+      {/* INFO */}
+      <p className="text-sm text-muted-foreground pt-3">
+        Mostrando {orders.length} de {totalOrders} órdenes
+      </p>
       <OrdersTable
         orders={orders}
-        totalOrder={totalOrders} />
+        columns={[
+          "order",
+          "customer",
+          "payment-method",
+          "tolal",
+          "date",
+          "status",
+          "shipment",
+          "drawer"
+        ]}
+      />
       <div className="mt-8">
         {totalPage > 1 && (
           <PaginationProducts

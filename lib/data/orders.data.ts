@@ -167,3 +167,27 @@ export async function getOrderByNumber(
     items: items as OrderItem[],
   }
 }
+
+export async function getTopFiveRecentOrders(): Promise<Order[]> {
+  try {
+const orders = await sql`
+  SELECT
+    o.id,
+    o.order_number,
+    o.status,
+    o.total,
+    payment_method,
+    o.shipping_data,
+    o.created_at
+  FROM orders o
+  ORDER BY o.created_at DESC
+  LIMIT 5
+`
+
+
+    return orders as Order[]
+  } catch (error) {
+    console.error("Database Error:", error)
+    throw new Error("Failed to fetch top 5 recent orders.")
+  }
+}

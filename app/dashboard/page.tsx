@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator"
 import { Package, ShoppingCart, DollarSign, TrendingUp, Truck, Clock } from "lucide-react"
 import { ProductsTable } from "@/components/dashboard/products-table"
 import { getProductsDashboardPages, getProductsDashboardTotalCount, getTopFiveOldestProducts, getTopFiveOutOfStockProducts } from "@/lib/data/product.data"
+import { OrdersTable } from "@/components/dashboard/orders-table"
+import { getTopFiveRecentOrders } from "@/lib/data/orders.data"
 
 // =========================
 // MOCK DATA
@@ -50,7 +52,7 @@ const recentTopOrders = [
 // =========================
 
 export default async function EcommerceDashboard({
-    searchParams,
+  searchParams,
 }: {
   searchParams?: Promise<{
     page?: string
@@ -77,13 +79,10 @@ export default async function EcommerceDashboard({
 
   const productsOld = await getTopFiveOldestProducts()
 
-  const totalProducts = await getProductsDashboardTotalCount(
-  query,
-  status,
-  categoryName,
-  onlyOutOfStock
-)
 
+  const OrdersTopFive = await getTopFiveRecentOrders()
+
+  console.log(OrdersTopFive)
 
 
 
@@ -97,10 +96,6 @@ export default async function EcommerceDashboard({
             Panel general de control de tu ecommerce
           </p>
         </div>
-        <Button className="rounded-2xl shadow-md">
-          <TrendingUp className="w-4 h-4 mr-2" />
-          Actualizar datos
-        </Button>
       </div>
 
       <Separator />
@@ -116,43 +111,49 @@ export default async function EcommerceDashboard({
 
       {/* TABLAS CON SEPARACIÓN */}
       <div className="space-y-10">
-        <DataTableCard title="Top 5 Productos Sin Stock" data={outOfStockProducts} />
-
-        <ProductsTable products={productsOutofStock} totalProducts={totalProducts}/>
-
-        <ProductsTable products={productsOld} totalProducts={totalProducts}/>
-
-        <DataTableCard title="Top 5 Productos Más Antiguos" data={oldestProducts} type="old" />
+        <Card className="rounded-2xl border bg-background shadow-md">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Top 5 Productos Más Antiguos
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProductsTable products={productsOld} />
+          </CardContent>
+        </Card>
 
         <Card className="rounded-2xl border bg-background shadow-md">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">
-              Top 5 Órdenes Recientes
+              Top 5 Productos Sin Stock
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>#</TableHead>
-                  <TableHead>Cliente</TableHead>
-                  <TableHead>Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentTopOrders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell>#{order.id}</TableCell>
-                    <TableCell>{order.customer}</TableCell>
-                    <TableCell className="font-medium">
-                      ${order.total.toLocaleString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+        <ProductsTable products={productsOutofStock}/>
           </CardContent>
         </Card>
+
+        <Card className="rounded-2xl border bg-background shadow-md">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Top 5 Ultimas Orden
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <OrdersTable
+              orders={OrdersTopFive}
+              columns={[
+                "order",
+                "customer",
+                "payment-method",
+                "tolal",
+                "date",
+                "status",
+                "shipment"
+              ]} />
+          </CardContent>
+        </Card>
+
       </div>
     </div>
   )
@@ -178,38 +179,3 @@ function StatCard({ title, value, icon, highlight }: any) {
   )
 }
 
-function DataTableCard({ title, data, type }: any) {
-  return (
-    <Card className="rounded-2xl border bg-background shadow-md">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableBody>
-            {data.map((item: any) => (
-              <TableRow key={item.id}>
-                <TableCell className="font-medium">{item.title}</TableCell>
-                {type === "old" ? (
-                  <>
-                    <TableCell>{item.stock}</TableCell>
-                    <TableCell>{item.createdAt}</TableCell>
-                  </>
-                ) : (
-                  <>
-                    <TableCell>${item.price?.toLocaleString()}</TableCell>
-                    <TableCell>
-                      <Badge variant="destructive" className="rounded-full">
-                        Sin Stock
-                      </Badge>
-                    </TableCell>
-                  </>
-                )}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-  )
-}

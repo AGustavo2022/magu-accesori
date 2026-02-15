@@ -48,7 +48,6 @@ export type OrderItem = {
 
 export type OrdersTableProps = {
   orders: Order[];
-  totalOrder: number
 }
 
 export type OrderPreview = {
