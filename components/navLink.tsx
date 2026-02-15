@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import { useOrders } from "@/contexts/orders/orders-context"
 import { Badge } from "./ui/badge"
+import { Eye } from "lucide-react"
 
 type IconName =
   | "dashboard"
@@ -24,6 +25,7 @@ type IconName =
   | "pending"
   | "confirmed"
   | "cancelled"
+  | "eye"
 
 interface NavLinkProps {
   href: string
@@ -40,6 +42,7 @@ const ICONS = {
   pending: Clock,
   confirmed: CheckCircle,
   cancelled: XCircle,
+  eye: Eye
 }
 
 export function NavLink({ href, label, icon }: NavLinkProps) {

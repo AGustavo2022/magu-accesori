@@ -21,8 +21,7 @@ export default async function OrdersPage({
   const currentPage = Number(params?.page || 1)
   const query = params?.query || ""
  
-const status = params?.status
-
+  const status = params?.status || "pending"
 
   const orders = await getOrdersPages(query, currentPage, status)
 

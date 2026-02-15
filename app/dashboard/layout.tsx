@@ -14,7 +14,7 @@ export default function DashboardLayout({
     <div className="flex min-h-screen flex-col">
       {/* HEADER */}
       
-        <header className=" bg-background  py-2 border-b">
+        <header className=" bg-background  py-2">
           <DashboardHeader />
         </header>
       
