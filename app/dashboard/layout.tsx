@@ -4,6 +4,8 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { OrdersProvider } from "@/contexts/orders/orders-context"
 import React from "react"
 
+export const dynamic = "force-dynamic"
+
 export default function DashboardLayout({
   children,
 }: {
