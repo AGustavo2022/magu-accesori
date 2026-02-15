@@ -38,7 +38,7 @@ export default async function OrdersPage({
 
       <OrdersInitializer count={pendingCount} />
 
-      <SearchNew placeholder="Buscar orden..." />
+      {/* <SearchNew placeholder="Buscar orden..." /> */}
 {/* 
       <OrdersTable
         orders={orders}
