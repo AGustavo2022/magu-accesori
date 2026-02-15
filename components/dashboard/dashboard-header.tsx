@@ -1,8 +1,31 @@
 "use client"
 
+import { Suspense } from "react"
 import { NavLink } from "../navLink"
 import { usePathname } from "next/navigation"
 import { SignOutButton } from "../auth/sign-out-button"
+
+function OrdersFilters() {
+  return (
+    <>
+      <NavLink 
+        href="/dashboard/orders?page=1&status=pending" 
+        label="Pendientes" 
+        icon="pending" 
+      />
+      <NavLink 
+        href="/dashboard/orders?page=1&status=confirmed" 
+        label="Confirmadas" 
+        icon="confirmed" 
+      />
+      <NavLink 
+        href="/dashboard/orders?page=1&status=cancelled" 
+        label="Canceladas" 
+        icon="cancelled" 
+      />
+    </>
+  )
+}
 
 export function DashboardHeader() {
   const pathname = usePathname()
@@ -23,15 +46,17 @@ export function DashboardHeader() {
         <div className="flex items-center gap-4">
 
           {isProductsPage && (
-            <NavLink href="/dashboard/products/add" label="Agregar Productos" icon="add" />
+            <NavLink 
+              href="/dashboard/products/add" 
+              label="Agregar Productos" 
+              icon="add" 
+            />
           )}
 
           {isOrdersPage && (
-            <>
-            <NavLink href="/dashboard/orders?page=1&status=pending" label="Pendientes" icon="pending" />
-            <NavLink href="/dashboard/orders?page=1&status=confirmed" label="Confirmadas" icon="confirmed" />
-            <NavLink href="/dashboard/orders?page=1&status=cancelled" label="Canceladas" icon="cancelled" />
-            </>
+            <Suspense fallback={null}>
+              <OrdersFilters />
+            </Suspense>
           )}
 
           <SignOutButton />

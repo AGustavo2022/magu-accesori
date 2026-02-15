@@ -54,12 +54,10 @@ export function NavLink({ href, label, icon }: NavLinkProps) {
 
   let isActive = false
 
-  // 🟢 Links normales
   if (!href.includes("status")) {
     isActive = pathname === href
   }
 
-  // 🔵 Links con status (Orders)
   if (pathname === "/dashboard/orders" && href.includes("status")) {
     const linkStatus = href.split("status=")[1]
     isActive = currentStatus === linkStatus
