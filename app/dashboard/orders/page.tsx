@@ -10,6 +10,8 @@ import {
 } from "@/lib/data/orders.data"
 import { OrderStatus } from "@/lib/types/order.types"
 
+export const dynamic = "force-dynamic"
+
 interface OrdersPageProps {
   searchParams?: {
     page?: string
