@@ -20,6 +20,7 @@ import { OrderDrawer } from "./order-drawer"
 import { Store } from "lucide-react"
 
 type OrderColumn =
+  | "info"
   | "order"
   | "customer"
   | "payment-method"
@@ -32,6 +33,7 @@ type OrderColumn =
 
 interface OrdersTableProps {
   orders: Order[]
+  totalOrders: number
   columns: OrderColumn[]
 }
 
@@ -130,11 +132,19 @@ export function ShippingIcon({
   )
 }
 
-export function OrdersTable({ orders, columns }: OrdersTableProps) {
+export function OrdersTable({ orders, totalOrders, columns }: OrdersTableProps) {
 
 
   return (
     <>
+
+      {/* INFO */}
+      {columns.includes("info") && (
+        <p className="text-sm text-muted-foreground pt-3">
+          Mostrando {orders.length} de {totalOrders} órdenes
+        </p>
+      )}
+
       {/* TABLA */}
       <div className="mt-6 border rounded-lg overflow-hidden">
         <Table>

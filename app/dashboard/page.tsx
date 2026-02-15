@@ -9,7 +9,8 @@ import { Package, ShoppingCart, DollarSign, TrendingUp, Truck, Clock } from "luc
 import { ProductsTable } from "@/components/dashboard/products-table"
 import { getProductsDashboardPages, getProductsDashboardTotalCount, getTopFiveOldestProducts, getTopFiveOutOfStockProducts } from "@/lib/data/product.data"
 import { OrdersTable } from "@/components/dashboard/orders-table"
-import { getTopFiveRecentOrders } from "@/lib/data/orders.data"
+import { getOrdersDashboardTotalCount, getTopFiveRecentOrders } from "@/lib/data/orders.data"
+import { OrderStatus } from "@/lib/types/order.types"
 
 // =========================
 // MOCK DATA
@@ -57,7 +58,7 @@ export default async function EcommerceDashboard({
   searchParams?: Promise<{
     page?: string
     query?: string
-    status?: "true" | "false"
+    status?: OrderStatus
     category?: string
     outOfStock?: string
   }>
@@ -67,8 +68,7 @@ export default async function EcommerceDashboard({
   const currentPage = Number(params?.page || 1)
   const query = params?.query || ""
 
-  const status: boolean =
-    params?.status === "false" ? false : true
+  const status = params?.status
 
   const categoryName = params?.category ?? undefined
 
@@ -79,6 +79,7 @@ export default async function EcommerceDashboard({
 
   const productsOld = await getTopFiveOldestProducts()
 
+  const totalOrders = await getOrdersDashboardTotalCount(query, status)
 
   const OrdersTopFive = await getTopFiveRecentOrders()
 
@@ -142,6 +143,7 @@ export default async function EcommerceDashboard({
           <CardContent>
             <OrdersTable
               orders={OrdersTopFive}
+              totalOrders={totalOrders}
               columns={[
                 "order",
                 "customer",

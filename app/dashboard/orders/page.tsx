@@ -26,7 +26,7 @@ const status = params?.status
 
   const orders = await getOrdersPages(query, currentPage, status)
 
-  const totalOrders = await getOrdersDashboardTotalCount(query)
+  const totalOrders = await getOrdersDashboardTotalCount(query, status)
   
   const totalPage = await getOrdersTotalPages(query, status)
 
@@ -36,13 +36,11 @@ const status = params?.status
     <div className="container mx-auto flex flex-col min-h-screen">
       <OrdersInitializer count={pendingCount} />
       <SearchNew placeholder="Buscar orden..." />
-      {/* INFO */}
-      <p className="text-sm text-muted-foreground pt-3">
-        Mostrando {orders.length} de {totalOrders} órdenes
-      </p>
       <OrdersTable
         orders={orders}
+        totalOrders={totalOrders}
         columns={[
+          "info",
           "order",
           "customer",
           "payment-method",
