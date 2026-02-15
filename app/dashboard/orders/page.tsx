@@ -6,6 +6,7 @@ import { getPendingOrdersCount } from "@/lib/actions/order.actions"
 import { getOrdersDashboardTotalCount, getOrdersPages, getOrdersTotalPages } from "@/lib/data/orders.data"
 import { OrderStatus } from "@/lib/types/order.types"
 
+export const dynamic = "force-dynamic";
 
 export default async function OrdersPage({
     searchParams,
