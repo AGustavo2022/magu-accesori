@@ -82,11 +82,20 @@ export default function PageWithGridDashboard({
 
       <SearchNew placeholder="Buscar producto..." />
 
-      <p className="text-sm text-muted-foreground">
-        Mostrando {products.length} de {totalProducts} productos
-      </p>
-
-      <ProductsTable products={products} totalProducts={totalProducts} />
+      <ProductsTable 
+      products={products} 
+      totalProducts={totalProducts} 
+        columns={[
+          "info",
+          "image",
+          "product",
+          "price",
+          "stock",
+          "discount",
+          "date",
+          "action"
+        ]}
+      />
 
       {totalPages > 1 && (
         <PaginationProducts

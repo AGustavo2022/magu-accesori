@@ -1,5 +1,5 @@
 
-import PageWithGridDashboard from "@/components/dashboard/products-table-pagination"
+import PageWithGridDashboard from "@/components/dashboard/page-with-grid-dashboard"
 import {
   getProductsDashboardPages,
   getProductsDashboardTotalCount,

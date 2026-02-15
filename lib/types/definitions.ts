@@ -44,9 +44,22 @@ export type ProductArrayProps = {
   unitSigla?: string
 };
 
+type ProductColumn =
+  | "info"
+  | "image"
+  | "product"
+  | "price"
+  | "stock"
+  | "discount"
+  | "date"
+  | "action"
+
+
+
 export type ProductTableProps = {
   products: Product[];
   totalProducts?: number
+  columns: ProductColumn[]
 }
 
 export type ProductItemProps = {

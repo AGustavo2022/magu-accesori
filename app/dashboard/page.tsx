@@ -112,51 +112,82 @@ export default async function EcommerceDashboard({
 
       {/* TABLAS CON SEPARACIÓN */}
       <div className="space-y-10">
-        <Card className="rounded-2xl border bg-background shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Top 5 Productos Más Antiguos
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ProductsTable products={productsOld} />
-          </CardContent>
-        </Card>
 
-        <Card className="rounded-2xl border bg-background shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Top 5 Productos Sin Stock
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-        <ProductsTable products={productsOutofStock}/>
-          </CardContent>
-        </Card>
+  {/* PRODUCTOS EN PARALELO */}
+  <div className="grid gap-8 lg:grid-cols-2">
 
-        <Card className="rounded-2xl border bg-background shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Top 5 Ultimas Orden
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <OrdersTable
-              orders={OrdersTopFive}
-              totalOrders={totalOrders}
-              columns={[
-                "order",
-                "customer",
-                "payment-method",
-                "tolal",
-                "date",
-                "status",
-                "shipment"
-              ]} />
-          </CardContent>
-        </Card>
+    <Card className="rounded-2xl border bg-background shadow-md">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">
+          Top 5 Productos Más Antiguos
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ProductsTable
+          products={productsOld}
+          columns={[
+            "image",
+            "product",
+            // "price",
+            // "stock",
+            // "discount",
+            // "date",
+            // "action"
+          ]}
+        />
+      </CardContent>
+    </Card>
 
-      </div>
+    <Card className="rounded-2xl border bg-background shadow-md">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">
+          Top 5 Productos Sin Stock
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ProductsTable
+          products={productsOutofStock}
+          columns={[
+            "image",
+            "product",
+            // "price",
+            // "stock",
+            // "discount",
+            // "date",
+            // "action"
+          ]}
+        />
+      </CardContent>
+    </Card>
+
+  </div>
+
+  {/* ORDENES ABAJO (COMO ESTÁ) */}
+  <Card className="rounded-2xl border bg-background shadow-md">
+    <CardHeader>
+      <CardTitle className="text-lg font-semibold">
+        Top 5 Últimas Ordenes
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <OrdersTable
+        orders={OrdersTopFive}
+        totalOrders={totalOrders}
+        columns={[
+          "order",
+          "customer",
+          "payment-method",
+          "tolal",
+          "date",
+          "status",
+          "shipment"
+        ]}
+      />
+    </CardContent>
+  </Card>
+
+</div>
+
     </div>
   )
 }
