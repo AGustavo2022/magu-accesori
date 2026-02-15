@@ -18,6 +18,9 @@ import { Ban } from "lucide-react"
 import { Eye } from "lucide-react"
 import { OrderDrawer } from "./order-drawer"
 import { Store } from "lucide-react"
+import { Button } from "../ui/button"
+import Link from "next/link"
+import { usePathname, useSearchParams  } from "next/navigation"
 
 type OrderColumn =
   | "info"
@@ -134,16 +137,42 @@ export function ShippingIcon({
 
 export function OrdersTable({ orders, totalOrders, columns }: OrdersTableProps) {
 
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+
+  const isOrdersPage = pathname === "/dashboard/orders"
+  const hasQueryParams = searchParams.toString().length > 0
+
+  const shouldDisable = isOrdersPage && !hasQueryParams
+
 
   return (
     <>
 
-      {/* INFO */}
-      {columns.includes("info") && (
-        <p className="text-sm text-muted-foreground pt-3">
-          Mostrando {orders.length} de {totalOrders} órdenes
-        </p>
-      )}
+{/* INFO */}
+{columns.includes("info") && (
+    <div className="flex items-center justify-between pt-4">
+      <p className="text-sm text-muted-foreground">
+        Mostrando {orders.length} de {totalOrders} órdenes
+      </p>
+
+      <Button
+        asChild={!shouldDisable}
+        variant="outline"
+        disabled={shouldDisable}
+      >
+        {shouldDisable ? (
+          <span>Ver todos</span>
+        ) : (
+          <Link href="/dashboard/orders">
+            Ver todos
+          </Link>
+        )}
+      </Button>
+    </div>
+
+)}
 
       {/* TABLA */}
       <div className="mt-6 border rounded-lg overflow-hidden">
