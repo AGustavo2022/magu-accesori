@@ -36,7 +36,7 @@ export default async function OrdersPage({
   return (
     <div className="container mx-auto flex flex-col min-h-screen">
 
-      <OrdersInitializer count={pendingCount} />
+      {/* <OrdersInitializer count={pendingCount} /> */}
 
       {/* <SearchNew placeholder="Buscar orden..." /> */}
 {/* 
@@ -56,14 +56,14 @@ export default async function OrdersPage({
         ]}
       /> */}
 
-      <div className="mt-8">
+      {/* <div className="mt-8">
         {totalPage > 1 && (
           <PaginationProducts
             currentPage={currentPage}
             totalPages={totalPage}
           />
         )}
-      </div>
+      </div> */}
     </div>
   )
 }
