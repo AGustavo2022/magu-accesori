@@ -3,35 +3,39 @@
 import {  getTopFiveOldestProducts, getTopFiveOutOfStockProducts } from "@/lib/data/product.data"
 import { getOrdersDashboardTotalCount, getTopFiveRecentOrders } from "@/lib/data/orders.data"
 import { OrderStatus } from "@/lib/types/order.types"
-import DashboardTablesClient from "./DashboardTablesClient"
+import DashboardClient from "./_components/dashboard-client"
 
-
-
-export default async function EcommerceDashboard({
-  searchParams,
-}: {
-  searchParams?: Promise<{
-    page?: string
+interface DashboardPageProps {
+  searchParams?: {
     query?: string
     status?: OrderStatus
-  }>
-}) {
+  }
+}
 
-  const params = await searchParams;
-  const query = params?.query || ""
-  const status = params?.status
+export default async function DashboardPage({
+  searchParams,
+}: DashboardPageProps) {
+  const query = searchParams?.query ?? ""
+  const status: OrderStatus =
+  searchParams?.status ?? "pending" 
+
+  console.log(status)
 
 
-  const productsOutofStock = await getTopFiveOutOfStockProducts()
-
-  const productsOld = await getTopFiveOldestProducts()
-
-  const totalOrders = await getOrdersDashboardTotalCount(query, status)
-
-  const OrdersTopFive = await getTopFiveRecentOrders()
+  const [
+    productsOutofStock,
+    productsOld,
+    totalOrders,
+    OrdersTopFive,
+  ] = await Promise.all([
+    getTopFiveOutOfStockProducts(),
+    getTopFiveOldestProducts(),
+    getOrdersDashboardTotalCount(query, status),
+    getTopFiveRecentOrders(),
+  ])
 
   return (
-    <DashboardTablesClient
+    <DashboardClient
       productsOld={productsOld}
       productsOutOfStock={productsOutofStock}
       OrdersTopFive={OrdersTopFive}

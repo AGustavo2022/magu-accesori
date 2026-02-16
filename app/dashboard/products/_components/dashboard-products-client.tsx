@@ -1,9 +1,9 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import PaginationProducts from "@/components/pagination-products"
-import { ProductsTable } from "./products-table"
-import SearchNew from "../search"
+import { ProductsTable } from "../../../../components/dashboard/products-table"
+import SearchNew from "../../../../components/search"
 
 import {
   FilterOptionCard,
@@ -15,31 +15,24 @@ interface Props {
   pageNumber: number
   totalPages: number
   totalProducts: number
+  currentFilter: "active" | "out-of-stock" | "inactive"
   children?: React.ReactNode
   footer?: React.ReactNode
 }
 
-export default function PageWithGridDashboard({
+export default function DashboardProductsClient({
   products,
   pageNumber,
   totalPages,
   totalProducts,
+  currentFilter,
   children,
   footer,
 }: Props) {
 
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const pathname = usePathname()
 
-  const statusParam = searchParams.get("status") ?? "true"
-  const outOfStockParam = searchParams.get("outOfStock") === "true"
-
-  const currentFilter: "active" | "out-of-stock" | "inactive" =
-    outOfStockParam
-      ? "out-of-stock"
-      : statusParam === "false"
-      ? "inactive"
-      : "active"
 
   return (
     <div className="container mx-auto flex flex-col min-h-screen space-y-6">
@@ -55,27 +48,26 @@ export default function PageWithGridDashboard({
             item={option}
             selected={currentFilter === option.id}
             onSelect={() => {
-              const params = new URLSearchParams(searchParams.toString())
+              const params = new URLSearchParams()
 
               if (option.id === "active") {
                 params.set("status", "true")
-                params.delete("outOfStock")
               }
 
               if (option.id === "out-of-stock") {
-                params.set("page", "1")
                 params.set("status", "true")
                 params.set("outOfStock", "true")
               }
 
               if (option.id === "inactive") {
-                params.set("page", "1")
                 params.set("status", "false")
-                params.delete("outOfStock")
               }
 
-              router.push(`?${params.toString()}`)
+              params.set("page", "1")
+
+              router.replace(`${pathname}?${params.toString()}`)
             }}
+
           />
         ))}
       </div>

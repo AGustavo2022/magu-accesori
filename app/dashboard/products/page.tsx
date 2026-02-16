@@ -1,66 +1,74 @@
-
-import PageWithGridDashboard from "@/components/dashboard/page-with-grid-dashboard"
+import DashboardProductsClient from "@/app/dashboard/products/_components/dashboard-products-client"
 import {
   getProductsDashboardPages,
   getProductsDashboardTotalCount,
   getProductsDashboardTotalPages,
 } from "@/lib/data/product.data"
 
-export const dynamic = "force-dynamic"
-
-
-
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{
+interface DashboardPageProps {
+  searchParams: Promise<{
     page?: string
     query?: string
     status?: "true" | "false"
     category?: string
     outOfStock?: string
-  }>
-}) {
+      }>;
+    }
+
+export default async function DashboardProductsPage({ searchParams }: DashboardPageProps) {
 
   const params = await searchParams;
-  const currentPage = Number(params?.page || 1)
-  const query = params?.query || ""
+
+  const currentPage = Number(params?.page ?? 1)
+  const query = params?.query ?? ""
 
   const status: boolean =
     params?.status === "false" ? false : true
 
   const categoryName = params?.category ?? undefined
-
   const onlyOutOfStock = params?.outOfStock === "true"
- 
 
-  const products = await getProductsDashboardPages(
-    query,
-    currentPage,
-    status,
-    categoryName,
-    onlyOutOfStock
-  )
+  const statusParam = params?.status ?? "true"
+  const outOfStockParam = params?.outOfStock === "true"
 
-  const totalProducts = await getProductsDashboardTotalCount(
-  query,
-  status,
-  categoryName,
-  onlyOutOfStock
-)
+  const currentFilter: "active" | "out-of-stock" | "inactive" =
+  outOfStockParam
+    ? "out-of-stock"
+    : statusParam === "false"
+    ? "inactive"
+    : "active"
 
-  const totalPages = await getProductsDashboardTotalPages(
-  query,
-  status,
-  categoryName
-)
+
+  const [ products, totalProducts, totalPages ] = await Promise.all([
+    
+    getProductsDashboardPages(
+      query,
+      currentPage,
+      status,
+      categoryName,
+      onlyOutOfStock
+    ),
+    getProductsDashboardTotalCount(
+      query,
+      status,
+      categoryName,
+      onlyOutOfStock
+    ),
+    getProductsDashboardTotalPages(
+      query,
+      status,
+      categoryName
+    ),
+  ])
 
   return (
-    <PageWithGridDashboard
+
+    <DashboardProductsClient
       products={products}
       pageNumber={currentPage}
       totalProducts={totalProducts}
       totalPages={totalPages}
+      currentFilter={currentFilter} 
     />
   )
 }

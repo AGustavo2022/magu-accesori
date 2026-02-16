@@ -1,6 +1,5 @@
 "use client"
 
-import React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Package, ShoppingCart, DollarSign, Truck, Clock } from "lucide-react"
 import { ProductsTable } from "@/components/dashboard/products-table"
@@ -23,17 +22,17 @@ const mockStats = {
   inventoryValue: 254300,
 }
 
-export default function DashboardTablesClient({
+export default function DashboardClient({
   productsOld,
   productsOutOfStock,
   OrdersTopFive,
   totalOrders,
 }: DashboardTablesClientProps) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-2">
       
       {/* ===== HEADER + STATS ===== */}
-      <div className="space-y-6">
+      <div className="pt-8">
         
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           <StatCard title="Total Productos" value={mockStats.totalProducts} icon={<Package className="w-5 h-5" />} />
@@ -44,10 +43,10 @@ export default function DashboardTablesClient({
         </div>
       </div>
 
-      <div className="divide-y divide-muted/40 space-y-10">
+      <div className="divide-y divide-muted/40 space-y-2">
         
         {/* ===== PRODUCTOS EN PARALELO ===== */}
-        <div className="grid gap-8 lg:grid-cols-2 pt-10">
+        <div className="grid gap-8 lg:grid-cols-2 pt-4">
           <Card className="rounded-2xl border bg-background shadow-md">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Top 5 Productos Más Antiguos</CardTitle>
@@ -68,7 +67,7 @@ export default function DashboardTablesClient({
         </div>
 
         {/* ===== ORDENES ABAJO ===== */}
-        <div className="pt-10">
+        <div className="pt-4">
           <Card className="rounded-2xl border bg-background shadow-md">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Top 5 Últimas Ordenes</CardTitle>
@@ -90,7 +89,7 @@ export default function DashboardTablesClient({
 
 function StatCard({ title, value, icon, highlight }: any) {
   return (
-    <Card className="rounded-2xl border bg-background/70 backdrop-blur shadow-lg hover:shadow-xl transition">
+    <Card className="rounded-2xl border bg-background/70 backdrop-blur ">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
         {icon}
