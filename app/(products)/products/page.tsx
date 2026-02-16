@@ -1,5 +1,4 @@
 import { getProductsPages, getProductsTotalPages } from '@/lib/data/product.data';
-import { notFound } from "next/navigation";
 import PageWithGrid from "@/components/page-with-grid";
 import SearchNew from "@/components/search";
 

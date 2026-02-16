@@ -20,3 +20,6 @@ export default function Layout({
       </ProductsPanelClient>
   )
 }
+
+{/* LocalSidebar Crear un sidebar colapsable local "use client" (solo para la sección donde se usa) */}
+{/* ProductsPanelClient crear el layout horizontal redimensionable de la sección*/}
