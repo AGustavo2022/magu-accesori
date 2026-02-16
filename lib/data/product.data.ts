@@ -147,7 +147,7 @@ export async function getProductsPages(
       OFFSET ${offset}
     `;
 
-    return response;
+    return response as Product[]
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch paginated products.");

@@ -1,7 +1,7 @@
 
-import LocalSidebar from "@/components/local-sidebar"
+import LocalSidebar from "@/app/(products)/products/_components/layout-products-sidebar-client"
 import CategorySidebar from "@/components/category-sidebar"
-import ProductsPanelClient from "./products-panel-client"
+import ProductsPanelClient from "./products/_components/layout-products-panel-client"
 
 export default function Layout({
   children,
