@@ -8,9 +8,9 @@ export function SkeletonProductsPage() {
     <div className="container mx-auto flex flex-col min-h-screen">
 
       {/* Buscador */}
-      <div className="h-16 w-full flex items-center">
+      {/* <div className="h-16 w-full flex items-center">
         <Skeleton className="h-10 w-full  rounded-md" />
-      </div>
+      </div> */}
 
       {/* Grid */}
       <div className="flex-1">

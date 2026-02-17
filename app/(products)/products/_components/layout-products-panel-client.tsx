@@ -4,8 +4,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { Suspense } from "react"
-import { SkeletonProductsPage } from "@/components/skeletons"
 
 export default function ProductsPanelClient({
   sidebar,
@@ -29,9 +27,7 @@ export default function ProductsPanelClient({
 
       {/* PRODUCTOS */}
       <ResizablePanel defaultSize={82}>
-        <Suspense fallback={<SkeletonProductsPage />}>
           {children}
-        </Suspense>
       </ResizablePanel>
 
     </ResizablePanelGroup>

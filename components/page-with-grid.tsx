@@ -2,6 +2,8 @@
 
 import PaginationProducts from "@/components/pagination-products";
 import ProductGrid from "@/components/products/product-grid";
+import { Suspense } from "react";
+import {SkeletonProductsPage} from "./skeletons";
 
 interface Props {
   products: any[];
@@ -23,12 +25,14 @@ export default function PageWithGrid({
 
       {/* Contenido superior opcional */}
       <div className=" h-16">
-      {children}
+        {children}
       </div>
 
-      <div className="flex-1">
-        <ProductGrid products={products} />
-      </div>
+      <Suspense fallback={<SkeletonProductsPage/>}>
+        <div className="flex-1">
+          <ProductGrid products={products} />
+        </div>
+      </Suspense>
 
       <div className="mt-8">
         {totalPages > 1 && (
