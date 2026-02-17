@@ -138,6 +138,13 @@ export async function getProductsPages({
         sc.name AS subcategory,     
         p.status,
         p.discount,
+
+        -- 🔥 Precio final calculado
+        ROUND(
+          p.price * (1 - COALESCE(p.discount, 0) / 100.0),
+          2
+        ) AS final_price,
+
         p.created_at
       FROM products2 p
       INNER JOIN categories c ON p.category = c.id
@@ -176,6 +183,7 @@ export async function getProductsPages({
     throw new Error("Failed to fetch products.")
   }
 }
+
 
 
 
