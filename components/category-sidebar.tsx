@@ -65,16 +65,14 @@ export default async function CategorySidebar() {
               <SidebarLink
                 key={sub.subcategory_id}
                 label={sub.subcategory_name}
-                href={`/category/subcategory/${createSlug(
-                  sub.subcategory_name
-                )}`}
+                href={`/products/${createSlug(cat.category_name)}/${createSlug(sub.subcategory_name)}`}
               />
             ))}
 
             {/* VER TODOS */}
             <SidebarLink
               label="Ver todos"
-              href={`/category/${createSlug(cat.category_name)}`}
+              href={`/products/${createSlug(cat.category_name)}`}
               className="font-semibold"
             />
           </AccordionContent>

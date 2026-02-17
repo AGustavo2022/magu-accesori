@@ -20,15 +20,19 @@ export function createSlug(text: string): string {
 /**
  * Convierte un slug en texto legible.
  */
-export function unslugify(slug: string): string {
-  const textWithSpaces = slug.replace(/-/g, ' ');
+export function unslugify(slug?: string | null): string {
+  if (!slug) return ""
 
-  return textWithSpaces.toLowerCase().split(' ')
+  return slug
+    .replace(/-/g, " ")
+    .toLowerCase()
+    .split(" ")
     .map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)
     )
-    .join(' ');
+    .join(" ")
 }
+
 
 /**
  * Formatea un precio en pesos argentinos.

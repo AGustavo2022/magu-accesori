@@ -1,5 +1,5 @@
 
-import LocalSidebar from "@/app/(products)/products/_components/layout-products-sidebar-client"
+import LocalSidebar from "@/app/(shop)/products/_components/layout-products-sidebar-client"
 import CategorySidebar from "@/components/category-sidebar"
 import ProductsPanelClient from "./products/_components/layout-products-panel-client"
 

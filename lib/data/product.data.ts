@@ -106,15 +106,26 @@ export async function getProductById(product_id: string): Promise<Product[]> {
   }
 }
 
-export async function getProductsPages(
-  query: string = "",
-  page: number = 1
-) {
-  const offset = (page - 1) * ITEMS_PAGINATION_PAGE;
-  const search = `%${query}%`;
+
+interface ProductFilters {
+  query?: string
+  page?: number
+  category?: string | null
+  subcategory?: string | null
+}
+
+export async function getProductsPages({
+  query = "",
+  page = 1,
+  category,
+  subcategory,
+}: ProductFilters): Promise<Product[]> {
+
+  const offset = (page - 1) * ITEMS_PAGINATION_PAGE
+  const search = `%${query}%`
 
   try {
-    const response = await sql`
+    const result = await sql`
       SELECT 
         p.id,
         p.title,
@@ -123,11 +134,10 @@ export async function getProductsPages(
         p.price,
         p.stock,
         p.image_url,
-        c.name AS category, 
-        sc.name AS subcategory, 
+        c.name AS category,        
+        sc.name AS subcategory,     
         p.status,
         p.discount,
-        (p.price - (p.price * p.discount / 100))::numeric AS final_price,
         p.created_at
       FROM products2 p
       INNER JOIN categories c ON p.category = c.id
@@ -135,27 +145,47 @@ export async function getProductsPages(
       WHERE 
         p.status = true
         AND p.stock > 0
-        AND (
-          p.title ILIKE ${search}
-          OR p.short_description ILIKE ${search}
-          OR c.name ILIKE ${search}
-          OR sc.name ILIKE ${search}
-          OR p.price::text ILIKE ${search}
-        )
+
+        ${query
+          ? sql`
+            AND (
+              p.title ILIKE ${search}
+              OR p.short_description ILIKE ${search}
+              OR c.name ILIKE ${search}
+              OR sc.name ILIKE ${search}
+            )
+          `
+          : sql``}
+
+        ${category
+          ? sql`AND c.name = ${category}`
+          : sql``}
+
+        ${subcategory
+          ? sql`AND sc.name = ${subcategory}`
+          : sql``}
+
       ORDER BY p.id ASC
       LIMIT ${ITEMS_PAGINATION_PAGE}
       OFFSET ${offset}
-    `;
+    `
 
-    return response as Product[]
+    return result as Product[]
   } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch paginated products.");
+    console.error("Database Error:", error)
+    throw new Error("Failed to fetch products.")
   }
 }
 
-export async function getProductsTotalPages(query: string = "") {
-  const search = `%${query}%`;
+
+
+export async function getProductsTotalPages({
+  query = "",
+  category,
+  subcategory,
+}: ProductFilters) {
+
+  const search = `%${query}%`
 
   try {
     const count = await sql`
@@ -166,22 +196,39 @@ export async function getProductsTotalPages(query: string = "") {
       WHERE 
         p.status = true
         AND p.stock > 0
-        AND (
-          p.title ILIKE ${search}
-          OR p.short_description ILIKE ${search}
-          OR c.name ILIKE ${search}
-          OR sc.name ILIKE ${search}
-          OR p.price::text ILIKE ${search}
-        )
-    `;
 
-    const total = Number(count[0].count);
-    return Math.ceil(total / ITEMS_PAGINATION_PAGE);
+        ${query
+          ? sql`
+            AND (
+              p.title ILIKE ${search}
+              OR p.short_description ILIKE ${search}
+              OR c.name ILIKE ${search}
+              OR sc.name ILIKE ${search}
+              OR p.price::text ILIKE ${search}
+            )
+          `
+          : sql``}
+
+        ${category
+          ? sql`AND c.name = ${category}`
+          : sql``}
+
+        ${subcategory
+          ? sql`AND sc.name = ${subcategory}`
+          : sql``}
+    `
+
+    const total = Number(count[0].count)
+
+    return Math.ceil(total / ITEMS_PAGINATION_PAGE)
   } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch total number of pages.");
+    console.error("Database Error:", error)
+    throw new Error("Failed to fetch total number of pages.")
   }
 }
+
+
+
 
 
 export async function getProductsDashboard() {
