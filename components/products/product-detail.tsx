@@ -122,13 +122,11 @@ const validSpecifications = (product.specifications ?? []).filter(
               { label: "Productos", href: "/products" },
               {
                 label: product.category,
-                href: `/category/${createSlug(product.category)}`,
+                href: `/products/${createSlug(product.category)}`,
               },
               {
                 label: product.subcategory,
-                href: `/category/subcategory/${createSlug(
-                  product.subcategory
-                )}`,
+                href: `/products/${createSlug(product.category)}/${createSlug(product.subcategory)}`,
                 active: true,
               },
             ]}
