@@ -8,8 +8,8 @@ import { CheckoutProgress } from "@/components/checkout/checkout-progress"
 import { StepCart } from "@/components/checkout/steps/step-cart"
 import { StepPayment } from "@/components/checkout/steps/step-payment"
 import { StepSummary } from "@/components/checkout/steps/step-summary"
-import { StepShipping } from "./steps/step-shipping"
-import { CheckoutFooter } from "./checkout-footer"
+import { StepShipping } from "../../../../components/checkout/steps/step-shipping"
+import { CheckoutFooter } from "../../../../components/checkout/checkout-footer"
 
 import { createOrder } from "@/lib/actions/order.actions"
 import { shippingSchema } from "@/lib/schemas/order.schema"
@@ -71,8 +71,7 @@ export default function CheckoutClient({
   })
 
   const [state, formAction] = useFormState(createOrder, initialState)
-  const [clientErrors, setClientErrors] =
-    useState<Record<string, string[]>>({})
+  const [clientErrors, setClientErrors] = useState<Record<string, string[]>>({})
 
   /* ---------------- REDIRECT ---------------- */
 

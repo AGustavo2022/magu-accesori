@@ -1,6 +1,6 @@
 import { getOrderByNumber } from "@/lib/data/orders.data"
 import { notFound } from "next/navigation"
-import OrderClient from "./order-client"
+import OrderConfirmation from "@/app/(shop)/order/_components/order-confirmation"
 
 
 export default async function OrderPage({
@@ -14,5 +14,5 @@ export default async function OrderPage({
 
   if (!order) notFound()
 
-  return <OrderClient order={order} items={items} />
+  return <OrderConfirmation order={order} items={items} />
 }

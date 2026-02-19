@@ -29,8 +29,6 @@ export function StepSummary({
     onBack,
 }: StepSummaryProps) {
 
-    console.log(subtotal, total, shippingCost)
-
     return (
         <>
             {/* <Card className="mb-6 overflow-hidden border-border bg-gray-300"> */}

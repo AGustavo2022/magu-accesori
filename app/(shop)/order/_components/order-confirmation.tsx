@@ -11,6 +11,8 @@ import { Separator } from "@/components/ui/separator"
 import { useRouter } from "next/navigation"
 import { OrderConfirmationProps } from "@/lib/types/order.types"
 import { formatPrice } from "@/lib/utils"
+import { useCart } from "@/contexts/cart/cart.context"
+import { useEffect } from "react"
 
 /* -------------------- COMPONENT -------------------- */
 
@@ -20,6 +22,13 @@ export default function OrderConfirmation({
 }: OrderConfirmationProps) {
 
   const router = useRouter()
+
+  const { clearCart } = useCart()
+
+  useEffect(() => {
+    clearCart()
+  }, [])
+
 
   const {
     order_number,
