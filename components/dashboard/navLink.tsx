@@ -14,7 +14,7 @@ import {
   XCircle,
 } from "lucide-react"
 import { useOrders } from "@/contexts/orders/orders-context"
-import { Badge } from "./ui/badge"
+import { Badge } from "../ui/badge"
 import { Eye } from "lucide-react"
 
 type IconName =

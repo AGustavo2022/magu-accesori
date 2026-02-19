@@ -1,7 +1,6 @@
 "use client"
 
 import { useRouter, usePathname } from "next/navigation"
-import PaginationProducts from "@/components/pagination-products"
 import { ProductsTable } from "../../../../../components/dashboard/products-table"
 import SearchNew from "../../../../../components/search"
 
@@ -9,6 +8,7 @@ import {
   FilterOptionCard,
   filterOptions,
 } from "@/components/dashboard/filter-option-card"
+import PaginationPage from "@/components/pagination-page"
 
 interface Props {
   products: any[]
@@ -90,7 +90,7 @@ export default function DashboardProductsClient({
       />
 
       {totalPages > 1 && (
-        <PaginationProducts
+        <PaginationPage
           currentPage={pageNumber}
           totalPages={totalPages}
         />

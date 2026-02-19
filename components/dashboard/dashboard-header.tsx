@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense } from "react"
-import { NavLink } from "../navLink"
+import { NavLink } from "./navLink"
 import { usePathname } from "next/navigation"
 import { SignOutButton } from "../auth/sign-out-button"
 

@@ -4,10 +4,10 @@ import { useEffect } from "react"
 import { useOrders } from "@/contexts/orders/orders-context"
 
 import { OrdersTable } from "@/components/dashboard/orders-table"
-import PaginationProducts from "@/components/pagination-products"
 import SearchNew from "@/components/search"
 
 import { Order } from "@/lib/types/order.types"
+import PaginationPage from "@/components/pagination-page"
 
 interface DashboardOrdersClientProps {
   orders: Order[]
@@ -55,7 +55,7 @@ export default function DashboardOrdersClient({
 
       <div className="mt-8">
         {totalPages > 1 && (
-          <PaginationProducts
+          <PaginationPage
             currentPage={currentPage}
             totalPages={totalPages}
           />

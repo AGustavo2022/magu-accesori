@@ -6,7 +6,7 @@ import {
 import ProductsPageClient from "../_components/products-page-client"
 import { unslugify } from "@/lib/utils"
 import LocalSidebar from "../_components/products-sidebar-client"
-import CategorySidebar from "@/components/category-sidebar"
+import CategorySidebar from "@/components/products/category-sidebar"
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 
 export const dynamic = "force-dynamic"

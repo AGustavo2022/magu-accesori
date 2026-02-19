@@ -1,6 +1,7 @@
 "use client"
 
-import PageWithGrid from "@/components/page-with-grid"
+
+import PageWithGrid from "@/components/products/page-with-grid"
 import SearchNew from "@/components/search"
 
 import { Product } from "@/lib/types/definitions"

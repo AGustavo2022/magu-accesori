@@ -1,9 +1,10 @@
 "use client";
 
-import PaginationProducts from "@/components/pagination-products";
 import ProductGrid from "@/components/products/product-grid";
 import { Suspense } from "react";
-import {SkeletonProductsPage} from "./skeletons";
+import { SkeletonProductsPage } from "../skeletons";
+import PaginationPage from "@/components/pagination-page";
+
 
 interface Props {
   products: any[];
@@ -36,7 +37,7 @@ export default function PageWithGrid({
 
       <div className="mt-8">
         {totalPages > 1 && (
-          <PaginationProducts
+          <PaginationPage
             currentPage={pageNumber}
             totalPages={totalPages}
           />

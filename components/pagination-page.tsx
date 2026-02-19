@@ -15,7 +15,7 @@ interface Props {
   totalPages: number
 }
 
-export default function PaginationProducts({
+export default function PaginationPage({
   currentPage,
   totalPages,
 }: Props) {
