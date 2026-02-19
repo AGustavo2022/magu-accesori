@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { useRouter } from "next/navigation"
 import { OrderConfirmationProps } from "@/lib/types/order.types"
-import { formatPrice } from "@/lib/utils"
+import { formatDateAR, formatPrice } from "@/lib/utils"
 import { useCart } from "@/contexts/cart/cart.context"
 import { useEffect } from "react"
 
@@ -39,19 +39,6 @@ export default function OrderConfirmation({
     created_at,
     shipping_data,
   } = order
-
-  const date = new Date(created_at)
-
-  const fecha = date.toLocaleDateString("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  })
-
-  const hora = date.toLocaleTimeString("es-AR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  })
 
   const itemCount = items.length
 
@@ -86,8 +73,8 @@ export default function OrderConfirmation({
               <p className="mb-1 text-xs uppercase text-muted-foreground">
                 Fecha del pedido
               </p>
-              <p className="text-lg font-medium">{fecha}</p>
-              <p className="text-sm text-muted-foreground">{hora}</p>
+              <p className="text-lg font-medium">{formatDateAR(created_at).fecha}</p>
+              <p className="text-sm text-muted-foreground">{formatDateAR(created_at).hora}</p>
             </div>
           </div>
 
