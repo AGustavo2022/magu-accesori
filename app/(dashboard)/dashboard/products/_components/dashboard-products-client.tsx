@@ -2,8 +2,8 @@
 
 import { useRouter, usePathname } from "next/navigation"
 import PaginationProducts from "@/components/pagination-products"
-import { ProductsTable } from "../../../../components/dashboard/products-table"
-import SearchNew from "../../../../components/search"
+import { ProductsTable } from "../../../../../components/dashboard/products-table"
+import SearchNew from "../../../../../components/search"
 
 import {
   FilterOptionCard,

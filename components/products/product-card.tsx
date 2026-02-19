@@ -38,7 +38,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <Card className="w-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 flex flex-col h-95 p-0">
       {/* Imagen */}
       <div className="relative">
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/products/item/${product.id}`}>
           <Image
             src={product.image_url || "/backpack.png"}
             width={500}
@@ -62,7 +62,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="flex flex-col flex-1">
           {/* Texto */}
           <div className="flex-1">
-            <Link href={`/product/${product.id}`}>
+            <Link href={`/products/item/${product.id}`}>
               <h3 className="text-base font-semibold line-clamp-2 hover:text-blue-600">
                 {product.title}
               </h3>

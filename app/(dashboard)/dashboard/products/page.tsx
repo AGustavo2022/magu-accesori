@@ -1,4 +1,4 @@
-import DashboardProductsClient from "@/app/dashboard/products/_components/dashboard-products-client"
+import DashboardProductsClient from "@/app/(dashboard)/dashboard/products/_components/dashboard-products-client"
 import {
   getProductsDashboardPages,
   getProductsDashboardTotalCount,
