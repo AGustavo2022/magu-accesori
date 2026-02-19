@@ -1,10 +1,13 @@
 "use client"
 
 
-import PageWithGrid from "@/components/products/page-with-grid"
+import PaginationPage from "@/components/pagination-page"
+import ProductGrid from "@/components/products/product-grid"
 import SearchNew from "@/components/search"
+import { SkeletonProductsPage } from "@/components/skeletons"
 
 import { Product } from "@/lib/types/definitions"
+import { Suspense } from "react"
 
 interface ProductsPageClientProps {
   products: Product[]
@@ -21,20 +24,25 @@ export default function ProductsPageClient({
   const isEmpty = !products || products.length === 0
 
     return (
-        <PageWithGrid
-            products={products}
-            pageNumber={currentPage}
-            totalPages={totalPages}
-        >
-            <SearchNew
-                placeholder="Busqueda de Producto"
-            />
 
-            {isEmpty && (
-                <div className="mt-10 text-center text-muted-foreground">
-                    No se encontraron productos para tu búsqueda
+        <div className="container mx-auto flex flex-col min-h-screen">
+
+            <SearchNew placeholder="Busqueda de Producto"/>
+
+            <Suspense fallback={<SkeletonProductsPage />}>
+                <div className="flex-1">
+                    <ProductGrid products={products} />
                 </div>
-            )}
-        </PageWithGrid>
+            </Suspense>
+
+            <div className="mt-8">
+                {totalPages > 1 && (
+                    <PaginationPage
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                    />
+                )}
+            </div>
+        </div>
     )
 }
