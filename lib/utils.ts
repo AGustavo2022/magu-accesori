@@ -105,3 +105,54 @@ export function productToCartItem(
     quantity,
   }
 }
+
+
+
+/**
+ * Formatea una fecha en zona horaria de Argentina (America/Argentina/Buenos_Aires).
+ *
+ * Convierte un string ISO o un objeto Date a:
+ * - fecha → formato DD/MM/YYYY
+ * - hora → formato HH:mm (24hs)
+ * - full  → combinación de fecha y hora
+ *
+ * Ideal para mostrar fechas de órdenes, pagos o registros guardados en UTC.
+ *
+ * @param {string | Date} dateInput - Fecha en formato ISO string (UTC recomendado) o instancia de Date.
+ *
+ * @returns {{
+ *   fecha: string;
+ *   hora: string;
+ *   full: string;
+ * }}
+ *
+ * @example
+ * const result = formatDateAR("2026-02-19T16:32:01.000Z")
+ *
+ * result.fecha // "19/02/2026"
+ * result.hora  // "13:32"
+ * result.full  // "19/02/2026 13:32"
+ */
+export function formatDateAR(dateInput: string | Date) {
+  const date = new Date(dateInput)
+
+  const fecha = date.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "America/Argentina/Buenos_Aires",
+  })
+
+  const hora = date.toLocaleTimeString("es-AR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "America/Argentina/Buenos_Aires",
+  })
+
+  return {
+    fecha,
+    hora,
+    full: `${fecha} ${hora}`,
+  }
+}

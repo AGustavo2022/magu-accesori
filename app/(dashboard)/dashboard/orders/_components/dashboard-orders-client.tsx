@@ -46,6 +46,7 @@ export default function DashboardOrdersClient({
           "payment-method",
           "tolal",
           "date",
+          "time",
           "status",
           "shipment",
           "drawer",

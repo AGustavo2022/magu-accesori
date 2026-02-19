@@ -18,8 +18,7 @@ import { Ban } from "lucide-react"
 import { Eye } from "lucide-react"
 import { OrderDrawer } from "./order-drawer"
 import { Store } from "lucide-react"
-import { Button } from "../ui/button"
-import Link from "next/link"
+import { formatDateAR } from "@/lib/utils"
 
 type OrderColumn =
   | "info"
@@ -28,6 +27,7 @@ type OrderColumn =
   | "payment-method"
   | "tolal"
   | "date"
+  | "time" 
   | "status"
   | "shipment"
   | "drawer"
@@ -48,7 +48,7 @@ type OrderStatus =
 
 
 const STATUS_CONFIG: Record<
-OrderStatus,
+  OrderStatus,
   { label: string; className: string; icon: typeof Clock }
 > = {
   pending: {
@@ -134,19 +134,19 @@ export function ShippingIcon({
   )
 }
 
-export function OrdersTable({ orders, totalOrders, columns}: OrdersTableProps) {
+export function OrdersTable({ orders, totalOrders, columns }: OrdersTableProps) {
 
   return (
     <>
 
-{/* INFO */}
-{columns.includes("info") && (
-  
-      <p className="text-sm text-muted-foreground">
-        Mostrando {orders.length} de {totalOrders} órdenes
-      </p>
+      {/* INFO */}
+      {columns.includes("info") && (
 
-)}
+        <p className="text-sm text-muted-foreground">
+          Mostrando {orders.length} de {totalOrders} órdenes
+        </p>
+
+      )}
 
       {/* TABLA */}
       <div className="mt-6 border rounded-lg overflow-hidden">
@@ -158,25 +158,28 @@ export function OrdersTable({ orders, totalOrders, columns}: OrdersTableProps) {
                 <TableHead className="text-center">Orden</TableHead>
               )}
               {columns.includes("customer") && (
-              <TableHead className="text-center">Cliente</TableHead>
+                <TableHead className="text-center">Cliente</TableHead>
               )}
               {columns.includes("payment-method") && (
-              <TableHead className="text-center">Mét. Pago</TableHead>
+                <TableHead className="text-center">Mét. Pago</TableHead>
               )}
               {columns.includes("tolal") && (
-              <TableHead className="text-center">Total</TableHead>
+                <TableHead className="text-center">Total</TableHead>
               )}
               {columns.includes("date") && (
-              <TableHead className="text-center">Fecha</TableHead>
+                <TableHead className="text-center">Fecha</TableHead>
+              )}
+              {columns.includes("time") && (
+                <TableHead className="text-center">Hora</TableHead>
               )}
               {columns.includes("status") && (
-              <TableHead className="text-center">Estado</TableHead>
+                <TableHead className="text-center">Estado</TableHead>
               )}
               {columns.includes("shipment") && (
-              <TableHead className="text-center">Envio</TableHead>
+                <TableHead className="text-center">Envio</TableHead>
               )}
               {columns.includes("drawer") && (
-              <TableHead className="text-center"></TableHead>
+                <TableHead className="text-center"></TableHead>
               )}
             </TableRow>
           </TableHeader>
@@ -193,73 +196,82 @@ export function OrdersTable({ orders, totalOrders, columns}: OrdersTableProps) {
               </TableRow>
             ) : (
               orders.map((order) => (
+
                 <TableRow key={order.id}>
 
                   {/* ORDEN */}
                   {columns.includes("order") && (
-                  <TableCell className="text-center font-medium">
-                    {order.order_number}
-                  </TableCell>
+                    <TableCell className="text-center font-medium">
+                      {order.order_number}
+                    </TableCell>
                   )}
 
                   {/* CLIENTE */}
                   {columns.includes("customer") && (
-                  <TableCell>
-                    <p className="font-medium">
-                      {order.shipping_data.firstName}{" "}
-                      {order.shipping_data.lastName}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {order.shipping_data.phone}
-                    </p>
-                  </TableCell>
+                    <TableCell>
+                      <p className="font-medium">
+                        {order.shipping_data.firstName}{" "}
+                        {order.shipping_data.lastName}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {order.shipping_data.phone}
+                      </p>
+                    </TableCell>
                   )}
 
                   {/* MÉTODO DE PAGO */}
                   {columns.includes("payment-method") && (
-                  <TableCell className="text-center capitalize">
-                    {order.payment_method}
-                  </TableCell>
+                    <TableCell className="text-center capitalize">
+                      {order.payment_method}
+                    </TableCell>
                   )}
 
                   {/* TOTAL */}
                   {columns.includes("tolal") && (
-                  <TableCell className="text-center font-semibold">
-                    ${order.total}
-                  </TableCell>
+                    <TableCell className="text-center font-semibold">
+                      ${order.total}
+                    </TableCell>
                   )}
 
                   {/* FECHA */}
                   {columns.includes("date") && (
-                  <TableCell className="text-center text-sm text-muted-foreground">
-                    {order.created_at
-                      ? new Date(order.created_at).toLocaleDateString()
-                      : "N/A"}
-                  </TableCell>
+                    <TableCell className="text-center text-sm text-muted-foreground">
+                      {order.created_at
+                        ? formatDateAR(order.created_at).fecha
+                        : "N/A"}
+                    </TableCell>
+                  )}
+
+                  {columns.includes("time") && (
+                    <TableCell className="text-center text-sm text-muted-foreground">
+                      {order.created_at
+                        ? formatDateAR(order.created_at).hora
+                        : "N/A"}
+                    </TableCell>
                   )}
 
                   {/* ESTADO */}
                   {columns.includes("status") && (
-                  <TableCell className="text-center">
+                    <TableCell className="text-center">
                       <StatusBadge status={order.status} />
-                  </TableCell>
+                    </TableCell>
                   )}
 
                   {/* Envio */}
                   {columns.includes("shipment") && (
-                  <TableCell className="text-center font-semibold">
-                    {<ShippingIcon
-                      address={order.shipping_data?.address}
-                      shippingCost={order.shipping_cost}
-                    />}
-                  </TableCell>
+                    <TableCell className="text-center font-semibold">
+                      {<ShippingIcon
+                        address={order.shipping_data?.address}
+                        shippingCost={order.shipping_cost}
+                      />}
+                    </TableCell>
                   )}
 
                   {/* ACCIONES */}
                   {columns.includes("drawer") && (
-                  <TableCell className="text-center">
-                    <OrderDrawer order={order} />
-                  </TableCell>
+                    <TableCell className="text-center">
+                      <OrderDrawer order={order} />
+                    </TableCell>
                   )}
 
                 </TableRow>
