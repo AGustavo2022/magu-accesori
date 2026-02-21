@@ -22,7 +22,7 @@ export async function getProductsAll() {
         p.status,
         p.discount,
         p.created_at
-      FROM products2 p
+      FROM products p
       INNER JOIN categories c ON p.category = c.id
       INNER JOIN subcategories sc ON p.subcategory = sc.id
       WHERE p.status = true
@@ -57,7 +57,7 @@ export async function getProductsByCategory(
       p.status,
       p.discount,
       p.created_at
-    FROM products2 p
+    FROM products p
     INNER JOIN categories c ON p.category = c.id
     INNER JOIN subcategories sc ON p.subcategory = sc.id
     WHERE c.name = ${categoryName}
@@ -90,7 +90,7 @@ export async function getProductById(product_id: string): Promise<Product[]> {
                 p.discount,
                 (p.price - (p.price * p.discount / 100))::numeric AS final_price,
                 p.created_at
-            FROM products2 p
+            FROM products p
             
             INNER JOIN categories c ON p.category = c.id
             INNER JOIN subcategories sc ON p.subcategory = sc.id
@@ -146,7 +146,7 @@ export async function getProductsPages({
         ) AS final_price,
 
         p.created_at
-      FROM products2 p
+      FROM products p
       INNER JOIN categories c ON p.category = c.id
       INNER JOIN subcategories sc ON p.subcategory = sc.id
       WHERE 
@@ -198,7 +198,7 @@ export async function getProductsTotalPages({
   try {
     const count = await sql`
       SELECT COUNT(*) 
-      FROM products2 p
+      FROM products p
       INNER JOIN categories c ON p.category = c.id
       INNER JOIN subcategories sc ON p.subcategory = sc.id
       WHERE 
@@ -255,7 +255,7 @@ export async function getProductsDashboard() {
         p.status,
         p.discount,
         p.created_at
-      FROM products2 p
+      FROM products p
       INNER JOIN categories c ON p.category = c.id
       INNER JOIN subcategories sc ON p.subcategory = sc.id
       ORDER BY p.id ASC
@@ -294,7 +294,7 @@ export async function getProductsDashboardPages(
       p.status,
       p.discount,
       p.created_at
-    FROM products2 p
+    FROM products p
     INNER JOIN categories c ON p.category = c.id
     INNER JOIN subcategories sc ON p.subcategory = sc.id
     WHERE 1=1
@@ -342,7 +342,7 @@ export async function getProductsDashboardTotalCount(
 ): Promise<number> {
   const result = await sql`
     SELECT COUNT(*) AS total
-    FROM products2 p
+    FROM products p
     INNER JOIN categories c ON p.category = c.id
     WHERE 1=1
 
@@ -385,7 +385,7 @@ export async function getProductsDashboardTotalPages(
 ) {
   const count = await sql`
     SELECT COUNT(*)
-    FROM products2 p
+    FROM products p
     INNER JOIN categories c ON p.category = c.id
     WHERE 1=1
       ${query
@@ -421,7 +421,7 @@ export async function getTopFiveOutOfStockProducts(): Promise<Product[]> {
       p.status,
       p.discount,
       p.created_at
-    FROM products2 p
+    FROM products p
     INNER JOIN categories c ON p.category = c.id
     INNER JOIN subcategories sc ON p.subcategory = sc.id
     WHERE p.stock = 0
@@ -451,7 +451,7 @@ export async function getTopFiveOldestProducts(): Promise<Product[]> {
       p.status,
       p.discount,
       p.created_at
-    FROM products2 p
+    FROM products p
     INNER JOIN categories c ON p.category = c.id
     INNER JOIN subcategories sc ON p.subcategory = sc.id
     WHERE p.status = true
