@@ -1,7 +1,3 @@
-import Form from "@/components/dashboard/create-form"
-import { FileChartColumn } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { getCategoryAll } from "@/lib/data/categories.data"
 import { Category } from "@/lib/types/definitions"
 import CreateProductForm from "@/components/dashboard/create-form"
