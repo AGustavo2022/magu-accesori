@@ -5,8 +5,8 @@ import { useActionState } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 import { authenticate } from '@/lib/actions/authenticate.action';
-import { Button } from './ui/button';
- 
+import { Button } from '../ui/button';
+
 export default function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
