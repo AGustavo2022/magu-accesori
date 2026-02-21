@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { getCategoryAll } from "@/lib/data/categories.data"
 import { Category } from "@/lib/types/definitions"
+import CreateProductForm from "@/components/dashboard/create-form"
 
 export default async function AddProductPage() {
 
@@ -11,13 +12,7 @@ export default async function AddProductPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Nuevos Productos</h1>
-          <p className="text-muted-foreground">Formulario para el ingreso de nuevos productos</p>
-        </div>
-      </div>
-      <Form categories={category as Category[]}/>
+      <CreateProductForm categories={category as Category[]}/>
     </>
   )
 }
