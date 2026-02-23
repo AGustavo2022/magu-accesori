@@ -18,7 +18,7 @@ export async function GET(
         oi.price::numeric as price,
         oi.quantity
       FROM order_items oi
-      LEFT JOIN products2 p ON p.id = oi.product_id
+      LEFT JOIN products p ON p.id = oi.product_id
       WHERE oi.order_id = ${orderId}
     `
 

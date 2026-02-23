@@ -65,7 +65,7 @@ export async function createProduct(
 
 
   await sql`
-            INSERT INTO products2 (
+            INSERT INTO products (
                 title, 
                 short_description, 
                 long_description, 
@@ -135,7 +135,7 @@ export async function updateProduct(
 
   try {
     await sql`
-      UPDATE products2
+      UPDATE products
       SET
         title = ${validatedFields.data.title},
         short_description = ${validatedFields.data.shortDescription},
@@ -187,7 +187,7 @@ export async function deleteProduct(
 
   try {
     await sql`
-      UPDATE products2
+      UPDATE products
       SET status = false
       WHERE id = ${id};
     `;

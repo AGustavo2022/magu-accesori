@@ -43,7 +43,7 @@ export async function getCategoryTotalPages(
 
   const result = await sql`
     SELECT COUNT(*) AS count
-    FROM products2 p
+    FROM products p
     INNER JOIN categories c ON p.category = c.id
     WHERE c.name = ${categoryName}
       AND p.status = true
@@ -75,7 +75,7 @@ export async function getProductsBySubcategory(
         p.status,
         p.discount,
         p.created_at
-      FROM products2 p
+      FROM products p
       INNER JOIN categories c ON p.category = c.id
       INNER JOIN subcategories sc ON p.subcategory = sc.id
       WHERE sc.name = ${subcategoryName}
@@ -99,7 +99,7 @@ export async function getSubcategoryTotalPages(
   try {
     const count = await sql`
       SELECT COUNT(*)
-      FROM products2 p
+      FROM products p
       INNER JOIN subcategories sc ON p.subcategory = sc.id
       WHERE sc.name = ${subcategoryName}
         AND p.status = true

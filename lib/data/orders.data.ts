@@ -149,7 +149,7 @@ export async function getOrderByNumber(
       oi.quantity,
       oi.price
     FROM order_items oi
-    JOIN products2 p ON p.id = oi.product_id
+    JOIN products p ON p.id = oi.product_id
     WHERE oi.order_id = ${order.id}
     ORDER BY oi.id
   `

@@ -80,7 +80,7 @@ export async function createOrder(
         price - (price * COALESCE(discount, 0) / 100.0),
         2
       ) AS final_price
-    FROM products2
+    FROM products
     WHERE id = ANY(${items.map(i => i.productId)})
   `;
 
@@ -135,7 +135,7 @@ export async function createOrder(
     /* 4️⃣ Control de stock */
     for (const item of items) {
       const [updated] = await sql`
-        UPDATE products2
+        UPDATE products
         SET stock = stock - ${item.quantity}
         WHERE id = ${item.productId}
           AND stock >= ${item.quantity}
@@ -286,7 +286,7 @@ export async function updateOrderStatus(
 
       for (const item of items) {
         await sql`
-          UPDATE products2
+          UPDATE products
           SET stock = stock + ${item.quantity}
           WHERE id = ${item.product_id}
         `
