@@ -1,7 +1,3 @@
-
-import { Product } from '../types/definitions';
-
-import { ITEMS_PAGINATION_PAGE } from '../constants/pagination.constants';
 import { sql } from '../db/db';
 
 
@@ -37,80 +33,4 @@ export async function getCategoryAll() {
     }
 }
 
-export async function getCategoryTotalPages(
-  categoryName: string
-): Promise<number> {
-
-  const result = await sql`
-    SELECT COUNT(*) AS count
-    FROM products p
-    INNER JOIN categories c ON p.category = c.id
-    WHERE c.name = ${categoryName}
-      AND p.status = true
-      AND p.stock > 0
-  `;
-
-  const totalItems = Number(result[0]?.count) || 0;
-  return Math.ceil(totalItems / ITEMS_PAGINATION_PAGE);
-}
-
-export async function getProductsBySubcategory(
-  subcategoryName: string,
-  page: number = 1
-): Promise<Product[]> {
-  const offset = (page - 1) * ITEMS_PAGINATION_PAGE;
-
-  try {
-    const result = await sql`
-      SELECT 
-        p.id,
-        p.title,
-        p.short_description,
-        p.long_description,
-        p.price,
-        p.stock,
-        p.image_url,
-        c.name AS category,        
-        sc.name AS subcategory,     
-        p.status,
-        p.discount,
-        p.created_at
-      FROM products p
-      INNER JOIN categories c ON p.category = c.id
-      INNER JOIN subcategories sc ON p.subcategory = sc.id
-      WHERE sc.name = ${subcategoryName}
-        AND p.status = true
-        AND p.stock > 0
-      ORDER BY p.id ASC
-      LIMIT ${ITEMS_PAGINATION_PAGE}
-      OFFSET ${offset};
-    `;
-
-    return result as Product[];
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch paginated subcategory products.");
-  }
-}
-
-export async function getSubcategoryTotalPages(
-  subcategoryName: string
-): Promise<number> {
-  try {
-    const count = await sql`
-      SELECT COUNT(*)
-      FROM products p
-      INNER JOIN subcategories sc ON p.subcategory = sc.id
-      WHERE sc.name = ${subcategoryName}
-        AND p.status = true
-        AND p.stock > 0
-    `;
-
-    const total = Number(count[0].count);
-    return Math.ceil(total / ITEMS_PAGINATION_PAGE);
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch total pages for subcategory.");
-  }
-}
 
