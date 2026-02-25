@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { getCategoryAll } from "@/lib/data/categories.data";
 import { createSlug } from "@/lib/utils";
 
 import {
@@ -9,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import { Subcategory } from "@/lib/types/definitions";
+import { Category, Subcategory } from "@/lib/types/definitions";
 
 /* 🔹 Componente Link reutilizable */
 function SidebarLink({
@@ -31,14 +30,17 @@ function SidebarLink({
   );
 }
 
+interface CategorySidebarProps {
+  categories: Category[];
+}
 
-export default async function CategorySidebar() {
-  
-  const categories = await getCategoryAll();
+export default function CategorySidebar({
+  categories,
+}: CategorySidebarProps) {
 
   if (!categories?.length) return null;
 
-  return (
+return (
     <>
       <div className="pt-8 pb-4">
         {/* <h2 className="text-2xl font-semibold pb-4">Categorias</h2> */}
@@ -82,4 +84,3 @@ export default async function CategorySidebar() {
     </>
   );
 }
-

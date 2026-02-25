@@ -5,9 +5,7 @@ import {
 } from "@/lib/data/product.data"
 import ProductsPageClient from "../_components/products-page-client"
 import { unslugify } from "@/lib/utils"
-import LocalSidebar from "../_components/products-sidebar-client"
-import CategorySidebar from "@/components/products/category-sidebar"
-import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+
 
 export const dynamic = "force-dynamic"
 
@@ -59,32 +57,11 @@ export default async function ProductItemPage({
   ])
 
   return (
-    <ResizablePanelGroup direction="horizontal">
 
-      {/* SIDEBAR */}
-      <ResizablePanel
-        defaultSize={18}
-        minSize={12}
-        maxSize={22}
-        className="relative overflow-hidden"
-      >
-        <LocalSidebar>
-          <CategorySidebar />
-        </LocalSidebar>
-      </ResizablePanel>
-
-      {/* PRODUCTOS */}
-      <ResizablePanel defaultSize={82}>
-
-        <ProductsPageClient
-          products={products}
-          currentPage={currentPage}
-          totalPages={totalPages}
-        />
-      </ResizablePanel>
-    </ResizablePanelGroup>
+    <ProductsPageClient
+      products={products}
+      currentPage={currentPage}
+      totalPages={totalPages}
+    />
   )
 }
-
-{/* LocalSidebar Crear un sidebar colapsable local "use client" (solo para la sección donde se usa) */ }
-{/* ProductsPanelClient crear el layout horizontal redimensionable de la sección*/ }

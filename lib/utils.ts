@@ -11,10 +11,16 @@ export function cn(...inputs: ClassValue[]) {
  * Convierte un texto en un slug URL-friendly.
  */
 export function createSlug(text: string): string {
+  if (typeof text !== "string") {
+    throw new Error("createSlug requires a valid string")
+  }
+
   return text
     .toLowerCase()
+    .trim()
     .replace(/\s+/g, '-')
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
 }
 
 /**

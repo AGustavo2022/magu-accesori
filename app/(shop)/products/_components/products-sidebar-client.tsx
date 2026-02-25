@@ -57,7 +57,7 @@ export default function LocalSidebar({
       {/* SIDEBAR */}
       <div
         className={clsx(
-          "absolute inset-0 z-20 bg-background transition-transform duration-300",
+          "absolute inset-0 z-20 bg-background transition-transform duration-300 flex flex-col",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
