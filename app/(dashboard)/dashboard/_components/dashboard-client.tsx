@@ -44,7 +44,23 @@ export default function DashboardClient({
       </div>
 
       <div className="divide-y divide-muted/40 space-y-2">
-        
+
+        {/* ===== ORDENES ===== */}
+        <div className="pt-4">
+          <Card className="rounded-2xl border bg-background shadow-md">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">Top 5 Últimas Ordenes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <OrdersTable
+                orders={OrdersTopFive}
+                totalOrders={totalOrders}
+                columns={["order", "customer", "payment-method", "tolal", "date", "status", "shipment"]}
+              />
+            </CardContent>
+          </Card>
+        </div>
+
         {/* ===== PRODUCTOS EN PARALELO ===== */}
         <div className="grid gap-8 lg:grid-cols-2 pt-4">
           <Card className="rounded-2xl border bg-background shadow-md">
@@ -65,23 +81,6 @@ export default function DashboardClient({
             </CardContent>
           </Card>
         </div>
-
-        {/* ===== ORDENES ABAJO ===== */}
-        <div className="pt-4">
-          <Card className="rounded-2xl border bg-background shadow-md">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">Top 5 Últimas Ordenes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <OrdersTable
-                orders={OrdersTopFive}
-                totalOrders={totalOrders}
-                columns={["order", "customer", "payment-method", "tolal", "date", "status", "shipment"]}
-              />
-            </CardContent>
-          </Card>
-        </div>
-
       </div>
     </div>
   )

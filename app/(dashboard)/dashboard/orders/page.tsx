@@ -16,7 +16,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
 
   const currentPage = Number(params?.page ?? 1)
   const query = params?.query ?? ""
-  const status = params?.status ?? "pending"
+  const status = params?.status 
 
   const [orders, totalOrders, totalPages, pendingCount] = await Promise.all([
     getOrdersPages(query, currentPage, status),

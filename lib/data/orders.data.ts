@@ -83,7 +83,7 @@ export async function getOrdersTotalPages(
 
 export async function getOrdersDashboardTotalCount(
   query?: string,
-  status?: "pending" | "confirmed" | "cancelled"
+  status?: "pending" | "confirmed" | "cancelled" 
 ): Promise<number> {
   const result = await sql`
     SELECT COUNT(*) AS total
