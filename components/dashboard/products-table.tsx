@@ -29,6 +29,8 @@ const initialState: DeleteActionState = {
 export function ProductsTable({ products, totalProducts, columns }: ProductTableProps) {
   const [state, formAction] = useFormState(deleteProduct, initialState)
 
+  console.log(products)
+
   return (
 
     <>
@@ -46,6 +48,9 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
             <TableRow>
               {columns.includes("image") && (
                 <TableHead className="text-center">Imagen</TableHead>
+              )}
+              {columns.includes("sku") && (
+                <TableHead className="text-center">Codigo</TableHead>
               )}
               {columns.includes("product") && (
                 <TableHead>Producto</TableHead>
@@ -80,10 +85,13 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
                 </TableCell>
               </TableRow>
             ) : (
-              products.map((product) => (
-                
-                <TableRow key={product.id}>
-                                
+                products.map((product) => (
+
+                  <TableRow
+                    key={product.id}
+                    className="hover:bg-muted/40 transition-colors"
+                  >
+
                   {columns.includes("image") && (
                     <TableCell className="text-center">
                       <Image
@@ -96,9 +104,17 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
                     </TableCell>
                   )}
 
+
+
+                  {columns.includes("sku") && (
+                    <TableCell className="text-center font-medium">
+                      {product.sku}
+                    </TableCell>
+                  )}
+
                   {columns.includes("product") && (
                     <TableCell>
-                      <div className="space-y-1 max-w-105">
+                      <div className="space-y-1 max-w-80">
                         <p className="font-semibold text-base leading-tight">
                           {product.title}
                         </p>
@@ -117,15 +133,47 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
                   )}
 
 
-                  {columns.includes("price") && (
+                  {/* {columns.includes("price") && (
                     <TableCell className="text-center font-medium">
                       ${Number(product.final_price).toFixed(2)}
                     </TableCell>
+                  )} */}
+
+                  {columns.includes("price") && (
+                    <TableCell className="text-center">
+                      <div className="flex flex-col items-center">
+                        {product.discount > 0 && (
+                          <span className="text-sm text-muted-foreground line-through">
+                            ${Number(product.price).toFixed(2)}
+                          </span>
+                        )}
+
+                        <span className="font-semibold text-base">
+                          ${Number(product.final_price).toFixed(2)}
+                        </span>
+                      </div>
+                    </TableCell>
                   )}
+
+                  {/* {columns.includes("stock") && (
+                    <TableCell className="text-center">
+                      {product.stock}
+                    </TableCell>
+                  )} */}
 
                   {columns.includes("stock") && (
                     <TableCell className="text-center">
-                      {product.stock}
+                      {product.stock === 0 ? (
+                        <span className="text-red-600 font-medium">Sin stock</span>
+                      ) : product.stock < 2 ? (
+                        <span className="text-yellow-600 font-medium">
+                           {product.stock}
+                        </span>
+                      ) : (
+                        <span className="text-green-600 font-medium">
+                          {product.stock}
+                        </span>
+                      )}
                     </TableCell>
                   )}
 
@@ -145,7 +193,7 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
 
                   {columns.includes("action") && (
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                      {/* <div className="flex justify-end gap-2">
                         <Button asChild variant="outline" size="sm">
                           <Link href={`/dashboard/products/${product.id}/edit`}>
                             <Pencil size={16} />
@@ -163,9 +211,28 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
                             <Trash size={16} />
                           </Button>
                         </form>
-                      </div>
-                    </TableCell>
-                  )}
+                      </div> */}
+                        <div className="flex justify-end gap-1">
+                          <Button asChild variant="ghost" size="icon">
+                            <Link href={`/dashboard/products/${product.id}/edit`}>
+                              <Pencil size={16} />
+                            </Link>
+                          </Button>
+
+                          <form action={formAction}>
+                            <input type="hidden" name="id" value={product.id} />
+                            <Button
+                              type="submit"
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive hover:bg-destructive/10"
+                            >
+                              <Trash size={16} />
+                            </Button>
+                          </form>
+                        </div>
+                      </TableCell>
+                    )}
 
 
                 </TableRow>

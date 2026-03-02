@@ -6,6 +6,7 @@ export type ProductSpecification = {
 
 export type Product = {
   id: string;
+  sku: string;
   title: string;
   short_description: string;
   long_description: string;
@@ -47,6 +48,7 @@ export type ProductArrayProps = {
 type ProductColumn =
   | "info"
   | "image"
+  | "sku"
   | "product"
   | "price"
   | "stock"

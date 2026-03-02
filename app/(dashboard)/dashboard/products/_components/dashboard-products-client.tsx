@@ -72,14 +72,15 @@ export default function DashboardProductsClient({
         ))}
       </div>
 
-      <SearchNew placeholder="Buscar producto..." />
+      <SearchNew placeholder="Buscar producto por titulo, descripcion o sku" />
 
       <ProductsTable 
       products={products} 
       totalProducts={totalProducts} 
         columns={[
           "info",
-          "image",
+          "sku",
+          // "image",
           "product",
           "price",
           "stock",

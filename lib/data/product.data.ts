@@ -281,6 +281,7 @@ export async function getProductsDashboardPages(
   const products = await sql`
     SELECT 
       p.id,
+      p.sku,
       p.title,
       p.short_description,
       p.long_description,
@@ -300,11 +301,12 @@ export async function getProductsDashboardPages(
     WHERE 1=1
 
       ${query
-        ? sql`AND (
+      ? sql`AND (
             p.title ILIKE ${'%' + query + '%'} OR
-            p.short_description ILIKE ${'%' + query + '%'}
+            p.short_description ILIKE ${'%' + query + '%'} OR
+      p.sku ILIKE ${'%' + query + '%'}
           )`
-        : sql``}
+      : sql``}
 
       ${status !== undefined
         ? sql`AND p.status = ${status}`

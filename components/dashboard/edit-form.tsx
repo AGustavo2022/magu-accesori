@@ -292,7 +292,7 @@ return (
           type="submit"
           className="flex-1 h-12 text-base"
         >
-          Gurdar Cambios
+          Guardar Cambios
         </Button>
       </div>
 
