@@ -6,6 +6,9 @@ import { redirect } from "next/navigation";
 import { CreateProductSchema, UpdateProductSchema } from "../schemas/product.schema";
 import { CreateProductState, UpdateProductState, DeleteActionState } from "../types/product.types";
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
+
+
 
 
 export const sql = neon(`${process.env.DATABASE_URL}`);
@@ -14,6 +17,21 @@ export async function createProduct(
   prevState: CreateProductState,
   formData: FormData
 ): Promise<CreateProductState> {
+
+  // 1. Obtener la sesión de forma segura en el servidor
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  console.log("DEBUG - User ID:", userId); // Ponelo acá arriba
+
+  if (!userId) {
+    return {
+      success: false,
+      message: "Debes estar autenticado para crear un producto",
+      errors: {},
+      values: {},
+    };
+  }
 
   const rawValues: Record<string, string> = {};
 
@@ -58,8 +76,6 @@ export async function createProduct(
     };
   }
 
-  console.log(validatedFields.data)
-
   const status = 'true';
   const created_at = new Date().toISOString(); // Usar ISO string para TIMESTAMP
 
@@ -77,7 +93,8 @@ export async function createProduct(
                 subcategory, 
                 status, 
                 discount, 
-                created_at
+                created_at,
+                user_id
             )
             VALUES (
                 ${validatedFields.data.title}, 
@@ -91,9 +108,11 @@ export async function createProduct(
                 ${validatedFields.data.subcategory}, 
                 ${status}, 
                 ${validatedFields.data.discount}, 
-                ${created_at}
+                ${created_at},
+                ${userId}
             )
         `;
+
   // "Olvida los datos que tienes guardados" (la caché) para una página en particular.
   // "Cuando un usuario visite esa ruta la próxima vez, vuelve a buscar los datos" (o en el próximo acceso a datos en el servidor).
   revalidatePath('/dashboard/add');
