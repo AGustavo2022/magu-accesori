@@ -29,7 +29,6 @@ const initialState: DeleteActionState = {
 export function ProductsTable({ products, totalProducts, columns }: ProductTableProps) {
   const [state, formAction] = useFormState(deleteProduct, initialState)
 
-  console.log(products)
 
   return (
 
@@ -107,7 +106,7 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
 
 
                   {columns.includes("sku") && (
-                    <TableCell className="text-center font-medium">
+                    <TableCell className="text-center">
                       {product.sku}
                     </TableCell>
                   )}
@@ -125,9 +124,9 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
                           </p>
                         )}
 
-                        <p className="text-xs text-muted-foreground">
+                        {/* <p className="text-xs text-muted-foreground">
                           {product.category} / {product.subcategory}
-                        </p>
+                        </p> */}
                       </div>
                     </TableCell>
                   )}

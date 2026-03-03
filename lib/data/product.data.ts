@@ -278,6 +278,8 @@ export async function getProductsDashboardPages(
 
   const offset = (page - 1) * ITEMS_PAGINATION_PAGE
 
+  const isNumeric = query && !isNaN(Number(query))
+
   const products = await sql`
     SELECT 
       p.id,
@@ -302,31 +304,31 @@ export async function getProductsDashboardPages(
 
       ${query
       ? sql`AND (
-            p.title ILIKE ${'%' + query + '%'} OR
-            p.short_description ILIKE ${'%' + query + '%'} OR
-      p.sku ILIKE ${'%' + query + '%'}
-          )`
+        p.title ILIKE ${'%' + query + '%'} OR
+        p.short_description ILIKE ${'%' + query + '%'}
+        ${isNumeric
+          ? sql`OR p.sku = ${Number(query)}`
+          : sql``}
+      )`
       : sql``}
 
       ${status !== undefined
-        ? sql`AND p.status = ${status}`
-        : sql``}
+      ? sql`AND p.status = ${status}`
+      : sql``}
 
-      ${
-        status === true && onlyOutOfStock === true
-          ? sql`AND p.stock = 0`
-          : sql``
-      }
+      ${status === true && onlyOutOfStock === true
+      ? sql`AND p.stock = 0`
+      : sql``
+    }
 
-      ${
-        status === true && onlyOutOfStock !== true
-          ? sql`AND p.stock > 0`
-          : sql``
-      }
+      ${status === true && onlyOutOfStock !== true
+      ? sql`AND p.stock > 0`
+      : sql``
+    }
 
       ${categoryName
-        ? sql`AND c.name = ${categoryName}`
-        : sql``}
+      ? sql`AND c.name = ${categoryName}`
+      : sql``}
 
     ORDER BY p.created_at DESC
     LIMIT ${ITEMS_PAGINATION_PAGE}
@@ -349,31 +351,29 @@ export async function getProductsDashboardTotalCount(
     WHERE 1=1
 
       ${query
-        ? sql`AND (
+      ? sql`AND (
             p.title ILIKE ${'%' + query + '%'} OR
             p.short_description ILIKE ${'%' + query + '%'}
           )`
-        : sql``}
+      : sql``}
 
       ${status !== undefined
-        ? sql`AND p.status = ${status}`
-        : sql``}
+      ? sql`AND p.status = ${status}`
+      : sql``}
 
-      ${
-        status === true && onlyOutOfStock === true
-          ? sql`AND p.stock = 0`
-          : sql``
-      }
+      ${status === true && onlyOutOfStock === true
+      ? sql`AND p.stock = 0`
+      : sql``
+    }
 
-      ${
-        status === true && onlyOutOfStock !== true
-          ? sql`AND p.stock > 0`
-          : sql``
-      }
+      ${status === true && onlyOutOfStock !== true
+      ? sql`AND p.stock > 0`
+      : sql``
+    }
 
       ${categoryName
-        ? sql`AND c.name = ${categoryName}`
-        : sql``}
+      ? sql`AND c.name = ${categoryName}`
+      : sql``}
   `
 
   return Number(result[0].total)
@@ -391,15 +391,15 @@ export async function getProductsDashboardTotalPages(
     INNER JOIN categories c ON p.category = c.id
     WHERE 1=1
       ${query
-        ? sql`AND (
+      ? sql`AND (
             p.title ILIKE ${'%' + query + '%'} OR
             p.short_description ILIKE ${'%' + query + '%'}
           )`
-        : sql``}
+      : sql``}
       ${status !== undefined ? sql`AND p.status = ${status}` : sql``}
       ${categoryName
-        ? sql`AND c.name = ${categoryName}`
-        : sql``}
+      ? sql`AND c.name = ${categoryName}`
+      : sql``}
   `
 
   return Math.ceil(Number(count[0].count) / ITEMS_PAGINATION_PAGE)

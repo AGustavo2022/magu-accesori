@@ -6,7 +6,7 @@ export type ProductSpecification = {
 
 export type Product = {
   id: string;
-  sku: string;
+  sku: number;
   title: string;
   short_description: string;
   long_description: string;
