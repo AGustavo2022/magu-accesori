@@ -56,6 +56,8 @@ export default async function ProductItemPage({
     }),
   ])
 
+  console.log(products)
+
   return (
 
     <ProductsPageClient

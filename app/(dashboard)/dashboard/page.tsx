@@ -15,9 +15,11 @@ interface DashboardPageProps {
 export default async function DashboardPage({
   searchParams,
 }: DashboardPageProps) {
-  const query = searchParams?.query ?? ""
-  const status: OrderStatus =
-  searchParams?.status ?? "pending" 
+
+  const params = await searchParams;
+
+  const query = params?.query ?? ""
+  const status: OrderStatus = (params?.status as OrderStatus) ?? "pending"; 
 
   console.log(status)
 

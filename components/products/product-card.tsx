@@ -40,8 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="relative">
         <Link href={`/product/item/${product.id}`}>
           <Image
-            src={product.image_url || "/backpack.png"}
-            width={500}
+            src={(product.image && product.image.length > 0) ? product.image[0].image_url : "/backpack.png"}            width={500}
             height={300}
             className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
             alt={product.title}

@@ -94,9 +94,9 @@ export function ProductsTable({ products, totalProducts, columns }: ProductTable
                   {columns.includes("image") && (
                     <TableCell className="text-center">
                       <Image
-                        src={product.image_url || "/backpack.png"}
-                        width={64}
-                        height={64}
+                        src={product.image[0].image_url || "/backpack.png"}
+                        width={72}
+                        height={72}
                         alt={product.title}
                         className="mx-auto rounded-md object-cover"
                       />

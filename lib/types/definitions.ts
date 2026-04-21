@@ -3,6 +3,11 @@ export type ProductSpecification = {
   value: string;
 };
 
+export type ProductImage = {
+  publicId: string;
+  image_url: string;
+}
+
 
 export type Product = {
   id: string;
@@ -14,7 +19,7 @@ export type Product = {
   final_price: number
   specifications: ProductSpecification[];
   stock: number;
-  image_url: string;
+  image: ProductImage[];  
   category: string;
   subcategory: string;
   status: boolean;

@@ -65,9 +65,9 @@ const validSpecifications = (product.specifications ?? []).filter(
         <div className="relative">
           <div className="sticky top-8">
             <div className="relative aspect-square overflow-hidden rounded-xl border bg-muted/20">
-              {product.image_url ? (
+              {product.image ? (
                 <Image
-                  src={product.image_url || "/placeholder.svg"}
+                  src={(product.image && product.image.length > 0) ? product.image[0].image_url : "/backpack.png"}            
                   alt={product.title}
                   fill
                   className="object-cover"
