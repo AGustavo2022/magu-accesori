@@ -5,8 +5,7 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { getUser } from './lib/data/users.data';
 
-
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -18,16 +17,18 @@ export const { auth, signIn, signOut } = NextAuth({
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const user = await getUser(email);
-          console.log(`Usuario: ${user}`)
+          
           if (!user) return null;
+          
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) return user;
         }
-        console.log('Invalid credentials');
+        
         return null;
       },
     }),
   ],
+  // La doc oficial recomienda extender los tipos si agregas el ID a la sesión
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
