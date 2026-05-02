@@ -50,7 +50,6 @@ try {
   images = [];
 }
 
-console.log(images)
 
   const normalizedValues = {
     ...rawValues,
@@ -63,7 +62,6 @@ console.log(images)
   // 2. Validación con Zod
   const validatedFields = CreateProductSchema.safeParse(normalizedValues);
 
-  console.log(normalizedValues)
 
   if (!validatedFields.success) {
     const tree = z.treeifyError(validatedFields.error);
@@ -147,72 +145,103 @@ console.log(images)
   redirect('/dashboard');
 }
 
-// export async function updateProduct(
-//   id: string,
-//   prevState: UpdateProductState,
-//   formData: FormData
-// ): Promise<UpdateProductState> {
 
-//   const rawValues = Object.fromEntries(
-//     Array.from(formData.entries()).map(([k, v]) => [k, String(v)])
-//   );
+export async function updateProduct(
+  id: string,
+  prevState: UpdateProductState,
+  formData: FormData
+): Promise<UpdateProductState> {
 
-//   const validatedFields = UpdateProductSchema.safeParse(rawValues);
+  // 1. Extraemos los valores del formData
+  const rawValues = Object.fromEntries(
+    Array.from(formData.entries()).map(([k, v]) => [k, String(v)])
+  );
 
-//   if (!validatedFields.success) {
-//     const tree = z.treeifyError(validatedFields.error);
+  // 2. Construimos el array de imágenes para que coincida con el esquema de Zod
+  // Tomamos el image_url y publicId que vienen del formulario
+  let images = [];
+  let specifications = [];
 
-//     const errors = Object.fromEntries(
-//       Object.entries(tree.properties ?? {}).map(([key, value]) => [
-//         key,
-//         value?.errors ?? [],
-//       ])
-//     );
+  try {
+    images = rawValues.images ? JSON.parse(rawValues.images) : [];
+    specifications = rawValues.specifications ? JSON.parse(rawValues.specifications) : [];
+  } catch (e) {
+    console.error("Error parseando JSON de imágenes o especificaciones", e);
+  }
 
-//     return {
-//       success: false,
-//       message: 'Datos inválidos. Revisá el formulario.',
-//       errors,
-//       values: rawValues,
-//     };
-//   }
+  // 3. Normalizamos los datos antes de validar (conversión de tipos)
+  const normalizedValues = {
+    ...rawValues,
+    price: Number(rawValues.price),
+    stock: Number(rawValues.stock),
+    discount: rawValues.discount === '' ? 0 : Number(rawValues.discount),
+    status: rawValues.status === 'true' ? 'true' : 'false',
+    images, // Inyectamos el array de imágenes procesado
+    specifications,
+  };
 
-//   const updated_at = new Date().toISOString();
+  // 4. Validación con Zod
+  const validatedFields = UpdateProductSchema.safeParse(normalizedValues);
+  
+  if (!validatedFields.success) {
+    const tree = z.treeifyError(validatedFields.error);
+    const errors = Object.fromEntries(
+      Object.entries(tree.properties ?? {}).map(([key, value]) => [
+        key,
+        value?.errors ?? [],
+      ])
+    );
 
-//   try {
-//     await sql`
-//       UPDATE products
-//       SET
-//         title = ${validatedFields.data.title},
-//         short_description = ${validatedFields.data.shortDescription},
-//         long_description = ${validatedFields.data.longDescription},
-//         price = ${validatedFields.data.price},
-//         stock = ${validatedFields.data.stock},
-//         image_url = ${validatedFields.data.image_url},
-//         category = ${validatedFields.data.category},
-//         subcategory = ${validatedFields.data.subcategory},
-//         status = ${validatedFields.data.status},
-//         discount = ${validatedFields.data.discount},
-//         updated_at = ${updated_at}
-//       WHERE id = ${id}
-//     `;
-//   } catch (error) {
-//     console.error('Error DB update:', error);
+    return {
+      success: false,
+      message: 'Datos inválidos. Revisá el formulario.',
+      errors,
+      values: rawValues,
+    };
+  }
 
-//     return {
-//       success: false,
-//       message: 'Error al actualizar el producto. Intentá nuevamente.',
-//       errors: {
-//         _form: ["Error al actualizar el producto"],
-//       },
-//       values: rawValues,
-//     };
-//   }
 
-//   revalidatePath('/dashboard/products');
-//   revalidatePath(`/dashboard//products/${id}/edit`);
-//   redirect('/dashboard/products');
-// }
+  const updated_at = new Date().toISOString();
+
+  try {
+    // 5. Ejecución del UPDATE en la base de datos
+    await sql`
+      UPDATE products
+      SET
+        title = ${validatedFields.data.title},
+        short_description = ${validatedFields.data.shortDescription},
+        long_description = ${validatedFields.data.longDescription},
+        price = ${validatedFields.data.price},
+        stock = ${validatedFields.data.stock},
+        specifications = ${JSON.stringify(validatedFields.data.specifications)},
+        image = ${JSON.stringify(validatedFields.data.images)}, -- Guardamos como JSON string
+        category = ${validatedFields.data.category},
+        subcategory = ${validatedFields.data.subcategory},
+        status = ${validatedFields.data.status},
+        discount = ${validatedFields.data.discount},
+        updated_at = ${updated_at}
+      WHERE id = ${id}
+    `;
+    
+  } catch (error) {
+    console.error('Error DB update:', error);
+    return {
+      success: false,
+      message: 'Error al actualizar el producto. Intentá nuevamente.',
+      errors: {
+        _form: ["Error al actualizar el producto"],
+      },
+      values: rawValues,
+    };
+  }
+
+  // 6. Revalidación y redirección
+  revalidatePath('/dashboard/products');
+  revalidatePath(`/dashboard/products/${id}/edit`);
+  redirect('/dashboard/products');
+}
+
+
 
 export async function deleteProduct(
   prevState: DeleteActionState,

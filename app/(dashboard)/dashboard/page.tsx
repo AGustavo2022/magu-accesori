@@ -21,8 +21,6 @@ export default async function DashboardPage({
   const query = params?.query ?? ""
   const status: OrderStatus = (params?.status as OrderStatus) ?? "pending"; 
 
-  console.log(status)
-
 
   const [
     productsOutofStock,

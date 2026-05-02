@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 //   const session = await auth();
 //   if (!session) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-console.log("Endpoint=/api/upload-auth")
+
 
   const body = await request.json();
   const { paramsToSign } = body;

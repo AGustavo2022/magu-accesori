@@ -11,8 +11,6 @@ export default async function ProductItemPage({
 
   const { product_id } = await params;
 
-  console.log(product_id)
-
   const product = await getProductById(product_id)
   
   return (

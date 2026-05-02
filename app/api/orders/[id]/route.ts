@@ -8,7 +8,6 @@ export async function GET(
   try {
     const { id: orderId } = await params
 
-    console.log("Order ID recibido:", orderId)
 
     const items = await sql`
       SELECT 

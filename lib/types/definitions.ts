@@ -102,22 +102,9 @@ export type ProductFormState = {
 export type DeleteProductArgs = {
   id: string;
 }
-// Interfaz (sin cambios)
-export interface ProductForm {
-    id: string;
-    title: string;
-    short_description: string;
-    long_description: string;
-    price: number;
-    stock: number;
-    image_url: string;
-    category: string;
-    subcategory: string;
-    status: boolean; // Se mantiene en la interfaz, pero se ignora en el formulario
-    discount: number;
-    created_at: Date;
-}export interface EditProductFormProps {
-    product: ProductForm;
+
+export type EditProductFormProps = {
+    product: Product;
     categories: Category[];
 }
 
